@@ -21,6 +21,10 @@
       class="syn-auth-form syn-auth-form--plain syn-auth-form--comfortable"
       (submit)="onSubmit($event)"
     >
+      @if (errorMessage(); as message) {
+        <p class="syn-field__hint" role="alert">{{ message }}</p>
+      }
+
       <label class="syn-field" for="loginEmail">
         <span class="syn-field__label login-label">Institutional Email</span>
         <span class="syn-input-wrap">
@@ -62,8 +66,12 @@
         </span>
       </label>
 
-      <button class="syn-button syn-button--primary login-submit" type="submit">
-        Log In
+      <button
+        class="syn-button syn-button--primary login-submit"
+        [disabled]="submitting()"
+        type="submit"
+      >
+        {{ submitting() ? "Logging In" : "Log In" }}
         <span class="material-symbols-outlined" aria-hidden="true">
           arrow_forward
         </span>

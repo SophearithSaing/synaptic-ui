@@ -4,37 +4,43 @@ import { Injectable, signal } from '@angular/core';
   providedIn: 'root',
 })
 export class AuthSessionService {
-  private readonly storageKey = 'synaptic.authenticated';
+  private readonly tokenStorageKey = 'synaptic.accessToken';
 
-  public readonly authenticated = signal(this.readSession());
+  public readonly accessToken = signal<string | null>(this.readAccessToken());
 
   /**
-   * Marks the temporary local session as authenticated.
+   * Stores the API access token for the authenticated session.
+   *
+   * @param accessToken API bearer token returned by authentication.
    */
-  public signIn(): void {
-    this.authenticated.set(true);
-    localStorage.setItem(this.storageKey, 'true');
+  public signIn(accessToken: string): void {
+    this.accessToken.set(accessToken);
+    localStorage.setItem(this.tokenStorageKey, accessToken);
   }
 
   /**
-   * Clears the temporary local session.
+   * Clears the local authenticated session.
    */
   public signOut(): void {
-    this.authenticated.set(false);
-    localStorage.removeItem(this.storageKey);
+    this.accessToken.set(null);
+    localStorage.removeItem(this.tokenStorageKey);
   }
 
   /**
-   * Reports whether the current temporary session is authenticated.
+   * Reports whether the current session has an API access token.
+   *
+   * @returns True when the current session has an API access token.
    */
   public isAuthenticated(): boolean {
-    return this.authenticated();
+    return this.accessToken() !== null;
   }
 
   /**
-   * Reads the temporary session state from local storage.
+   * Reads a persisted API access token when real authentication has occurred.
+   *
+   * @returns Persisted API access token, or null when none exists.
    */
-  private readSession(): boolean {
-    return localStorage.getItem(this.storageKey) === 'true';
+  private readAccessToken(): string | null {
+    return localStorage.getItem(this.tokenStorageKey);
   }
 }
