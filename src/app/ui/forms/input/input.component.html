@@ -1,0 +1,19 @@
+<span class="input-wrap">
+  @if (icon) {
+    <span class="input-wrap__icon material-symbols-outlined" aria-hidden="true">
+      {{ icon }}
+    </span>
+  }
+  <input
+    class="input"
+    [ngClass]="inputClasses"
+    [id]="inputId"
+    [name]="name"
+    [type]="type"
+    [autocomplete]="autocomplete"
+    [placeholder]="placeholder"
+    [required]="required"
+    [value]="value"
+    (input)="onInput($event)"
+  />
+</span>
