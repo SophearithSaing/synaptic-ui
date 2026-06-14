@@ -13,7 +13,7 @@ import { SynNavItem } from '../models/nav-item.model';
 export class SynFooterComponent {
   @Input() public ariaLabel = 'Footer navigation';
 
-  @Input() public brand = 'Synaptic';
+  @Input() public brand: string | null = 'Synaptic';
 
   @Input() public copy: string | null = null;
 

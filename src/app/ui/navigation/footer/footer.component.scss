@@ -22,6 +22,10 @@
   padding: var(--space-md) var(--page-gutter);
 
   text-align: center;
+
+  &--center {
+    justify-content: center;
+  }
 }
 
 .footer__brand {
@@ -59,5 +63,11 @@
     flex-direction: row;
 
     text-align: left;
+
+    &--center {
+      justify-content: center;
+
+      text-align: center;
+    }
   }
 }
