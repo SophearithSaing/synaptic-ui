@@ -1,25 +1,39 @@
-import { Component, Input } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component, Input, OnChanges } from '@angular/core';
 
 import { SynChipTone } from '../models/chip.model';
 
 @Component({
   selector: 'syn-chip',
   standalone: true,
+  imports: [NgClass],
   templateUrl: './chip.component.html',
   styleUrl: './chip.component.scss',
 })
-export class SynChipComponent {
+export class SynChipComponent implements OnChanges {
   @Input({ required: true }) public label = '';
 
   @Input() public tone: SynChipTone = 'default';
 
+  public chipClasses: Record<string, boolean> = this.createChipClasses();
+
   /**
-   * Returns whether the chip uses the requested tone.
-   *
-   * @param tone Tone to compare.
-   * @returns True when the requested tone matches the chip tone.
+   * Updates chip classes when inputs change.
    */
-  public hasTone(tone: SynChipTone): boolean {
-    return this.tone === tone;
+  public ngOnChanges(): void {
+    this.chipClasses = this.createChipClasses();
+  }
+
+  /**
+   * Builds tone classes for the rendered chip.
+   *
+   * @returns Chip class map keyed by CSS class name.
+   */
+  private createChipClasses(): Record<string, boolean> {
+    return {
+      'chip--primary': this.tone === 'primary',
+      'chip--outline': this.tone === 'outline',
+      'chip--error': this.tone === 'error',
+    };
   }
 }

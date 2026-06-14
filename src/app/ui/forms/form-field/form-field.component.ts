@@ -42,7 +42,7 @@ export class SynFormFieldComponent implements OnChanges {
    */
   private createFieldClasses(): Record<string, boolean> {
     return {
-      'form-field--error': this.error !== null,
+      'form-field--error': !!this.error,
     };
   }
 }

@@ -2,12 +2,12 @@
   <div class="footer__inner">
     <div>
       <span class="footer__brand">{{ brand }}</span>
-      @if (copy !== null) {
+      @if (copy) {
         <span class="footer__copy">{{ copy }}</span>
       }
     </div>
 
-    @if (links.length > 0) {
+    @if (links.length) {
       <nav class="footer__nav" [attr.aria-label]="ariaLabel">
         @for (link of links; track link.label) {
           @if (link.routerLink) {

@@ -1,4 +1,10 @@
-import { booleanAttribute, Component, Input } from '@angular/core';
+import { NgClass } from '@angular/common';
+import {
+  booleanAttribute,
+  Component,
+  Input,
+  OnChanges,
+} from '@angular/core';
 
 import {
   SynStackDirection,
@@ -8,33 +14,37 @@ import {
 @Component({
   selector: 'syn-stack',
   standalone: true,
+  imports: [NgClass],
   templateUrl: './stack.component.html',
   styleUrl: './stack.component.scss',
 })
-export class SynStackComponent {
+export class SynStackComponent implements OnChanges {
   @Input() public direction: SynStackDirection = 'vertical';
 
   @Input({ transform: booleanAttribute }) public page = false;
 
   @Input() public size: SynStackSize = 'md';
 
+  public stackClasses: Record<string, boolean> = this.createStackClasses();
+
   /**
-   * Returns whether the stack uses the requested direction.
-   *
-   * @param direction Direction to compare.
-   * @returns True when the requested direction matches the stack direction.
+   * Updates stack classes when inputs change.
    */
-  public hasDirection(direction: SynStackDirection): boolean {
-    return this.direction === direction;
+  public ngOnChanges(): void {
+    this.stackClasses = this.createStackClasses();
   }
 
   /**
-   * Returns whether the stack uses the requested spacing size.
+   * Builds layout classes for the rendered stack.
    *
-   * @param size Spacing size to compare.
-   * @returns True when the requested size matches the stack size.
+   * @returns Stack class map keyed by CSS class name.
    */
-  public hasSize(size: SynStackSize): boolean {
-    return this.size === size;
+  private createStackClasses(): Record<string, boolean> {
+    return {
+      'stack--inline': this.direction === 'inline',
+      'stack--split': this.direction === 'split',
+      'stack--lg': this.size === 'lg',
+      'stack--page': this.page,
+    };
   }
 }

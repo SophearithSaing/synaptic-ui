@@ -1,23 +1,38 @@
-import { Component, Input } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component, Input, OnChanges } from '@angular/core';
 
 import { SynGridColumns } from '../models/grid.model';
 
 @Component({
   selector: 'syn-grid',
   standalone: true,
+  imports: [NgClass],
   templateUrl: './grid.component.html',
   styleUrl: './grid.component.scss',
 })
-export class SynGridComponent {
+export class SynGridComponent implements OnChanges {
   @Input() public columns: SynGridColumns = 1;
 
+  public gridClasses: Record<string, boolean> = this.createGridClasses();
+
   /**
-   * Returns whether the grid should use the requested column layout.
-   *
-   * @param columns Column layout to compare.
-   * @returns True when the requested columns match the active grid layout.
+   * Updates grid classes when inputs change.
    */
-  public hasColumns(columns: SynGridColumns): boolean {
-    return this.columns === columns;
+  public ngOnChanges(): void {
+    this.gridClasses = this.createGridClasses();
+  }
+
+  /**
+   * Builds layout classes for the rendered grid.
+   *
+   * @returns Grid class map keyed by CSS class name.
+   */
+  private createGridClasses(): Record<string, boolean> {
+    return {
+      'grid--2': this.columns === 2,
+      'grid--3': this.columns === 3,
+      'grid--4': this.columns === 4,
+      'grid--workspace': this.columns === 'workspace',
+    };
   }
 }

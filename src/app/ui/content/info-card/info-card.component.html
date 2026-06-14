@@ -1,5 +1,5 @@
-<article class="info-card" [class.info-card--interactive]="interactive">
-  @if (icon !== null) {
+<article class="info-card" [ngClass]="cardClasses">
+  @if (icon) {
     <span class="info-card__icon material-symbols-outlined" aria-hidden="true">
       {{ icon }}
     </span>

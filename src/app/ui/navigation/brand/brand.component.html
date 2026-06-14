@@ -1,8 +1,8 @@
-@if (routerLink !== null) {
+@if (routerLink) {
   <a class="brand" [routerLink]="routerLink" [attr.aria-label]="ariaLabel">
     <ng-container *ngTemplateOutlet="brandContent"></ng-container>
   </a>
-} @else if (href !== null) {
+} @else if (href) {
   <a class="brand" [href]="href" [attr.aria-label]="ariaLabel">
     <ng-container *ngTemplateOutlet="brandContent"></ng-container>
   </a>

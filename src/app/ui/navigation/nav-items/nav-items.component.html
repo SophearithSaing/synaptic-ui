@@ -1,6 +1,6 @@
 <nav class="nav-items" [attr.aria-label]="ariaLabel">
   @for (item of items; track item.label) {
-    @if (item.routerLink !== undefined) {
+    @if (item.routerLink) {
       <a
         class="nav-items__link"
         [class.nav-items__link--active]="item.active === true"

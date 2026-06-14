@@ -73,7 +73,7 @@ export class SynInputComponent implements OnChanges {
   private createInputClasses(): Record<string, boolean> {
     return {
       'input--error': this.error,
-      'input--icon': this.icon !== null,
+      'input--icon': !!this.icon,
     };
   }
 }

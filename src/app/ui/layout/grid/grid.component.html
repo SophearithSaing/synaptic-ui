@@ -1,9 +1,3 @@
-<div
-  class="grid"
-  [class.grid--2]="hasColumns(2)"
-  [class.grid--3]="hasColumns(3)"
-  [class.grid--4]="hasColumns(4)"
-  [class.grid--workspace]="hasColumns('workspace')"
->
+<div class="grid" [ngClass]="gridClasses">
   <ng-content></ng-content>
 </div>

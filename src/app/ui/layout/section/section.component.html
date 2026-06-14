@@ -1,7 +1,3 @@
-<section
-  class="section"
-  [class.section--raised]="raised"
-  [attr.id]="sectionId"
->
+<section class="section" [ngClass]="sectionClasses" [attr.id]="sectionId">
   <ng-content></ng-content>
 </section>

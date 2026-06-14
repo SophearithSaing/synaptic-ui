@@ -1,6 +1,6 @@
 <nav class="mobile-nav" [attr.aria-label]="ariaLabel">
   @for (item of items; track item.label) {
-    @if (item.routerLink !== undefined) {
+    @if (item.routerLink) {
       <a
         class="mobile-nav__link"
         [class.mobile-nav__link--strong]="item.active === true"
@@ -21,28 +21,26 @@
     }
   }
 
-  @if (actions.length > 0) {
+  @if (actionItems.length) {
     <div class="mobile-nav__actions">
-      @for (action of actions; track action.label) {
-        @if (action.routerLink !== undefined) {
+      @for (item of actionItems; track item.action.label) {
+        @if (item.action.routerLink) {
           <a
             class="mobile-nav__action"
-            [class.mobile-nav__action--primary]="action.variant !== 'secondary'"
-            [class.mobile-nav__action--secondary]="action.variant === 'secondary'"
-            [routerLink]="action.routerLink"
+            [ngClass]="item.classes"
+            [routerLink]="item.action.routerLink"
             (click)="onNavigate()"
           >
-            {{ action.label }}
+            {{ item.action.label }}
           </a>
         } @else {
           <a
             class="mobile-nav__action"
-            [class.mobile-nav__action--primary]="action.variant !== 'secondary'"
-            [class.mobile-nav__action--secondary]="action.variant === 'secondary'"
-            [href]="action.href"
+            [ngClass]="item.classes"
+            [href]="item.action.href"
             (click)="onNavigate()"
           >
-            {{ action.label }}
+            {{ item.action.label }}
           </a>
         }
       }
