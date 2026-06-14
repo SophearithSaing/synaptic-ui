@@ -1,20 +1,46 @@
 # Project: Synaptic
 
 **Goal:** Interactive AI-driven education platform for computing theory.
-**Status:** Multi-repo Architecture.
 
 ## Technical Constraints
 
-- **Frontend:** Angular 18+, SCSS (Custom Styles only, NO Tailwind).
+- **Frontend:** Angular 17+, SCSS (Custom Styles only, NO Tailwind).
 - **Backend:** NestJS, Node.js.
 - **Database:** MongoDB (Mongoose).
-- **State:** Angular Signals for reactive UI (Progress Bar, Question State).
 
-## UI/UX Direction
+## Design
 
-- **Branding:** Minimalist, academic, interactive.
-- **Componentry:** Custom SCSS modules. Focus on high-quality typography and transitions.
-- **Interaction:** No chat bubbles. Question-based cards with $0 \rightarrow 100$ progress tracking.
+For any design-related work, first read `DESIGN.md` and `design-system.css`.
+
+Follow `DESIGN.md` as the source of truth for UI, UX, styling, layout, components, and interaction patterns.
+
+Follow `design-system.css` as the source of truth for design tokens, variables, colors, spacing, typography, breakpoints, shadows, borders, and reusable style primitives.
+
+Do not introduce new design patterns, hardcoded visual values, or duplicate style primitives unless explicitly requested.
+
+### Design System Philosophy
+
+The design system owns visual decisions. Product components should compose existing design tokens, primitives, components, and patterns instead of creating new styles locally.
+
+### Rules
+
+1. No hardcoded visual values in components.
+   Use design tokens for color, spacing, typography, shadows, borders, radii, and breakpoints.
+
+2. No one-off component styling when a reusable primitive or pattern would work.
+
+3. If a visual pattern appears twice, promote it into the design system.
+
+4. Components may define layout-specific styles only when the style is truly unique to that component.
+
+5. Responsive behavior should be handled through design-system media queries, layout primitives, or documented patterns.
+
+6. New variants must be added to the design system before being used in product components.
+
+7. Component-local CSS is allowed only as an escape hatch, and it must still use design-system tokens.
+
+8. The design system should describe intent, not raw CSS.
+   Prefer `surface-card`, `text-muted`, `button-primary`, and `stack-md` over arbitrary values.
 
 ## Code Style
 
@@ -22,58 +48,27 @@
 - **Quotes:** Use single quotes `'` for strings unless double quotes are required for JSON.
 - **Line Width:** Keep code blocks under 80 characters per line where possible.
 - **Comment:** Every function MUST have a return type and TS Doc header. Body comments are forbidden, except for complex algorithmic logic in long functions or non-obvious workarounds for third-party bugs.
-
-### TypeScript
-
-- **Strictness:** Strictly adhere to the project's `tsconfig.json`. Never use `any`; use `unknown` if the type is truly unknown.
-- **Null Safety:** Avoid non-null assertions (`!`). Use optional chaining (`?.`) or explicit null checks to handle potentially null or undefined values.
-- **Class Members:** Use explicit visibility modifiers (`public`, `private`, `protected`) for all class members.
-- **Overrides:** Always use the `override` keyword when overriding base class methods (required by `noImplicitOverride`).
-- **Return Types:** Ensure all code paths return a value (required by `noImplicitReturns`).
-- **Switch Cases:** Avoid fall-through cases in switch statements (required by `noFallthroughCasesInSwitch`).
-- **Index Signatures:** Use bracket notation for property access from index signatures (required by `noPropertyAccessFromIndexSignature`).
-- **Templates:** Ensure all templates are compatible with `strictTemplates` (Angular).
-- **State:** Use Angular Signals for all reactive UI state. Avoid `BehaviorSubject` unless strictly necessary for legacy integration.
 - **TS Doc Format:** Include `@param` for each parameter and `@returns` only when the function returns a value. Do not write `@returns Nothing.` for `void` functions.
 
 ```ts
 /**
- * Finds a topic by id.
+ * Finds an item by id.
  *
- * @param topicId Topic id to find.
- * @returns Matching topic, or null when no topic exists.
+ * @param itemId Item id to find.
+ * @returns Matching item, or null when no item exists.
  */
-private findTopic(topicId: string): Topic | null {
+private findItem(itemId: string): Item | null {
   return null;
 }
 
 /**
- * Clears the active session.
+ * Clears the current state.
  */
-public signOut(): void {
-  this.accessToken.set(null);
+public clearState(): void {
+  this.state.set(null);
 }
 ```
 
 ## Environment
 
 - **Shell:** PowerShell. Use PowerShell-compatible syntax (e.g., `;` instead of `&&` for command chaining).
-- **Command Preference:** Use PowerShell-native commands first for filesystem, search, and text inspection tasks (e.g., `Get-ChildItem`, `Get-Content`, `Select-String`) before trying Unix-style tools.
-- **Verification:** Prefer `npm.cmd run build` for local verification. Do not run `ng serve`; ask the user to verify browser/dev-server behavior instead.
-- **Formatting Timing:** Do not run Prettier after every small change. Run `npx prettier --write` only before committing code.
-
-## Plan Guidelines
-
-- When in Plan Mode, focus on implementing requested changes as defined by the approved plan.
-- Implement the requested changes and verify them (e.g., via local build), but **do not** stage, commit, or create a Pull Request for these changes until you receive an explicit directive from the user to do so.
-- After implementing and verifying, summarize the completed work and await further instructions.
-
-## Commit Standards
-
-- **Formatting:** Edited files must be formatted with `npx prettier --write` before any commit.
-- **Atomic Commits:** Separate changes into multiple logical commits. Avoid bulk commits of unrelated changes.
-- **Message Quality:** Use meaningful and descriptive commit messages that explain the "why" and "what".
-- **Formatting Rules:**
-  - Commit messages must start with a capitalized word.
-  - Do not use prefixes like 'Fix:', 'Enhancement:', or 'feat:'.
-  - Avoid vague messages like "Address comments", "Small fixes", or "Update files".
