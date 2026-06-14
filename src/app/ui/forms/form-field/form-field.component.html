@@ -1,0 +1,12 @@
+<label class="form-field" [ngClass]="fieldClasses" [attr.for]="forId">
+  <span class="form-field__header">
+    <span class="form-field__label">{{ label }}</span>
+    <ng-content select="[synFormFieldAction]"></ng-content>
+  </span>
+
+  <ng-content></ng-content>
+
+  @if (helperText(); as text) {
+    <span class="form-field__hint">{{ text }}</span>
+  }
+</label>
