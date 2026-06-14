@@ -1,5 +1,34 @@
 import { Component, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+
+import { SynButtonComponent } from '../../ui/actions/button/button.component';
+import { SynTextLinkComponent } from '../../ui/actions/text-link/text-link.component';
+import { SynCardComponent } from '../../ui/content/card/card.component';
+import { SynCatalogCardComponent } from '../../ui/content/catalog-card/catalog-card.component';
+import { SynChipComponent } from '../../ui/content/chip/chip.component';
+import { SynEmptyStateComponent } from '../../ui/content/empty-state/empty-state.component';
+import { SynInfoCardComponent } from '../../ui/content/info-card/info-card.component';
+import { SynLedgerListComponent } from '../../ui/content/ledger-list/ledger-list.component';
+import { SynLedgerItem } from '../../ui/content/models/ledger-item.model';
+import { SynTokenTone } from '../../ui/content/models/token.model';
+import { SynProgressCardComponent } from '../../ui/content/progress-card/progress-card.component';
+import { SynTokenComponent } from '../../ui/content/token/token.component';
+import { SynOptionComponent } from '../../ui/feedback/option/option.component';
+import { SynProgressBarComponent } from '../../ui/feedback/progress-bar/progress-bar.component';
+import { SynFormFieldComponent } from '../../ui/forms/form-field/form-field.component';
+import { SynFormPanelComponent } from '../../ui/forms/form-panel/form-panel.component';
+import { SynInputComponent } from '../../ui/forms/input/input.component';
+import { SynContainerComponent } from '../../ui/layout/container/container.component';
+import { SynGridComponent } from '../../ui/layout/grid/grid.component';
+import { SynPageShellComponent } from '../../ui/layout/page-shell/page-shell.component';
+import { SynSectionComponent } from '../../ui/layout/section/section.component';
+import { SynSectionHeaderComponent } from '../../ui/layout/section-header/section-header.component';
+import { SynStackComponent } from '../../ui/layout/stack/stack.component';
+import { SynBrandComponent } from '../../ui/navigation/brand/brand.component';
+import { SynFooterComponent } from '../../ui/navigation/footer/footer.component';
+import { SynMobileNavComponent } from '../../ui/navigation/mobile-nav/mobile-nav.component';
+import { SynNavItem } from '../../ui/navigation/models/nav-item.model';
+import { SynNavBarComponent } from '../../ui/navigation/nav-bar/nav-bar.component';
+import { SynNavItemsComponent } from '../../ui/navigation/nav-items/nav-items.component';
 
 interface Principle {
   readonly icon: string;
@@ -16,7 +45,7 @@ interface ColorToken {
 
 interface FunctionalToken {
   readonly name: string;
-  readonly className: string;
+  readonly tone: SynTokenTone;
 }
 
 interface TypeSpecimen {
@@ -33,12 +62,76 @@ interface SpacingToken {
 @Component({
   selector: 'app-design-system',
   standalone: true,
-  imports: [RouterLink],
+  imports: [
+    SynBrandComponent,
+    SynButtonComponent,
+    SynCardComponent,
+    SynCatalogCardComponent,
+    SynChipComponent,
+    SynContainerComponent,
+    SynEmptyStateComponent,
+    SynFooterComponent,
+    SynFormFieldComponent,
+    SynFormPanelComponent,
+    SynGridComponent,
+    SynInfoCardComponent,
+    SynInputComponent,
+    SynLedgerListComponent,
+    SynMobileNavComponent,
+    SynNavBarComponent,
+    SynNavItemsComponent,
+    SynOptionComponent,
+    SynPageShellComponent,
+    SynProgressBarComponent,
+    SynProgressCardComponent,
+    SynSectionComponent,
+    SynSectionHeaderComponent,
+    SynStackComponent,
+    SynTextLinkComponent,
+    SynTokenComponent,
+  ],
   templateUrl: './design-system.component.html',
   styleUrl: './design-system.component.scss',
 })
 export class DesignSystemComponent {
   public readonly mobileNavOpen = signal(false);
+
+  public readonly navItems: readonly SynNavItem[] = [
+    {
+      label: 'Home',
+      routerLink: '/',
+    },
+    {
+      active: true,
+      label: 'Design',
+      routerLink: '/design-system',
+    },
+  ];
+
+  public readonly footerLinks: readonly SynNavItem[] = [
+    {
+      label: 'Home',
+      routerLink: '/',
+    },
+    {
+      label: 'Design System',
+      routerLink: '/design-system',
+    },
+  ];
+
+  public readonly ledgerItems: readonly SynLedgerItem[] = [
+    {
+      icon: 'close',
+      title: 'Not a quick-answer tool',
+      description: 'Synaptic keeps friction in the learning loop.',
+      tone: 'danger',
+    },
+    {
+      icon: 'check_circle',
+      title: 'Reusable ledger row',
+      description: 'Ledger lists support neutral and semantic icon tones.',
+    },
+  ];
 
   public readonly iconSamples: readonly string[] = [
     'auto_stories',
@@ -98,19 +191,19 @@ export class DesignSystemComponent {
   public readonly functionalTokens: readonly FunctionalToken[] = [
     {
       name: 'primary-fixed',
-      className: 'syn-token--primary',
+      tone: 'primary',
     },
     {
       name: 'secondary-container',
-      className: 'syn-token--secondary',
+      tone: 'secondary',
     },
     {
       name: 'outline',
-      className: 'syn-token--outline',
+      tone: 'outline',
     },
     {
       name: 'error',
-      className: 'syn-token--error',
+      tone: 'error',
     },
   ];
 
