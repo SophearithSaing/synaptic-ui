@@ -1,0 +1,9 @@
+<div class="section-header" [class.section-header--inline]="inline">
+  <div>
+    <h2 [attr.id]="headingId">{{ title }}</h2>
+    @if (description !== null) {
+      <p>{{ description }}</p>
+    }
+  </div>
+  <ng-content select="[synSectionHeaderAction]"></ng-content>
+</div>
