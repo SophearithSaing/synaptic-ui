@@ -1,0 +1,42 @@
+@if (routerLink) {
+  <a class="catalog-card" [routerLink]="routerLink">
+    <ng-container *ngTemplateOutlet="catalogCardContent"></ng-container>
+  </a>
+} @else if (href) {
+  <a class="catalog-card" [href]="href">
+    <ng-container *ngTemplateOutlet="catalogCardContent"></ng-container>
+  </a>
+} @else {
+  <article class="catalog-card">
+    <ng-container *ngTemplateOutlet="catalogCardContent"></ng-container>
+  </article>
+}
+
+<ng-template #catalogCardContent>
+  <div class="catalog-card__bar">
+    <span class="catalog-card__label">{{ label }}</span>
+    @if (icon) {
+      <span
+        class="catalog-card__icon material-symbols-outlined"
+        aria-hidden="true"
+      >
+        {{ icon }}
+      </span>
+    }
+  </div>
+
+  <div class="catalog-card__body">
+    <h3 class="catalog-card__title">{{ title }}</h3>
+    <p class="catalog-card__text">{{ description }}</p>
+
+    @if (tags.length) {
+      <div class="catalog-card__tags" aria-label="Tags">
+        @for (tag of tags; track tag) {
+          <span class="catalog-card__tag">{{ tag }}</span>
+        }
+      </div>
+    }
+
+    <ng-content></ng-content>
+  </div>
+</ng-template>
