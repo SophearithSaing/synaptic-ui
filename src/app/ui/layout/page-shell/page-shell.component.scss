@@ -1,0 +1,12 @@
+:host {
+  background: var(--color-surface);
+  color: var(--color-on-surface);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.page-shell__main {
+  display: block;
+  flex: 1;
+}
