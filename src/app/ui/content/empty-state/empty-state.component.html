@@ -1,0 +1,10 @@
+<article class="empty-state">
+  @if (icon) {
+    <span class="empty-state__icon material-symbols-outlined" aria-hidden="true">
+      {{ icon }}
+    </span>
+  }
+  <h3 class="empty-state__title">{{ title }}</h3>
+  <p class="empty-state__text">{{ description }}</p>
+  <ng-content></ng-content>
+</article>
