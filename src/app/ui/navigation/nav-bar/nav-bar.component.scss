@@ -1,0 +1,23 @@
+:host {
+  display: block;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.nav-bar {
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-outline-variant);
+  position: relative;
+}
+
+.nav-bar__inner {
+  align-items: center;
+  display: flex;
+  height: 64px;
+  justify-content: space-between;
+  margin: 0 auto;
+  max-width: var(--container-max);
+  padding: 0 var(--page-gutter);
+  width: 100%;
+}
