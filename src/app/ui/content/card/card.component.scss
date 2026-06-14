@@ -1,0 +1,32 @@
+:host {
+  display: block;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+
+  border: 1px solid var(--color-outline-variant);
+
+  padding: var(--space-md);
+
+  background: var(--color-surface-container-lowest);
+
+  &--interactive {
+    transition: border-color 180ms ease;
+
+    &:hover {
+      border-color: var(--color-primary);
+    }
+  }
+
+  &--flush,
+  &--ledger {
+    gap: 0;
+  }
+
+  &--flush {
+    padding: 0;
+  }
+}
