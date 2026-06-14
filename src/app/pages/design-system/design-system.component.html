@@ -24,7 +24,7 @@
       (click)="toggleMobileNav()"
     >
       <span class="material-symbols-outlined" aria-hidden="true">
-        {{ mobileNavOpen() ? "close" : "menu" }}
+        {{ mobileNavOpen() ? 'close' : 'menu' }}
       </span>
     </button>
 
@@ -164,7 +164,11 @@
           <div class="syn-inline-row">
             <syn-button label="Primary Action" />
             <syn-button label="Secondary" variant="secondary" />
-            <syn-button label="Ghost Action" variant="ghost" icon="arrow_forward" />
+            <syn-button
+              label="Ghost Action"
+              variant="ghost"
+              icon="arrow_forward"
+            />
           </div>
         </syn-card>
 
@@ -297,7 +301,7 @@
             />
           </syn-form-field>
           <syn-button label="Submit" />
-          <p synFormPanelFooter class="design-panel-footer">
+          <p synFormPanelFooter>
             Form panels support projected footer content.
           </p>
         </syn-form-panel>
