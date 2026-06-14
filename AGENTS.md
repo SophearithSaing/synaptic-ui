@@ -34,6 +34,26 @@
 - **Index Signatures:** Use bracket notation for property access from index signatures (required by `noPropertyAccessFromIndexSignature`).
 - **Templates:** Ensure all templates are compatible with `strictTemplates` (Angular).
 - **State:** Use Angular Signals for all reactive UI state. Avoid `BehaviorSubject` unless strictly necessary for legacy integration.
+- **TS Doc Format:** Include `@param` for each parameter and `@returns` only when the function returns a value. Do not write `@returns Nothing.` for `void` functions.
+
+```ts
+/**
+ * Finds a topic by id.
+ *
+ * @param topicId Topic id to find.
+ * @returns Matching topic, or null when no topic exists.
+ */
+private findTopic(topicId: string): Topic | null {
+  return null;
+}
+
+/**
+ * Clears the active session.
+ */
+public signOut(): void {
+  this.accessToken.set(null);
+}
+```
 
 ## Environment
 

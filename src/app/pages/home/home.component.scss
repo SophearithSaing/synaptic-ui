@@ -1,0 +1,74 @@
+:host {
+  display: block;
+}
+
+.logged-home {
+  padding: 0 0 var(--space-lg);
+}
+
+.logged-home__session {
+  align-items: center;
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.logged-home__section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.logged-home__card-header {
+  align-items: flex-start;
+}
+
+.logged-home__progress-card {
+  justify-content: space-between;
+}
+
+.logged-home__progress-actions {
+  align-items: center;
+  margin-top: var(--space-sm);
+}
+
+.logged-home__progress-label {
+  color: var(--color-on-surface-variant);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.logged-home__category-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.logged-home__category {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.logged-home__category-heading {
+  align-items: flex-start;
+  border-bottom: 1px solid var(--color-outline-variant);
+  display: flex;
+  gap: var(--space-sm);
+  padding-bottom: var(--space-sm);
+}
+
+.logged-home__category-heading h3 {
+  font-size: 24px;
+  line-height: 1.4;
+}
+
+.logged-home__category-heading p:last-child {
+  color: var(--color-secondary);
+  max-width: 720px;
+}
+
+@media (max-width: 719px) {
+  .logged-home__session .syn-kicker {
+    display: none;
+  }
+}
