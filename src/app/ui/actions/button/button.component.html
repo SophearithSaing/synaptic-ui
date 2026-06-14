@@ -31,7 +31,7 @@
 }
 
 <ng-template #buttonContent>
-  <ng-content>{{ label }}</ng-content>
+  {{ label }}
   @if (icon) {
     <span class="button__icon material-symbols-outlined" aria-hidden="true">
       {{ icon }}
