@@ -1,88 +1,55 @@
 <header class="login-header">
-  <a class="syn-brand" routerLink="/" aria-label="Synaptic home">
-    <span class="syn-brand__mark" aria-hidden="true">
-      <img class="syn-brand__logo" src="assets/logo.png" alt="" />
-    </span>
-    <span class="syn-brand__name">Synaptic</span>
-  </a>
+  <syn-brand routerLink="/" ariaLabel="Synaptic home" />
 </header>
 
 <main class="login-main">
-  <section
-    class="syn-auth-panel syn-stack syn-stack--lg login-card"
-    aria-labelledby="login-title"
+  <syn-form-panel
+    title="Log In"
+    titleId="login-title"
+    description="Secure access for technical mastery."
+    [error]="errorMessage()"
+    (formSubmit)="onSubmit($event)"
   >
-    <div class="syn-auth-panel__header">
-      <h1 id="login-title" class="syn-auth-panel__title">Log In</h1>
-      <p class="syn-auth-panel__text">Secure access for technical mastery.</p>
-    </div>
+    <syn-form-field label="Institutional Email" forId="loginEmail">
+      <syn-input
+        inputId="loginEmail"
+        name="email"
+        type="email"
+        autocomplete="email"
+        icon="mail"
+        placeholder="student@example.com"
+        required
+      />
+    </syn-form-field>
 
-    <form
-      class="syn-auth-form syn-auth-form--plain syn-auth-form--comfortable"
-      (submit)="onSubmit($event)"
-    >
-      @if (errorMessage(); as message) {
-        <p class="syn-field__hint" role="alert">{{ message }}</p>
-      }
+    <syn-form-field label="Password" forId="loginPassword">
+      <syn-text-link
+        synFormFieldAction
+        label="Forgot Password?"
+        href="#forgot"
+        subtle
+      />
+      <syn-input
+        inputId="loginPassword"
+        name="password"
+        type="password"
+        autocomplete="current-password"
+        icon="lock"
+        placeholder="••••••••"
+        required
+      />
+    </syn-form-field>
 
-      <label class="syn-field" for="loginEmail">
-        <span class="syn-field__label login-label">Institutional Email</span>
-        <span class="syn-input-wrap">
-          <span class="material-symbols-outlined" aria-hidden="true">
-            mail
-          </span>
-          <input
-            id="loginEmail"
-            class="syn-input syn-input--icon"
-            name="email"
-            autocomplete="email"
-            placeholder="student@example.com"
-            required
-            type="email"
-          />
-        </span>
-      </label>
+    <syn-button
+      [label]="submitting() ? 'Logging In' : 'Log In'"
+      icon="arrow_forward"
+      type="submit"
+      [disabled]="submitting()"
+    />
 
-      <label class="syn-field" for="loginPassword">
-        <span class="syn-split-row">
-          <span class="syn-field__label login-label">Password</span>
-          <a class="syn-text-link syn-text-link--subtle" href="#forgot">
-            Forgot Password?
-          </a>
-        </span>
-        <span class="syn-input-wrap">
-          <span class="material-symbols-outlined" aria-hidden="true">
-            lock
-          </span>
-          <input
-            id="loginPassword"
-            class="syn-input syn-input--icon"
-            name="password"
-            autocomplete="current-password"
-            placeholder="••••••••"
-            required
-            type="password"
-          />
-        </span>
-      </label>
-
-      <button
-        class="syn-button syn-button--primary login-submit"
-        [disabled]="submitting()"
-        type="submit"
-      >
-        {{ submitting() ? "Logging In" : "Log In" }}
-        <span class="material-symbols-outlined" aria-hidden="true">
-          arrow_forward
-        </span>
-      </button>
-    </form>
-
-    <div class="login-card__footer">
-      <p>
-        Require access?
-        <a class="syn-text-link" routerLink="/register">Sign Up</a>
-      </p>
-    </div>
-  </section>
+    <p synFormPanelFooter>
+      Require access?
+      <syn-text-link label="Sign Up" routerLink="/register" />
+    </p>
+  </syn-form-panel>
 </main>
