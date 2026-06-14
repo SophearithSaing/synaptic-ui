@@ -1,0 +1,41 @@
+:host {
+  display: block;
+}
+
+.landing-actions {
+  display: none;
+}
+
+.landing-hero {
+  align-items: center;
+  display: flex;
+  min-height: 420px;
+  text-align: center;
+}
+
+.landing-hero__content {
+  margin: 0 auto;
+  max-width: 800px;
+}
+
+.landing-hero__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  justify-content: center;
+}
+
+@media (min-width: 720px) {
+  .landing-actions {
+    display: flex;
+    gap: var(--space-unit);
+  }
+
+  .landing-hero {
+    min-height: 520px;
+  }
+
+  .landing-hero__actions {
+    flex-direction: row;
+  }
+}

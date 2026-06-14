@@ -1,0 +1,88 @@
+<header class="login-header">
+  <a class="syn-brand" routerLink="/" aria-label="Synaptic home">
+    <span class="syn-brand__mark" aria-hidden="true">
+      <img class="syn-brand__logo" src="assets/logo.png" alt="" />
+    </span>
+    <span class="syn-brand__name">Synaptic</span>
+  </a>
+</header>
+
+<main class="login-main">
+  <section
+    class="syn-auth-panel syn-stack syn-stack--lg login-card"
+    aria-labelledby="login-title"
+  >
+    <div class="syn-auth-panel__header">
+      <h1 id="login-title" class="syn-auth-panel__title">Log In</h1>
+      <p class="syn-auth-panel__text">Secure access for technical mastery.</p>
+    </div>
+
+    <form
+      class="syn-auth-form syn-auth-form--plain syn-auth-form--comfortable"
+      (submit)="onSubmit($event)"
+    >
+      @if (errorMessage(); as message) {
+        <p class="syn-field__hint" role="alert">{{ message }}</p>
+      }
+
+      <label class="syn-field" for="loginEmail">
+        <span class="syn-field__label login-label">Institutional Email</span>
+        <span class="syn-input-wrap">
+          <span class="material-symbols-outlined" aria-hidden="true">
+            mail
+          </span>
+          <input
+            id="loginEmail"
+            class="syn-input syn-input--icon"
+            name="email"
+            autocomplete="email"
+            placeholder="student@example.com"
+            required
+            type="email"
+          />
+        </span>
+      </label>
+
+      <label class="syn-field" for="loginPassword">
+        <span class="syn-split-row">
+          <span class="syn-field__label login-label">Password</span>
+          <a class="syn-text-link syn-text-link--subtle" href="#forgot">
+            Forgot Password?
+          </a>
+        </span>
+        <span class="syn-input-wrap">
+          <span class="material-symbols-outlined" aria-hidden="true">
+            lock
+          </span>
+          <input
+            id="loginPassword"
+            class="syn-input syn-input--icon"
+            name="password"
+            autocomplete="current-password"
+            placeholder="••••••••"
+            required
+            type="password"
+          />
+        </span>
+      </label>
+
+      <button
+        class="syn-button syn-button--primary login-submit"
+        [disabled]="submitting()"
+        type="submit"
+      >
+        {{ submitting() ? "Logging In" : "Log In" }}
+        <span class="material-symbols-outlined" aria-hidden="true">
+          arrow_forward
+        </span>
+      </button>
+    </form>
+
+    <div class="login-card__footer">
+      <p>
+        Require access?
+        <a class="syn-text-link" routerLink="/register">Sign Up</a>
+      </p>
+    </div>
+  </section>
+</main>
