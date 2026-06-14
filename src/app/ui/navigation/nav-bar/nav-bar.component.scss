@@ -6,18 +6,22 @@
 }
 
 .nav-bar {
-  background: var(--color-surface);
-  border-bottom: 1px solid var(--color-outline-variant);
   position: relative;
+
+  border-bottom: 1px solid var(--color-outline-variant);
+
+  background: var(--color-surface);
 }
 
 .nav-bar__inner {
   align-items: center;
   display: flex;
-  height: 64px;
   justify-content: space-between;
-  margin: 0 auto;
-  max-width: var(--container-max);
-  padding: 0 var(--page-gutter);
+
   width: 100%;
+  height: 64px;
+  max-width: var(--container-max);
+  margin: 0 auto;
+
+  padding: 0 var(--page-gutter);
 }

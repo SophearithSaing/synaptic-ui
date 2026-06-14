@@ -3,10 +3,10 @@
 }
 
 .container {
-  margin: 0 auto;
-  max-width: var(--container-max);
-  padding: 0 var(--page-gutter);
   width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--page-gutter);
 }
 
 .container--narrow {

@@ -9,24 +9,29 @@
 
 .nav-items__link {
   align-items: center;
-  border-bottom: 2px solid transparent;
-  color: var(--color-secondary);
   display: flex;
+
+  height: 64px;
+
+  border-bottom: 2px solid transparent;
+
+  color: var(--color-secondary);
   font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 500;
-  height: 64px;
   letter-spacing: 0;
   text-transform: uppercase;
+
   transition:
     color 160ms ease,
     border-color 160ms ease;
-}
 
-.nav-items__link:hover,
-.nav-items__link--active {
-  border-bottom-color: var(--color-primary);
-  color: var(--color-primary);
+  &:hover,
+  &--active {
+    border-bottom-color: var(--color-primary);
+
+    color: var(--color-primary);
+  }
 }
 
 @media (min-width: 720px) {
