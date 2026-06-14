@@ -68,7 +68,3 @@ public clearState(): void {
   this.state.set(null);
 }
 ```
-
-## Environment
-
-- **Shell:** PowerShell. Use PowerShell-compatible syntax (e.g., `;` instead of `&&` for command chaining).
