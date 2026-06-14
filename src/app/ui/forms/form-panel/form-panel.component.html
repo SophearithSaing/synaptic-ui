@@ -6,9 +6,15 @@
     }
   </div>
 
-  <div class="form-panel__body">
-    <ng-content></ng-content>
-  </div>
+  @if (error) {
+    <p class="form-panel__error" role="alert">{{ error }}</p>
+  }
 
-  <ng-content select="[synFormPanelFooter]"></ng-content>
+  <form class="form-panel__body" (submit)="onSubmit($event)">
+    <ng-content></ng-content>
+  </form>
+
+  <div class="form-panel__footer">
+    <ng-content select="[synFormPanelFooter]"></ng-content>
+  </div>
 </section>
