@@ -1,0 +1,51 @@
+<nav class="mobile-nav" [attr.aria-label]="ariaLabel">
+  @for (item of items; track item.label) {
+    @if (item.routerLink !== undefined) {
+      <a
+        class="mobile-nav__link"
+        [class.mobile-nav__link--strong]="item.active === true"
+        [routerLink]="item.routerLink"
+        (click)="onNavigate()"
+      >
+        {{ item.label }}
+      </a>
+    } @else {
+      <a
+        class="mobile-nav__link"
+        [class.mobile-nav__link--strong]="item.active === true"
+        [href]="item.href"
+        (click)="onNavigate()"
+      >
+        {{ item.label }}
+      </a>
+    }
+  }
+
+  @if (actions.length > 0) {
+    <div class="mobile-nav__actions">
+      @for (action of actions; track action.label) {
+        @if (action.routerLink !== undefined) {
+          <a
+            class="mobile-nav__action"
+            [class.mobile-nav__action--primary]="action.variant !== 'secondary'"
+            [class.mobile-nav__action--secondary]="action.variant === 'secondary'"
+            [routerLink]="action.routerLink"
+            (click)="onNavigate()"
+          >
+            {{ action.label }}
+          </a>
+        } @else {
+          <a
+            class="mobile-nav__action"
+            [class.mobile-nav__action--primary]="action.variant !== 'secondary'"
+            [class.mobile-nav__action--secondary]="action.variant === 'secondary'"
+            [href]="action.href"
+            (click)="onNavigate()"
+          >
+            {{ action.label }}
+          </a>
+        }
+      }
+    </div>
+  }
+</nav>
