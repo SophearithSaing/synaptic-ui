@@ -1,0 +1,10 @@
+<label class="option" [ngClass]="optionClasses">
+  <input
+    [name]="name"
+    [type]="type"
+    [value]="value"
+    [checked]="selected"
+    (change)="onChange($event)"
+  />
+  <span>{{ label }}</span>
+</label>
