@@ -9,13 +9,15 @@
 .landing-hero {
   align-items: center;
   display: flex;
+
   min-height: 420px;
+
   text-align: center;
 }
 
 .landing-hero__content {
-  margin: 0 auto;
   max-width: 800px;
+  margin: 0 auto;
 }
 
 .landing-hero__actions {

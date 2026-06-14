@@ -1,27 +1,25 @@
-<header class="syn-topbar">
-  <div class="syn-topbar__inner">
-    <a class="syn-brand" href="#home" aria-label="Synaptic home">
-      <span class="syn-brand__mark" aria-hidden="true">
-        <img class="syn-brand__logo" src="assets/logo.png" alt="" />
-      </span>
-      <span class="syn-brand__name">Synaptic</span>
-    </a>
+<syn-page-shell>
+  <syn-nav-bar synPageHeader>
+    <syn-brand
+      synNavBarBrand
+      href="#home"
+      label="Synaptic"
+      ariaLabel="Synaptic home"
+    />
 
-    <nav class="syn-nav" aria-label="Primary navigation">
-      <a class="syn-nav__link syn-nav__link--active" href="#home">Home</a>
-      <a class="syn-nav__link" href="#philosophy">Philosophy</a>
-      <a class="syn-nav__link" href="#curriculum">Curriculum</a>
-      <a class="syn-nav__link" routerLink="/design-system">Design</a>
-    </nav>
+    <syn-nav-items
+      synNavBarNav
+      ariaLabel="Primary navigation"
+      [items]="navItems"
+    />
 
-    <div class="landing-actions">
-      <a class="syn-button syn-button--secondary" routerLink="/login">Log In</a>
-      <a class="syn-button syn-button--primary" routerLink="/register">
-        Sign Up
-      </a>
+    <div synNavBarActions class="landing-actions">
+      <syn-button label="Log In" routerLink="/login" variant="secondary" />
+      <syn-button label="Sign Up" routerLink="/register" />
     </div>
 
     <button
+      synNavBarMenu
       class="syn-menu-button"
       type="button"
       aria-label="Toggle navigation menu"
@@ -32,55 +30,17 @@
         {{ mobileNavOpen() ? "close" : "menu" }}
       </span>
     </button>
-  </div>
 
-  @if (mobileNavOpen()) {
-    <nav class="syn-mobile-nav" aria-label="Mobile navigation">
-      <a class="syn-mobile-nav__link" href="#home" (click)="closeMobileNav()">
-        Home
-      </a>
-      <a
-        class="syn-mobile-nav__link"
-        href="#philosophy"
-        (click)="closeMobileNav()"
-      >
-        Philosophy
-      </a>
-      <a
-        class="syn-mobile-nav__link"
-        href="#curriculum"
-        (click)="closeMobileNav()"
-      >
-        Curriculum
-      </a>
-      <a
-        class="syn-mobile-nav__link"
-        routerLink="/design-system"
-        (click)="closeMobileNav()"
-      >
-        Design
-      </a>
-      <div class="syn-mobile-nav__actions">
-        <a
-          class="syn-button syn-button--secondary"
-          routerLink="/login"
-          (click)="closeMobileNav()"
-        >
-          Log In
-        </a>
-        <a
-          class="syn-button syn-button--primary"
-          routerLink="/register"
-          (click)="closeMobileNav()"
-        >
-          Sign Up
-        </a>
-      </div>
-    </nav>
-  }
-</header>
+    @if (mobileNavOpen()) {
+      <syn-mobile-nav
+        synNavBarMobileNav
+        [items]="navItems"
+        [actions]="navActions"
+        (navigate)="closeMobileNav()"
+      />
+    }
+  </syn-nav-bar>
 
-<main>
   <section class="landing-hero syn-section" id="home">
     <div class="landing-hero__content">
       <p class="syn-kicker">Structured technical mastery</p>
@@ -91,122 +51,83 @@
         internalize complex systems.
       </p>
       <div class="landing-hero__actions">
-        <a class="syn-button syn-button--primary" routerLink="/register">
-          Enter the Workspace
-          <span class="material-symbols-outlined" aria-hidden="true">
-            arrow_forward
-          </span>
-        </a>
-        <a class="syn-button syn-button--secondary" href="#curriculum">
-          View Curriculum
-        </a>
+        <syn-button
+          label="Enter the Workspace"
+          routerLink="/register"
+          icon="arrow_forward"
+        />
+        <syn-button
+          label="View Curriculum"
+          href="#curriculum"
+          variant="secondary"
+        />
       </div>
     </div>
   </section>
 
-  <section class="syn-section syn-section--raised" id="philosophy">
-    <div class="syn-container">
-      <div class="syn-section__header">
-        <h2>The Philosophy</h2>
-      </div>
+  <syn-section sectionId="philosophy" raised>
+    <syn-container>
+      <syn-section-header title="The Philosophy" />
 
-      <div class="syn-grid syn-grid--3">
+      <syn-grid [columns]="3">
         @for (card of philosophyCards; track card.title) {
-          <article class="syn-card syn-card--interactive">
-            <span class="syn-icon material-symbols-outlined" aria-hidden="true">
-              {{ card.icon }}
-            </span>
-            <h3 class="syn-card__title">{{ card.title }}</h3>
-            <p class="syn-card__text">{{ card.description }}</p>
-          </article>
+          <syn-info-card
+            [icon]="card.icon"
+            [title]="card.title"
+            [description]="card.description"
+            interactive
+          />
         }
-      </div>
-    </div>
-  </section>
+      </syn-grid>
+    </syn-container>
+  </syn-section>
 
-  <section class="syn-section" id="curriculum">
-    <div class="syn-container">
-      <div class="syn-section__header syn-section__header--inline">
-        <h2>The Syllabus</h2>
-        <a class="syn-text-link" routerLink="/design-system">
-          View Design System
-        </a>
-      </div>
+  <syn-section sectionId="curriculum">
+    <syn-container>
+      <syn-section-header title="The Syllabus" inline>
+        <syn-text-link
+          synSectionHeaderAction
+          label="View Design System"
+          routerLink="/design-system"
+        />
+      </syn-section-header>
 
-      <div class="syn-grid syn-grid--2">
+      <syn-grid [columns]="2">
         @for (track of curriculumTracks; track track.label) {
-          <a class="syn-card syn-card--catalog" href="#curriculum">
-            <div class="syn-card__bar">
-              <span class="syn-kicker">{{ track.label }}</span>
-              <span class="material-symbols-outlined" aria-hidden="true">
-                arrow_forward
-              </span>
-            </div>
-            <div class="syn-card__body">
-              <h3>{{ track.title }}</h3>
-              <p>{{ track.description }}</p>
-              <div class="syn-chip-row">
-                @for (tag of track.tags; track tag) {
-                  <span class="syn-chip">{{ tag }}</span>
-                }
-              </div>
-            </div>
-          </a>
+          <syn-catalog-card
+            [label]="track.label"
+            icon="arrow_forward"
+            [title]="track.title"
+            [description]="track.description"
+            [tags]="track.tags"
+            href="#curriculum"
+          />
         }
 
-        <article class="syn-card syn-card--empty">
-          <span class="syn-icon material-symbols-outlined" aria-hidden="true">
-            lock
-          </span>
-          <h3>More Tracks Coming</h3>
-          <p>Curriculum expansion in progress.</p>
-        </article>
-      </div>
-    </div>
-  </section>
+        <syn-empty-state
+          icon="lock"
+          title="More Tracks Coming"
+          description="Curriculum expansion in progress."
+        />
+      </syn-grid>
+    </syn-container>
+  </syn-section>
 
-  <section class="syn-section syn-section--raised" id="boundaries">
-    <div class="syn-container syn-container--narrow">
-      <div class="syn-section__header">
-        <h2>Boundaries</h2>
-        <p>
-          To maintain the platform standard, Synaptic is explicit about what it
-          is not.
-        </p>
-      </div>
+  <syn-section sectionId="boundaries" raised>
+    <syn-container narrow>
+      <syn-section-header
+        title="Boundaries"
+        description="To maintain the platform standard, Synaptic is explicit about what it is not."
+      />
 
-      <div class="syn-ledger-list">
-        @for (item of boundaries; track item.title) {
-          <article class="syn-ledger-list__item">
-            <span
-              class="syn-ledger-list__icon material-symbols-outlined"
-              aria-hidden="true"
-            >
-              close
-            </span>
-            <div>
-              <h3>{{ item.title }}</h3>
-              <p>{{ item.description }}</p>
-            </div>
-          </article>
-        }
-      </div>
-    </div>
-  </section>
-</main>
+      <syn-ledger-list [items]="boundaries" />
+    </syn-container>
+  </syn-section>
 
-<footer class="syn-footer">
-  <div class="syn-footer__inner">
-    <div>
-      <span class="syn-footer__brand">Synaptic</span>
-      <span class="syn-footer__copy">
-        (c) 2026 Synaptic. Built for technical mastery.
-      </span>
-    </div>
-    <nav class="syn-footer__nav" aria-label="Footer navigation">
-      <a href="#curriculum">Documentation</a>
-      <a href="#home">Privacy Policy</a>
-      <a href="#home">Terms of Service</a>
-    </nav>
-  </div>
-</footer>
+  <syn-footer
+    synPageFooter
+    brand="Synaptic"
+    copy="(c) 2026 Synaptic. Built for technical mastery."
+    [links]="footerLinks"
+  />
+</syn-page-shell>

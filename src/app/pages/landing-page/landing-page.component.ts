@@ -1,5 +1,26 @@
 import { Component, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+
+import { SynButtonComponent } from '../../ui/actions/button/button.component';
+import { SynTextLinkComponent } from '../../ui/actions/text-link/text-link.component';
+import { SynCatalogCardComponent } from '../../ui/content/catalog-card/catalog-card.component';
+import { SynEmptyStateComponent } from '../../ui/content/empty-state/empty-state.component';
+import { SynInfoCardComponent } from '../../ui/content/info-card/info-card.component';
+import { SynLedgerListComponent } from '../../ui/content/ledger-list/ledger-list.component';
+import { SynLedgerItem } from '../../ui/content/models/ledger-item.model';
+import { SynContainerComponent } from '../../ui/layout/container/container.component';
+import { SynGridComponent } from '../../ui/layout/grid/grid.component';
+import { SynPageShellComponent } from '../../ui/layout/page-shell/page-shell.component';
+import { SynSectionComponent } from '../../ui/layout/section/section.component';
+import { SynSectionHeaderComponent } from '../../ui/layout/section-header/section-header.component';
+import { SynBrandComponent } from '../../ui/navigation/brand/brand.component';
+import { SynFooterComponent } from '../../ui/navigation/footer/footer.component';
+import {
+  SynNavAction,
+  SynNavItem,
+} from '../../ui/navigation/models/nav-item.model';
+import { SynMobileNavComponent } from '../../ui/navigation/mobile-nav/mobile-nav.component';
+import { SynNavBarComponent } from '../../ui/navigation/nav-bar/nav-bar.component';
+import { SynNavItemsComponent } from '../../ui/navigation/nav-items/nav-items.component';
 
 interface FeatureCard {
   readonly icon: string;
@@ -14,20 +35,80 @@ interface CurriculumTrack {
   readonly tags: readonly string[];
 }
 
-interface BoundaryItem {
-  readonly title: string;
-  readonly description: string;
-}
-
 @Component({
   selector: 'app-landing-page',
   standalone: true,
-  imports: [RouterLink],
+  imports: [
+    SynBrandComponent,
+    SynButtonComponent,
+    SynCatalogCardComponent,
+    SynContainerComponent,
+    SynEmptyStateComponent,
+    SynFooterComponent,
+    SynGridComponent,
+    SynInfoCardComponent,
+    SynLedgerListComponent,
+    SynMobileNavComponent,
+    SynNavBarComponent,
+    SynNavItemsComponent,
+    SynPageShellComponent,
+    SynSectionComponent,
+    SynSectionHeaderComponent,
+    SynTextLinkComponent,
+  ],
   templateUrl: './landing-page.component.html',
   styleUrl: './landing-page.component.scss',
 })
 export class LandingPageComponent {
   public readonly mobileNavOpen = signal(false);
+
+  public readonly navItems: readonly SynNavItem[] = [
+    {
+      active: true,
+      href: '#home',
+      label: 'Home',
+    },
+    {
+      href: '#philosophy',
+      label: 'Philosophy',
+    },
+    {
+      href: '#curriculum',
+      label: 'Curriculum',
+    },
+    {
+      label: 'Design',
+      routerLink: '/design-system',
+    },
+  ];
+
+  public readonly navActions: readonly SynNavAction[] = [
+    {
+      label: 'Log In',
+      routerLink: '/login',
+      variant: 'secondary',
+    },
+    {
+      label: 'Sign Up',
+      routerLink: '/register',
+      variant: 'primary',
+    },
+  ];
+
+  public readonly footerLinks: readonly SynNavItem[] = [
+    {
+      href: '#curriculum',
+      label: 'Documentation',
+    },
+    {
+      href: '#home',
+      label: 'Privacy Policy',
+    },
+    {
+      href: '#home',
+      label: 'Terms of Service',
+    },
+  ];
 
   public readonly philosophyCards: readonly FeatureCard[] = [
     {
@@ -80,24 +161,30 @@ export class LandingPageComponent {
     },
   ];
 
-  public readonly boundaries: readonly BoundaryItem[] = [
+  public readonly boundaries: readonly SynLedgerItem[] = [
     {
+      icon: 'close',
       title: 'Not a quick-answer tool',
       description:
         'Synaptic does not provide copy-paste solutions. The friction is the ' +
         'learning mechanism.',
+      tone: 'danger',
     },
     {
+      icon: 'close',
       title: 'Not a coding bootcamp',
       description:
         'The platform assumes prior programming knowledge and focuses on ' +
         'architecture, theory, and reasoning.',
+      tone: 'danger',
     },
     {
+      icon: 'close',
       title: 'Not a casual distraction',
       description:
         'The experience is designed for focused study sessions, not bright ' +
         'gamification or social engagement loops.',
+      tone: 'danger',
     },
   ];
 
