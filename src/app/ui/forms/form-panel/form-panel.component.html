@@ -1,0 +1,12 @@
+<section class="form-panel" [attr.aria-labelledby]="titleId">
+  <div class="form-panel__header">
+    <h1 class="form-panel__title" [attr.id]="titleId">{{ title }}</h1>
+    @if (description) {
+      <p class="form-panel__text">{{ description }}</p>
+    }
+  </div>
+
+  <ng-content></ng-content>
+
+  <ng-content select="[synFormPanelFooter]"></ng-content>
+</section>
