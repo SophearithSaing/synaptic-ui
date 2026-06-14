@@ -1,0 +1,32 @@
+<article class="progress-card">
+  <div class="progress-card__header">
+    <div>
+      <h3 class="progress-card__title">{{ title }}</h3>
+      @if (level !== null) {
+        <p class="progress-card__meta">Level {{ level }}</p>
+      }
+    </div>
+    @if (icon) {
+      <span
+        class="progress-card__icon material-symbols-outlined"
+        aria-hidden="true"
+      >
+        {{ icon }}
+      </span>
+    }
+  </div>
+
+  <div
+    class="progress-card__track"
+    [attr.aria-label]="progress + ' percent complete'"
+  >
+    <span [style.width.%]="progress"></span>
+  </div>
+
+  <div class="progress-card__actions">
+    <span class="progress-card__label">{{ progress }}% Progress</span>
+    <button class="progress-card__button" type="button" (click)="onAction()">
+      {{ actionLabel }}
+    </button>
+  </div>
+</article>
