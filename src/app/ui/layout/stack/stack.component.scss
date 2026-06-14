@@ -1,0 +1,31 @@
+:host {
+  display: block;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.stack--lg {
+  gap: var(--space-lg);
+}
+
+.stack--page {
+  gap: var(--space-lg);
+  padding: var(--space-lg) 0;
+}
+
+.stack--inline {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+.stack--split {
+  align-items: center;
+  flex-direction: row;
+  gap: var(--space-sm);
+  justify-content: space-between;
+}

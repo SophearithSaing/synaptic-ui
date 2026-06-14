@@ -1,0 +1,9 @@
+<div
+  class="stack"
+  [class.stack--inline]="hasDirection('inline')"
+  [class.stack--split]="hasDirection('split')"
+  [class.stack--lg]="hasSize('lg')"
+  [class.stack--page]="page"
+>
+  <ng-content></ng-content>
+</div>
