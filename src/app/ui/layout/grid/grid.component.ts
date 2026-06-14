@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 
-export type SynGridColumns = 1 | 2 | 3 | 4 | 'workspace';
+import { SynGridColumns } from '../models/grid.model';
 
 @Component({
   selector: 'syn-grid',

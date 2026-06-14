@@ -1,7 +1,9 @@
 import { booleanAttribute, Component, Input } from '@angular/core';
 
-export type SynStackDirection = 'vertical' | 'inline' | 'split';
-export type SynStackSize = 'md' | 'lg';
+import {
+  SynStackDirection,
+  SynStackSize,
+} from '../models/stack.model';
 
 @Component({
   selector: 'syn-stack',
