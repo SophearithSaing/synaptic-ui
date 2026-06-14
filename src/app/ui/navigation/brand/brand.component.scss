@@ -1,0 +1,35 @@
+:host {
+  display: inline-flex;
+}
+
+.brand {
+  align-items: center;
+  color: inherit;
+  display: inline-flex;
+  gap: var(--space-unit);
+  text-decoration: none;
+}
+
+.brand__mark {
+  align-items: center;
+  color: var(--color-primary);
+  display: inline-flex;
+  height: 32px;
+  justify-content: center;
+  width: 32px;
+}
+
+.brand__logo {
+  display: block;
+  height: 32px;
+  object-fit: contain;
+  width: 32px;
+}
+
+.brand__name {
+  color: var(--color-primary);
+  font-family: var(--font-serif);
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.4;
+}
