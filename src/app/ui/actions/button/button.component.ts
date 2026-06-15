@@ -46,9 +46,13 @@ export class SynButtonComponent implements OnChanges {
 
   /**
    * Emits when the button is selected and not disabled.
+   *
+   * @param event Optional native mouse event for anchor buttons.
    */
-  public onClick(): void {
+  public onClick(event?: MouseEvent): void {
     if (this.disabled) {
+      event?.preventDefault();
+      event?.stopPropagation();
       return;
     }
 

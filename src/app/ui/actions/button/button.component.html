@@ -2,9 +2,9 @@
   <a
     class="button"
     [ngClass]="buttonClasses"
-    [routerLink]="routerLink"
+    [routerLink]="disabled ? null : routerLink"
     [attr.aria-disabled]="disabled"
-    (click)="onClick()"
+    (click)="onClick($event)"
   >
     <ng-container *ngTemplateOutlet="buttonContent"></ng-container>
   </a>
@@ -14,7 +14,7 @@
     [ngClass]="buttonClasses"
     [href]="disabled ? null : href"
     [attr.aria-disabled]="disabled"
-    (click)="onClick()"
+    (click)="onClick($event)"
   >
     <ng-container *ngTemplateOutlet="buttonContent"></ng-container>
   </a>
