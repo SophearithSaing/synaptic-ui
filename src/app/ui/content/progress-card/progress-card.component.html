@@ -18,13 +18,15 @@
 
   <div
     class="progress-card__track"
-    [attr.aria-label]="progress + ' percent complete'"
+    [attr.aria-label]="normalizedProgress() + ' percent complete'"
   >
-    <span [style.width.%]="progress"></span>
+    <span [style.width.%]="normalizedProgress()"></span>
   </div>
 
   <div class="progress-card__actions">
-    <span class="progress-card__label">{{ progress }}% Progress</span>
+    <span class="progress-card__label">
+      {{ normalizedProgress() }}% Progress
+    </span>
     <button class="progress-card__button" type="button" (click)="onAction()">
       {{ actionLabel }}
     </button>
