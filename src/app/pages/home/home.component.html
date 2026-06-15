@@ -1,144 +1,106 @@
-<header class="syn-topbar">
-  <div class="syn-topbar__inner">
-    <a class="syn-brand" routerLink="/home" aria-label="Synaptic home">
-      <span class="syn-brand__mark" aria-hidden="true">
-        <img class="syn-brand__logo" src="assets/logo.png" alt="" />
-      </span>
-      <span class="syn-brand__name">Synaptic</span>
-    </a>
+<syn-page-shell>
+  <syn-nav-bar synPageHeader>
+    <syn-brand synNavBarBrand routerLink="/home" ariaLabel="Synaptic home" />
 
-    <nav class="syn-nav" aria-label="Workspace navigation">
-      <a class="syn-nav__link syn-nav__link--active" routerLink="/home">
-        Home
-      </a>
-      <a class="syn-nav__link" routerLink="/design-system">Design</a>
-    </nav>
+    <syn-nav-items
+      synNavBarNav
+      ariaLabel="Workspace navigation"
+      [items]="navItems"
+    />
 
-    <div class="logged-home__session">
+    <div synNavBarActions class="home__session" },{>
       <span class="syn-kicker">Session Active</span>
-      <button
-        class="syn-button syn-button--secondary"
-        (click)="logOut()"
-        type="button"
-      >
-        Log Out
-      </button>
+      <syn-button
+        label="Log Out"
+        variant="secondary"
+        (buttonClick)="logOut()"
+      />
     </div>
-  </div>
-</header>
+  </syn-nav-bar>
 
-<main class="logged-home">
-  <section class="syn-container syn-page-stack">
-    <section class="logged-home__section" aria-labelledby="in-progress-title">
-      <div class="syn-section__header">
-        <h2 id="in-progress-title">In-Progress Topics</h2>
-      </div>
+  <main class="home">
+    <syn-container>
+      <syn-stack page>
+        <section class="home__section" aria-labelledby="in-progress-title">
+          <syn-section-header
+            title="In-Progress Topics"
+            headingId="in-progress-title"
+          />
 
-      @if (inProgressTopics().length > 0) {
-        <div class="syn-grid syn-grid--2">
-          @for (summary of inProgressTopics(); track summary.topic._id) {
-            <article class="syn-card logged-home__progress-card">
-              <div class="syn-split-row logged-home__card-header">
-                <div>
-                  <h3 class="syn-card__title">{{ summary.topic.title }}</h3>
-                  <p class="syn-kicker">Level {{ summary.progress.level }}</p>
-                </div>
-                <span class="material-symbols-outlined syn-icon">
-                  {{ summary.topic.icon }}
-                </span>
-              </div>
-
-              <div
-                class="syn-progress"
-                [attr.aria-label]="
-                  summary.progress.progress + ' percent complete'
-                "
-              >
-                <span [style.width.%]="summary.progress.progress"></span>
-              </div>
-
-              <div class="syn-split-row logged-home__progress-actions">
-                <span class="logged-home__progress-label">
-                  {{ summary.progress.progress }}% Progress
-                </span>
-                <button class="syn-button syn-button--primary" type="button">
-                  Continue
-                </button>
-              </div>
-            </article>
+          @if (inProgressTopics().length) {
+            <syn-grid [columns]="2">
+              @for (summary of inProgressTopics(); track summary.topic._id) {
+                <syn-progress-card
+                  [title]="summary.topic.title"
+                  [level]="summary.progress.level"
+                  [progress]="summary.progress.progress"
+                  [icon]="summary.topic.icon"
+                  actionLabel="Continue"
+                />
+              }
+            </syn-grid>
+          } @else {
+            <syn-empty-state
+              title="No active topics yet"
+              description="Select an available topic below to begin your first session."
+            />
           }
-        </div>
-      } @else {
-        <article class="syn-card syn-card--empty">
-          <h3 class="syn-card__title">No active topics yet</h3>
-          <p>Select an available topic below to begin your first session.</p>
-        </article>
-      }
-    </section>
+        </section>
 
-    <section class="logged-home__section" aria-labelledby="available-title">
-      <div class="syn-section__header">
-        <h2 id="available-title">Available Topics</h2>
-      </div>
+        <section class="home__section" aria-labelledby="available-title">
+          <syn-section-header
+            title="Available Topics"
+            headingId="available-title"
+          />
 
-      @if (loading()) {
-        <article class="syn-card syn-card--empty">
-          <h3 class="syn-card__title">Loading topic catalog</h3>
-          <p>Preparing the authenticated topic list.</p>
-        </article>
-      } @else {
-        <div class="logged-home__category-list">
-          @for (group of categoryGroups(); track categoryTrackBy(group)) {
-            <section
-              class="logged-home__category"
-              [attr.aria-labelledby]="'category-' + group.category._id"
-            >
-              <div class="logged-home__category-heading">
-                <span class="material-symbols-outlined syn-icon">
-                  {{ group.category.icon }}
-                </span>
-                <div>
-                  <h3 id="category-{{ group.category._id }}">
-                    {{ group.category.title }}
-                  </h3>
-                  <p>{{ group.category.description }}</p>
-                </div>
-              </div>
-
-              <div class="syn-grid syn-grid--3">
-                @for (topic of group.topics; track topicTrackBy(topic)) {
-                  <article class="syn-card syn-card--interactive">
-                    <div class="syn-split-row logged-home__card-header">
-                      <p class="syn-kicker">{{ group.category.title }}</p>
-                      <span class="material-symbols-outlined">
-                        {{ topic.icon }}
-                      </span>
+          @if (loading()) {
+            <syn-empty-state
+              title="Loading topic catalog"
+              description="Preparing the authenticated topic list."
+            />
+          } @else {
+            <div class="home__category-list">
+              @for (group of categoryGroups(); track categoryTrackBy(group)) {
+                <section
+                  class="home__category"
+                  [attr.aria-labelledby]="'category-' + group.category._id"
+                >
+                  <div class="home__category-heading">
+                    <span class="material-symbols-outlined syn-icon">
+                      {{ group.category.icon }}
+                    </span>
+                    <div>
+                      <h3 id="category-{{ group.category._id }}">
+                        {{ group.category.title }}
+                      </h3>
+                      <p>{{ group.category.description }}</p>
                     </div>
-                    <h4 class="syn-card__title">{{ topic.title }}</h4>
-                    <p class="syn-card__text">{{ topic.description }}</p>
-                    <div class="syn-chip-row">
-                      @for (tag of topic.tags; track tag) {
-                        <span class="syn-chip">{{ tag }}</span>
-                      }
-                    </div>
-                    <button
-                      class="syn-button syn-button--secondary"
-                      type="button"
-                    >
-                      Start
-                    </button>
-                  </article>
-                } @empty {
-                  <article class="syn-card syn-card--empty">
-                    <h4 class="syn-card__title">No topics available</h4>
-                    <p>This category is ready for future seeded topics.</p>
-                  </article>
-                }
-              </div>
-            </section>
+                  </div>
+
+                  <syn-grid [columns]="3">
+                    @for (topic of group.topics; track topicTrackBy(topic)) {
+                      <syn-catalog-card
+                        [label]="group.category.title"
+                        [icon]="topic.icon"
+                        [title]="topic.title"
+                        [description]="topic.description"
+                        [tags]="topic.tags"
+                      >
+                        <syn-button label="Start" variant="secondary" />
+                      </syn-catalog-card>
+                    } @empty {
+                      <syn-empty-state
+                        title="No topics available"
+                        description="This category is ready for future seeded topics."
+                      />
+                    }
+                  </syn-grid>
+                </section>
+              }
+            </div>
           }
-        </div>
-      }
-    </section>
-  </section>
-</main>
+        </section>
+      </syn-stack>
+    </syn-container>
+  </main>
+</syn-page-shell>
