@@ -2,6 +2,22 @@ import { Component, DestroyRef, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 
+import {
+  SynBrandComponent,
+  SynButtonComponent,
+  SynCatalogCardComponent,
+  SynContainerComponent,
+  SynEmptyStateComponent,
+  SynGridComponent,
+  SynNavBarComponent,
+  SynNavItem,
+  SynNavItemsComponent,
+  SynPageShellComponent,
+  SynProgressCardComponent,
+  SynSectionHeaderComponent,
+  SynStackComponent,
+} from '../../ui';
+
 import { AuthSessionService } from '../../auth-session.service';
 import {
   Topic,
@@ -9,19 +25,6 @@ import {
   TopicProgressSummary,
 } from '../../models/topic.models';
 import { TopicCatalogService } from '../../topic-catalog.service';
-import { SynButtonComponent } from '../../ui/actions/button/button.component';
-import { SynCatalogCardComponent } from '../../ui/content/catalog-card/catalog-card.component';
-import { SynEmptyStateComponent } from '../../ui/content/empty-state/empty-state.component';
-import { SynProgressCardComponent } from '../../ui/content/progress-card/progress-card.component';
-import { SynContainerComponent } from '../../ui/layout/container/container.component';
-import { SynGridComponent } from '../../ui/layout/grid/grid.component';
-import { SynPageShellComponent } from '../../ui/layout/page-shell/page-shell.component';
-import { SynSectionHeaderComponent } from '../../ui/layout/section-header/section-header.component';
-import { SynStackComponent } from '../../ui/layout/stack/stack.component';
-import { SynBrandComponent } from '../../ui/navigation/brand/brand.component';
-import { SynNavItem } from '../../ui/navigation/models/nav-item.model';
-import { SynNavBarComponent } from '../../ui/navigation/nav-bar/nav-bar.component';
-import { SynNavItemsComponent } from '../../ui/navigation/nav-items/nav-items.component';
 
 interface HomeProgressTopic {
   readonly topic: Topic;

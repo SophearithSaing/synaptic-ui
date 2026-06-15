@@ -2,14 +2,17 @@ import { Component, DestroyRef, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 
+import {
+  SynBrandComponent,
+  SynButtonComponent,
+  SynFormFieldComponent,
+  SynFormPanelComponent,
+  SynInputComponent,
+  SynTextLinkComponent,
+} from '../../ui';
+
 import { AuthApiService } from '../../auth-api.service';
 import { AuthSessionService } from '../../auth-session.service';
-import { SynButtonComponent } from '../../ui/actions/button/button.component';
-import { SynTextLinkComponent } from '../../ui/actions/text-link/text-link.component';
-import { SynFormFieldComponent } from '../../ui/forms/form-field/form-field.component';
-import { SynFormPanelComponent } from '../../ui/forms/form-panel/form-panel.component';
-import { SynInputComponent } from '../../ui/forms/input/input.component';
-import { SynBrandComponent } from '../../ui/navigation/brand/brand.component';
 
 @Component({
   selector: 'app-login-page',

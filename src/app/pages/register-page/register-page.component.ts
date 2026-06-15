@@ -2,24 +2,25 @@ import { Component, DestroyRef, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 
+import {
+  SynBrandComponent,
+  SynButtonComponent,
+  SynFooterComponent,
+  SynFormFieldComponent,
+  SynFormPanelComponent,
+  SynFormShellComponent,
+  SynInputComponent,
+  SynMobileNavComponent,
+  SynNavAction,
+  SynNavBarComponent,
+  SynNavItem,
+  SynNavItemsComponent,
+  SynPageShellComponent,
+  SynTextLinkComponent,
+} from '../../ui';
+
 import { AuthApiService } from '../../auth-api.service';
 import { AuthSessionService } from '../../auth-session.service';
-import { SynButtonComponent } from '../../ui/actions/button/button.component';
-import { SynTextLinkComponent } from '../../ui/actions/text-link/text-link.component';
-import { SynFormFieldComponent } from '../../ui/forms/form-field/form-field.component';
-import { SynFormPanelComponent } from '../../ui/forms/form-panel/form-panel.component';
-import { SynFormShellComponent } from '../../ui/forms/form-shell/form-shell.component';
-import { SynInputComponent } from '../../ui/forms/input/input.component';
-import { SynPageShellComponent } from '../../ui/layout/page-shell/page-shell.component';
-import { SynBrandComponent } from '../../ui/navigation/brand/brand.component';
-import { SynFooterComponent } from '../../ui/navigation/footer/footer.component';
-import { SynMobileNavComponent } from '../../ui/navigation/mobile-nav/mobile-nav.component';
-import {
-  SynNavAction,
-  SynNavItem,
-} from '../../ui/navigation/models/nav-item.model';
-import { SynNavBarComponent } from '../../ui/navigation/nav-bar/nav-bar.component';
-import { SynNavItemsComponent } from '../../ui/navigation/nav-items/nav-items.component';
 
 @Component({
   selector: 'app-register-page',

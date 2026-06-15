@@ -1,27 +1,26 @@
 import { Component, signal } from '@angular/core';
 
-import { SynButtonComponent } from '../../ui/actions/button/button.component';
-import { SynTextLinkComponent } from '../../ui/actions/text-link/text-link.component';
-import { SynCatalogCardComponent } from '../../ui/content/catalog-card/catalog-card.component';
-import { SynEmptyStateComponent } from '../../ui/content/empty-state/empty-state.component';
-import { SynInfoCardComponent } from '../../ui/content/info-card/info-card.component';
-import { SynLedgerListComponent } from '../../ui/content/ledger-list/ledger-list.component';
-import { SynLedgerItem } from '../../ui/content/models/ledger-item.model';
-import { SynContainerComponent } from '../../ui/layout/container/container.component';
-import { SynGridComponent } from '../../ui/layout/grid/grid.component';
-import { SynPageShellComponent } from '../../ui/layout/page-shell/page-shell.component';
-import { SynSectionComponent } from '../../ui/layout/section/section.component';
-import { SynSectionHeaderComponent } from '../../ui/layout/section-header/section-header.component';
-import { SynBrandComponent } from '../../ui/navigation/brand/brand.component';
-import { SynFooterComponent } from '../../ui/navigation/footer/footer.component';
 import {
+  SynBrandComponent,
+  SynButtonComponent,
+  SynCatalogCardComponent,
+  SynContainerComponent,
+  SynEmptyStateComponent,
+  SynFooterComponent,
+  SynGridComponent,
+  SynInfoCardComponent,
+  SynLedgerItem,
+  SynLedgerListComponent,
+  SynMobileNavComponent,
   SynNavAction,
+  SynNavBarComponent,
   SynNavItem,
-} from '../../ui/navigation/models/nav-item.model';
-import { SynMobileNavComponent } from '../../ui/navigation/mobile-nav/mobile-nav.component';
-import { SynNavBarComponent } from '../../ui/navigation/nav-bar/nav-bar.component';
-import { SynNavItemsComponent } from '../../ui/navigation/nav-items/nav-items.component';
-
+  SynNavItemsComponent,
+  SynPageShellComponent,
+  SynSectionComponent,
+  SynSectionHeaderComponent,
+  SynTextLinkComponent,
+} from '../../ui';
 interface FeatureCard {
   readonly icon: string;
   readonly title: string;
