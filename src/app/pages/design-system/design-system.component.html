@@ -40,7 +40,7 @@
   <syn-stack page>
     <syn-container>
       <h1 class="syn-display">Synaptic Design System</h1>
-      <p class="syn-lede syn-lede--left">
+      <p class="syn-intro syn-intro--left">
         Synaptic Academic is engineered for serious learning, complex technical
         interfaces, and focused study. The system prioritizes typographic
         hierarchy, high-contrast borders, and flat institutional surfaces.
@@ -68,8 +68,7 @@
         description="Material Symbols Outlined are used as functional cues, not decoration."
       />
 
-      <syn-card>
-        <h3 class="syn-card__title">Technical Outlined Style</h3>
+      <syn-card title="Technical Outlined Style">
         <div class="syn-inline-row">
           @for (icon of iconSamples; track icon) {
             <span class="design-icon-sample">
@@ -132,8 +131,7 @@
       <syn-section-header title="Responsive Grid & Spacing" />
 
       <syn-grid [columns]="2">
-        <syn-card>
-          <h3 class="syn-card__title">Layout Behavior</h3>
+        <syn-card title="Layout Behavior">
           <ul class="syn-plain-list">
             <li>Desktop: 12-column grid with a 1140px container.</li>
             <li>Mobile: Single-column focused layout.</li>
@@ -141,8 +139,7 @@
           </ul>
         </syn-card>
 
-        <syn-card>
-          <h3 class="syn-card__title">Spacing Tokens</h3>
+        <syn-card title="Spacing Tokens">
           <div class="syn-ledger-list">
             @for (token of spacingTokens; track token.name) {
               <div class="design-spacing-row">
@@ -159,8 +156,7 @@
       <syn-section-header title="Component Library" />
 
       <syn-stack size="lg">
-        <syn-card>
-          <h3 class="syn-card__title">Interactive Elements</h3>
+        <syn-card title="Interactive Elements">
           <div class="syn-inline-row">
             <syn-button label="Primary Action" />
             <syn-button label="Secondary" variant="secondary" />
@@ -172,8 +168,7 @@
           </div>
         </syn-card>
 
-        <syn-card>
-          <h3 class="syn-card__title">Form Controls & Ledger Validation</h3>
+        <syn-card title="Form Controls & Ledger Validation">
           <div class="design-form-card">
             <syn-form-field label="Institutional Email" forId="designEmail">
               <syn-input
@@ -213,9 +208,8 @@
           description="An in-depth look at Paxos and Raft for fault tolerance in distributed environments."
         />
 
-        <syn-card>
-          <div class="syn-split-row">
-            <h3 class="syn-card__title">Advanced Data Structures</h3>
+        <syn-card title="Advanced Data Structures">
+          <div class="syn-inline-row">
             <syn-chip label="Module 3/5" />
           </div>
           <syn-progress-bar [value]="60" label="60 percent complete" />
@@ -235,8 +229,7 @@
           <syn-option label="High Availability" name="acid" />
         </syn-card>
 
-        <syn-card>
-          <h3 class="syn-card__title">Text Links</h3>
+        <syn-card title="Text Links">
           <div class="syn-inline-row">
             <syn-text-link label="Primary Link" routerLink="/design-system" />
             <syn-text-link label="Subtle Link" href="#tokens" subtle />
@@ -259,8 +252,7 @@
           />
         </syn-grid>
 
-        <syn-card>
-          <h3 class="syn-card__title">Ledger List</h3>
+        <syn-card title="Ledger List">
           <syn-ledger-list [items]="ledgerItems" />
         </syn-card>
 

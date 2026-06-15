@@ -20,6 +20,8 @@ export class SynCardComponent implements OnChanges {
 
   @Input({ transform: booleanAttribute }) public ledger = false;
 
+  @Input() public title: string | null = null;
+
   public cardClasses: Record<string, boolean> = this.createCardClasses();
 
   /**
