@@ -1,0 +1,17 @@
+@if (routerLink) {
+  <a class="text-link" [ngClass]="linkClasses" [routerLink]="routerLink">
+    <ng-container *ngTemplateOutlet="textLinkContent"></ng-container>
+  </a>
+} @else if (href) {
+  <a class="text-link" [ngClass]="linkClasses" [href]="href">
+    <ng-container *ngTemplateOutlet="textLinkContent"></ng-container>
+  </a>
+} @else {
+  <span class="text-link" [ngClass]="linkClasses">
+    <ng-container *ngTemplateOutlet="textLinkContent"></ng-container>
+  </span>
+}
+
+<ng-template #textLinkContent>
+  {{ label }}
+</ng-template>

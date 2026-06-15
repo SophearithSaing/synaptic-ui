@@ -1,0 +1,44 @@
+:host {
+  display: inline-flex;
+}
+
+.token {
+  align-items: center;
+  display: inline-flex;
+  justify-content: space-between;
+
+  min-height: 36px;
+
+  border: 1px solid var(--color-outline-variant);
+
+  padding: 8px 12px;
+
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.5;
+  text-transform: lowercase;
+
+  &--primary {
+    background: var(--color-primary-fixed);
+    color: var(--color-on-primary-fixed);
+  }
+
+  &--secondary {
+    background: var(--color-secondary-container);
+    color: var(--color-on-secondary-container);
+  }
+
+  &--outline {
+    background: var(--color-outline);
+    color: var(--color-on-primary);
+  }
+
+  &--error {
+    border-color: var(--color-error);
+
+    background: var(--color-error);
+    color: var(--color-on-error);
+  }
+}

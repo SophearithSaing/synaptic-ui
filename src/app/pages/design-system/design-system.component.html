@@ -1,25 +1,22 @@
-<header class="syn-topbar">
-  <div class="syn-topbar__inner">
-    <a class="syn-brand" routerLink="/" aria-label="Synaptic home">
-      <span class="syn-brand__mark" aria-hidden="true">
-        <img class="syn-brand__logo" src="assets/logo.png" alt="" />
-      </span>
-      <span class="syn-brand__name">Synaptic Design</span>
-    </a>
+<syn-page-shell>
+  <syn-nav-bar synPageHeader>
+    <syn-brand
+      synNavBarBrand
+      label="Synaptic Design"
+      routerLink="/"
+      ariaLabel="Synaptic home"
+    />
 
-    <nav class="syn-nav" aria-label="Primary navigation">
-      <a class="syn-nav__link" routerLink="/">Home</a>
-      <a
-        class="syn-nav__link syn-nav__link--active"
-        routerLink="/design-system"
-      >
-        Design
-      </a>
-    </nav>
+    <syn-nav-items
+      synNavBarNav
+      ariaLabel="Primary navigation"
+      [items]="navItems"
+    />
 
-    <span class="syn-kicker">v1.0.0</span>
+    <span synNavBarActions class="syn-kicker">v1.0.0</span>
 
     <button
+      synNavBarMenu
       class="syn-menu-button"
       type="button"
       aria-label="Toggle navigation menu"
@@ -27,253 +24,282 @@
       (click)="toggleMobileNav()"
     >
       <span class="material-symbols-outlined" aria-hidden="true">
-        {{ mobileNavOpen() ? "close" : "menu" }}
+        {{ mobileNavOpen() ? 'close' : 'menu' }}
       </span>
     </button>
-  </div>
 
-  @if (mobileNavOpen()) {
-    <nav class="syn-mobile-nav" aria-label="Mobile navigation">
-      <a class="syn-mobile-nav__link" routerLink="/" (click)="closeMobileNav()">
-        Home
-      </a>
-      <a
-        class="syn-mobile-nav__link syn-mobile-nav__link--strong"
-        routerLink="/design-system"
-        (click)="closeMobileNav()"
-      >
-        Design
-      </a>
-    </nav>
-  }
-</header>
+    @if (mobileNavOpen()) {
+      <syn-mobile-nav
+        synNavBarMobileNav
+        [items]="navItems"
+        (navigate)="closeMobileNav()"
+      />
+    }
+  </syn-nav-bar>
 
-<main class="syn-page-stack">
-  <section class="syn-container">
-    <h1 class="syn-display">Synaptic Design System</h1>
-    <p class="syn-lede syn-lede--left">
-      Synaptic Academic is engineered for serious learning, complex technical
-      interfaces, and focused study. The system prioritizes typographic
-      hierarchy, high-contrast borders, and flat institutional surfaces.
-    </p>
-    <div class="syn-divider"></div>
-  </section>
-
-  <section class="syn-container">
-    <div class="syn-section__header">
-      <h2>Design Principles</h2>
-    </div>
-
-    <div class="syn-grid syn-grid--3">
-      @for (principle of principles; track principle.title) {
-        <article class="syn-card">
-          <span class="syn-icon material-symbols-outlined" aria-hidden="true">
-            {{ principle.icon }}
-          </span>
-          <h3 class="syn-card__title">{{ principle.title }}</h3>
-          <p class="syn-card__text">{{ principle.description }}</p>
-        </article>
-      }
-    </div>
-  </section>
-
-  <section class="syn-container">
-    <div class="syn-section__header">
-      <h2>Iconography</h2>
-      <p>
-        Material Symbols Outlined are used as functional cues, not decoration.
+  <syn-stack page>
+    <syn-container>
+      <h1 class="syn-display">Synaptic Design System</h1>
+      <p class="syn-intro syn-intro--left">
+        Synaptic Academic is engineered for serious learning, complex technical
+        interfaces, and focused study. The system prioritizes typographic
+        hierarchy, high-contrast borders, and flat institutional surfaces.
       </p>
-    </div>
+      <div class="syn-divider"></div>
+    </syn-container>
 
-    <div class="syn-card">
-      <h3 class="syn-card__title">Technical Outlined Style</h3>
-      <div class="syn-inline-row">
-        @for (icon of iconSamples; track icon) {
-          <span class="design-icon-sample">
-            <span class="syn-icon material-symbols-outlined" aria-hidden="true">
-              {{ icon }}
+    <syn-container>
+      <syn-section-header title="Design Principles" />
+
+      <syn-grid [columns]="3">
+        @for (principle of principles; track principle.title) {
+          <syn-info-card
+            [icon]="principle.icon"
+            [title]="principle.title"
+            [description]="principle.description"
+          />
+        }
+      </syn-grid>
+    </syn-container>
+
+    <syn-container>
+      <syn-section-header
+        title="Iconography"
+        description="Material Symbols Outlined are used as functional cues, not decoration."
+      />
+
+      <syn-card title="Technical Outlined Style">
+        <div class="syn-inline-row">
+          @for (icon of iconSamples; track icon) {
+            <span class="design-icon-sample">
+              <span
+                class="syn-icon material-symbols-outlined"
+                aria-hidden="true"
+              >
+                {{ icon }}
+              </span>
+              <span class="syn-kicker">{{ icon }}</span>
             </span>
-            <span class="syn-kicker">{{ icon }}</span>
-          </span>
-        }
-      </div>
-    </div>
-  </section>
-
-  <section class="syn-container">
-    <div class="syn-section__header">
-      <h2>Color Palette</h2>
-      <p>
-        Low-saturation surfaces and deep slate primaries keep content in focus.
-      </p>
-    </div>
-
-    <div class="syn-grid syn-grid--4">
-      @for (color of colors; track color.name) {
-        <article class="syn-card syn-card--flush">
-          <div class="design-swatch {{ color.className }}"></div>
-          <div class="design-color-card__body">
-            <span class="syn-kicker">{{ color.name }}</span>
-            <strong>{{ color.label }}</strong>
-            <span>{{ color.value }}</span>
-          </div>
-        </article>
-      }
-    </div>
-
-    <div class="syn-subsection">
-      <h3 class="syn-subheading">Functional Tokens</h3>
-      <div class="syn-token-grid">
-        @for (token of functionalTokens; track token.name) {
-          <span class="syn-token {{ token.className }}">{{ token.name }}</span>
-        }
-      </div>
-    </div>
-  </section>
-
-  <section class="syn-container">
-    <div class="syn-section__header">
-      <h2>Typography</h2>
-    </div>
-
-    <div class="syn-card syn-card--ledger">
-      @for (specimen of typeSpecimens; track specimen.name) {
-        <div class="design-type-row">
-          <span class="syn-kicker">{{ specimen.name }}</span>
-          <span [class]="specimen.className">{{ specimen.sample }}</span>
-        </div>
-      }
-    </div>
-  </section>
-
-  <section class="syn-container">
-    <div class="syn-section__header">
-      <h2>Responsive Grid & Spacing</h2>
-    </div>
-
-    <div class="syn-grid syn-grid--2">
-      <article class="syn-card">
-        <h3 class="syn-card__title">Layout Behavior</h3>
-        <ul class="syn-plain-list">
-          <li>Desktop: 12-column grid with a 1140px container.</li>
-          <li>Mobile: Single-column focused layout.</li>
-          <li>Gutter: 24px standard margin above mobile.</li>
-        </ul>
-      </article>
-
-      <article class="syn-card">
-        <h3 class="syn-card__title">Spacing Tokens</h3>
-        <div class="syn-ledger-list">
-          @for (token of spacingTokens; track token.name) {
-            <div class="design-spacing-row">
-              <span class="syn-kicker">{{ token.name }}</span>
-              <span class="syn-kicker">{{ token.value }}</span>
-            </div>
           }
         </div>
-      </article>
-    </div>
-  </section>
+      </syn-card>
+    </syn-container>
 
-  <section class="syn-container">
-    <div class="syn-section__header">
-      <h2>Component Library</h2>
-    </div>
+    <syn-container>
+      <syn-section-header
+        title="Color Palette"
+        description="Low-saturation surfaces and deep slate primaries keep content in focus."
+      />
 
-    <div class="syn-stack syn-stack--lg">
-      <article class="syn-card">
-        <h3 class="syn-card__title">Interactive Elements</h3>
-        <div class="syn-inline-row">
-          <button class="syn-button syn-button--primary" type="button">
-            Primary Action
-          </button>
-          <button class="syn-button syn-button--secondary" type="button">
-            Secondary
-          </button>
-          <button class="syn-button syn-button--ghost" type="button">
-            Ghost Action
-            <span class="material-symbols-outlined" aria-hidden="true">
-              arrow_forward
-            </span>
-          </button>
+      <syn-grid [columns]="4">
+        @for (color of colors; track color.name) {
+          <syn-card flush>
+            <div class="design-swatch {{ color.className }}"></div>
+            <div class="design-color-card__body">
+              <span class="syn-kicker">{{ color.name }}</span>
+              <strong>{{ color.label }}</strong>
+              <span>{{ color.value }}</span>
+            </div>
+          </syn-card>
+        }
+      </syn-grid>
+
+      <div class="syn-subsection">
+        <h3 class="syn-subheading">Functional Tokens</h3>
+        <div class="syn-token-grid">
+          @for (token of functionalTokens; track token.name) {
+            <syn-token [label]="token.name" [tone]="token.tone" />
+          }
         </div>
-      </article>
+      </div>
+    </syn-container>
 
-      <article class="syn-card design-form-card">
-        <h3 class="syn-card__title">Form Controls & Ledger Validation</h3>
-        <label class="syn-field">
-          <span class="syn-field__label">Institutional Email</span>
-          <input class="syn-input" placeholder="student@example.com" />
-        </label>
-        <label class="syn-field">
-          <span class="syn-field__label">Focused State</span>
-          <input class="syn-input syn-input--focused" value="Active input" />
-        </label>
-        <label class="syn-field syn-field--error">
-          <span class="syn-field__label">Error State</span>
-          <input class="syn-input syn-input--error" value="Invalid syntax" />
-          <span class="syn-field__hint">Check the submitted response.</span>
-        </label>
-      </article>
+    <syn-container>
+      <syn-section-header title="Typography" />
 
-      <article class="syn-card syn-card--catalog">
-        <div class="syn-card__bar">
-          <span class="syn-kicker">Distributed Systems</span>
-          <span class="material-symbols-outlined" aria-hidden="true">
-            bookmark_border
-          </span>
-        </div>
-        <div class="syn-card__body">
-          <h3>Consensus Algorithms</h3>
-          <p>
-            An in-depth look at Paxos and Raft for fault tolerance in
-            distributed environments.
+      <syn-card ledger>
+        @for (specimen of typeSpecimens; track specimen.name) {
+          <div class="design-type-row">
+            <span class="syn-kicker">{{ specimen.name }}</span>
+            <span [class]="specimen.className">{{ specimen.sample }}</span>
+          </div>
+        }
+      </syn-card>
+    </syn-container>
+
+    <syn-container>
+      <syn-section-header title="Responsive Grid & Spacing" />
+
+      <syn-grid [columns]="2">
+        <syn-card title="Layout Behavior">
+          <ul class="syn-plain-list">
+            <li>Desktop: 12-column grid with a 1140px container.</li>
+            <li>Mobile: Single-column focused layout.</li>
+            <li>Gutter: 24px standard margin above mobile.</li>
+          </ul>
+        </syn-card>
+
+        <syn-card title="Spacing Tokens">
+          <div class="syn-ledger-list">
+            @for (token of spacingTokens; track token.name) {
+              <div class="design-spacing-row">
+                <span class="syn-kicker">{{ token.name }}</span>
+                <span class="syn-kicker">{{ token.value }}</span>
+              </div>
+            }
+          </div>
+        </syn-card>
+      </syn-grid>
+    </syn-container>
+
+    <syn-container>
+      <syn-section-header title="Component Library" />
+
+      <syn-stack size="lg">
+        <syn-card title="Interactive Elements">
+          <div class="syn-inline-row">
+            <syn-button label="Primary Action" />
+            <syn-button label="Secondary" variant="secondary" />
+            <syn-button
+              label="Ghost Action"
+              variant="ghost"
+              icon="arrow_forward"
+            />
+          </div>
+        </syn-card>
+
+        <syn-card title="Form Controls & Ledger Validation">
+          <div class="design-form-card">
+            <syn-form-field label="Institutional Email" forId="designEmail">
+              <syn-input
+                inputId="designEmail"
+                name="designEmail"
+                type="email"
+                placeholder="student@example.com"
+              />
+            </syn-form-field>
+            <syn-form-field label="Icon Input" forId="designIconInput">
+              <syn-input
+                inputId="designIconInput"
+                name="designIconInput"
+                icon="mail"
+                value="student@example.com"
+              />
+            </syn-form-field>
+            <syn-form-field
+              label="Error State"
+              forId="designErrorInput"
+              error="Check the submitted response."
+            >
+              <syn-input
+                inputId="designErrorInput"
+                name="designErrorInput"
+                value="Invalid syntax"
+                error
+              />
+            </syn-form-field>
+          </div>
+        </syn-card>
+
+        <syn-catalog-card
+          label="Distributed Systems"
+          icon="bookmark_border"
+          title="Consensus Algorithms"
+          description="An in-depth look at Paxos and Raft for fault tolerance in distributed environments."
+        />
+
+        <syn-card title="Advanced Data Structures">
+          <div class="syn-inline-row">
+            <syn-chip label="Module 3/5" />
+          </div>
+          <syn-progress-bar [value]="60" label="60 percent complete" />
+          <p class="syn-kicker design-progress-label">60% Complete</p>
+        </syn-card>
+
+        <syn-card>
+          <div class="design-question-heading">
+            <span class="syn-question-index">Q1</span>
+            <h3>
+              Which characteristic is strictly required for an ACID-compliant
+              database?
+            </h3>
+          </div>
+          <syn-option label="Eventual Consistency" name="acid" />
+          <syn-option label="Atomicity" name="acid" selected />
+          <syn-option label="High Availability" name="acid" />
+        </syn-card>
+
+        <syn-card title="Text Links">
+          <div class="syn-inline-row">
+            <syn-text-link label="Primary Link" routerLink="/design-system" />
+            <syn-text-link label="Subtle Link" href="#tokens" subtle />
+          </div>
+        </syn-card>
+
+        <syn-grid [columns]="2">
+          <syn-empty-state
+            icon="lock"
+            title="Empty State"
+            description="Use for loading, unavailable, or not-yet-started states."
+          />
+
+          <syn-progress-card
+            title="Distributed Systems"
+            icon="hub"
+            [level]="42"
+            [progress]="42"
+            actionLabel="Continue"
+          />
+        </syn-grid>
+
+        <syn-card title="Ledger List">
+          <syn-ledger-list [items]="ledgerItems" />
+        </syn-card>
+
+        <syn-section raised>
+          <syn-container>
+            <syn-section-header
+              title="Raised Section"
+              description="Sections provide page-level separation and optional raised surfaces."
+            />
+            <syn-info-card
+              icon="architecture"
+              title="Section Composition"
+              description="Use sections for page bands and containers for width control."
+            />
+          </syn-container>
+        </syn-section>
+
+        <syn-form-panel
+          title="Form Panel"
+          titleId="design-form-panel"
+          description="Reusable panel for form-oriented workflows."
+        >
+          <syn-form-field label="Username" forId="panelUsername">
+            <syn-input
+              inputId="panelUsername"
+              name="panelUsername"
+              icon="person"
+              placeholder="student123"
+            />
+          </syn-form-field>
+          <syn-form-field label="Email" forId="panelEmail">
+            <syn-input
+              inputId="panelEmail"
+              name="panelEmail"
+              type="email"
+              icon="mail"
+              placeholder="student@example.com"
+            />
+          </syn-form-field>
+          <syn-button label="Submit" />
+          <p synFormPanelFooter>
+            Form panels support projected footer content.
           </p>
-        </div>
-      </article>
+        </syn-form-panel>
+      </syn-stack>
+    </syn-container>
+  </syn-stack>
 
-      <article class="syn-card">
-        <div class="syn-split-row">
-          <h3 class="syn-card__title">Advanced Data Structures</h3>
-          <span class="syn-chip">Module 3/5</span>
-        </div>
-        <div class="syn-progress" aria-label="60 percent complete">
-          <span style="width: 60%"></span>
-        </div>
-        <p class="syn-kicker design-progress-label">60% Complete</p>
-      </article>
-
-      <article class="syn-card design-assessment">
-        <div class="design-question-heading">
-          <span class="syn-question-index">Q1</span>
-          <h3>
-            Which characteristic is strictly required for an ACID-compliant
-            database?
-          </h3>
-        </div>
-        <label class="syn-option">
-          <input name="acid" type="radio" />
-          <span>Eventual Consistency</span>
-        </label>
-        <label class="syn-option syn-option--selected">
-          <input checked name="acid" type="radio" />
-          <span>Atomicity</span>
-        </label>
-        <label class="syn-option">
-          <input name="acid" type="radio" />
-          <span>High Availability</span>
-        </label>
-      </article>
-    </div>
-  </section>
-</main>
-
-<footer class="syn-footer">
-  <div class="syn-footer__inner">
-    <span class="syn-footer__brand">Synaptic</span>
-    <nav class="syn-footer__nav" aria-label="Footer navigation">
-      <a routerLink="/">Home</a>
-      <a routerLink="/design-system">Design System</a>
-    </nav>
-  </div>
-</footer>
+  <syn-footer synPageFooter [links]="footerLinks" />
+</syn-page-shell>

@@ -1,6 +1,23 @@
 import { Component, DestroyRef, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
+
+import {
+  SynBrandComponent,
+  SynButtonComponent,
+  SynFooterComponent,
+  SynFormFieldComponent,
+  SynFormPanelComponent,
+  SynFormShellComponent,
+  SynInputComponent,
+  SynMobileNavComponent,
+  SynNavAction,
+  SynNavBarComponent,
+  SynNavItem,
+  SynNavItemsComponent,
+  SynPageShellComponent,
+  SynTextLinkComponent,
+} from '../../ui';
 
 import { AuthApiService } from '../../auth-api.service';
 import { AuthSessionService } from '../../auth-session.service';
@@ -8,7 +25,20 @@ import { AuthSessionService } from '../../auth-session.service';
 @Component({
   selector: 'app-register-page',
   standalone: true,
-  imports: [RouterLink],
+  imports: [
+    SynBrandComponent,
+    SynButtonComponent,
+    SynFooterComponent,
+    SynFormFieldComponent,
+    SynFormPanelComponent,
+    SynFormShellComponent,
+    SynInputComponent,
+    SynMobileNavComponent,
+    SynNavBarComponent,
+    SynNavItemsComponent,
+    SynPageShellComponent,
+    SynTextLinkComponent,
+  ],
   templateUrl: './register-page.component.html',
   styleUrl: './register-page.component.scss',
 })
@@ -16,6 +46,25 @@ export class RegisterPageComponent {
   public readonly errorMessage = signal<string | null>(null);
   public readonly mobileNavOpen = signal(false);
   public readonly submitting = signal(false);
+
+  public readonly navItems: readonly SynNavItem[] = [
+    {
+      label: 'Documentation',
+      routerLink: '/design-system',
+    },
+    {
+      href: 'mailto:support@synaptic.local',
+      label: 'Support',
+    },
+  ];
+
+  public readonly navActions: readonly SynNavAction[] = [
+    {
+      label: 'Log In',
+      routerLink: '/login',
+      variant: 'primary',
+    },
+  ];
 
   public constructor(
     private readonly authApi: AuthApiService,

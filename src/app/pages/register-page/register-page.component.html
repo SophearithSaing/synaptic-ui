@@ -1,20 +1,15 @@
-<header class="syn-topbar">
-  <div class="syn-topbar__inner">
-    <a class="syn-brand" routerLink="/" aria-label="Synaptic home">
-      <span class="syn-brand__mark" aria-hidden="true">
-        <img class="syn-brand__logo" src="assets/logo.png" alt="" />
-      </span>
-      <span class="syn-brand__name">Synaptic</span>
-    </a>
+<syn-page-shell>
+  <syn-nav-bar synPageHeader>
+    <syn-brand synNavBarBrand routerLink="/" ariaLabel="Synaptic home" />
 
-    <nav class="syn-nav" aria-label="Registration navigation">
-      <a class="syn-nav__link" routerLink="/design-system">Documentation</a>
-      <a class="syn-nav__link" href="mailto:support@synaptic.local">
-        Support
-      </a>
-    </nav>
+    <syn-nav-items
+      synNavBarNav
+      ariaLabel="Registration navigation"
+      [items]="navItems"
+    />
 
     <button
+      synNavBarMenu
       class="syn-menu-button"
       type="button"
       aria-label="Toggle navigation menu"
@@ -25,155 +20,89 @@
         {{ mobileNavOpen() ? "close" : "menu" }}
       </span>
     </button>
-  </div>
 
-  @if (mobileNavOpen()) {
-    <nav class="syn-mobile-nav" aria-label="Mobile navigation">
-      <a
-        class="syn-mobile-nav__link"
-        routerLink="/design-system"
-        (click)="closeMobileNav()"
-      >
-        Documentation
-      </a>
-      <a
-        class="syn-mobile-nav__link"
-        href="mailto:support@synaptic.local"
-        (click)="closeMobileNav()"
-      >
-        Support
-      </a>
-      <div class="syn-mobile-nav__actions">
-        <a
-          class="syn-button syn-button--primary"
-          routerLink="/login"
-          (click)="closeMobileNav()"
-        >
-          Log In
-        </a>
-      </div>
-    </nav>
-  }
-</header>
+    @if (mobileNavOpen()) {
+      <syn-mobile-nav
+        synNavBarMobileNav
+        [items]="navItems"
+        [actions]="navActions"
+        (navigate)="closeMobileNav()"
+      />
+    }
+  </syn-nav-bar>
 
-<main class="syn-auth-shell syn-auth-shell--center">
-  <section class="syn-auth-panel" aria-labelledby="register-title">
-    <div class="syn-auth-panel__header">
-      <h1 id="register-title" class="syn-auth-panel__title">
-        Establish Identity
-      </h1>
-      <p class="syn-auth-panel__text">
-        Register your institutional credentials for access to the research
-        network.
-      </p>
-    </div>
+  <syn-form-shell center>
+    <syn-form-panel
+      title="Establish Identity"
+      titleId="register-title"
+      description="Register your institutional credentials for access to the research network."
+      [error]="errorMessage()"
+      (formSubmit)="onSubmit($event)"
+    >
+      <syn-form-field label="Username" forId="username">
+        <syn-input
+          inputId="username"
+          name="username"
+          autocomplete="username"
+          icon="person"
+          placeholder="student123"
+          required
+        />
+      </syn-form-field>
 
-    <form class="syn-auth-form" (submit)="onSubmit($event)">
-      @if (errorMessage(); as message) {
-        <p class="syn-field__hint" role="alert">{{ message }}</p>
-      }
+      <syn-form-field label="Email" forId="email">
+        <syn-input
+          inputId="email"
+          name="email"
+          type="email"
+          autocomplete="email"
+          icon="mail"
+          placeholder="student@example.com"
+          required
+        />
+      </syn-form-field>
 
-      <label class="syn-field" for="username">
-        <span class="syn-field__label">Username</span>
-        <span class="syn-input-wrap">
-          <span class="material-symbols-outlined" aria-hidden="true">
-            person
-          </span>
-          <input
-            id="username"
-            class="syn-input syn-input--icon"
-            name="username"
-            autocomplete="username"
-            placeholder="student123"
-            required
-            type="text"
-          />
-        </span>
-      </label>
+      <syn-form-field label="Password" forId="password">
+        <syn-input
+          inputId="password"
+          name="password"
+          type="password"
+          autocomplete="new-password"
+          icon="key"
+          placeholder="Create password"
+          required
+        />
+      </syn-form-field>
 
-      <label class="syn-field" for="email">
-        <span class="syn-field__label">Email</span>
-        <span class="syn-input-wrap">
-          <span class="material-symbols-outlined" aria-hidden="true">
-            mail
-          </span>
-          <input
-            id="email"
-            class="syn-input syn-input--icon"
-            name="email"
-            autocomplete="email"
-            placeholder="student@example.com"
-            required
-            type="email"
-          />
-        </span>
-      </label>
+      <syn-form-field label="Confirm Password" forId="confirmPassword">
+        <syn-input
+          inputId="confirmPassword"
+          name="confirmPassword"
+          type="password"
+          autocomplete="new-password"
+          icon="lock"
+          placeholder="Repeat password"
+          required
+        />
+      </syn-form-field>
 
-      <label class="syn-field" for="password">
-        <span class="syn-field__label">Password</span>
-        <span class="syn-input-wrap">
-          <span class="material-symbols-outlined" aria-hidden="true">
-            key
-          </span>
-          <input
-            id="password"
-            class="syn-input syn-input--icon"
-            name="password"
-            autocomplete="new-password"
-            placeholder="Create password"
-            required
-            type="password"
-          />
-        </span>
-      </label>
-
-      <label class="syn-field" for="confirmPassword">
-        <span class="syn-field__label">Confirm Password</span>
-        <span class="syn-input-wrap">
-          <span class="material-symbols-outlined" aria-hidden="true">
-            lock
-          </span>
-          <input
-            id="confirmPassword"
-            class="syn-input syn-input--icon"
-            name="confirmPassword"
-            autocomplete="new-password"
-            placeholder="Repeat password"
-            required
-            type="password"
-          />
-        </span>
-      </label>
-
-      <button
-        class="syn-button syn-button--primary syn-auth-submit"
-        [disabled]="submitting()"
+      <syn-button
+        [label]="submitting() ? 'Signing Up' : 'Sign Up'"
+        icon="arrow_forward"
         type="submit"
-      >
-        {{ submitting() ? "Signing Up" : "Sign Up" }}
-        <span class="material-symbols-outlined" aria-hidden="true">
-          arrow_forward
-        </span>
-      </button>
-    </form>
+        [disabled]="submitting()"
+      />
 
-    <p class="syn-auth-switch">
-      Already authenticated?
-      <a class="syn-auth-link" routerLink="/login">Log In</a>
-    </p>
-  </section>
-</main>
+      <p synFormPanelFooter>
+        Already authenticated?
+        <syn-text-link label="Log In" routerLink="/login" />
+      </p>
+    </syn-form-panel>
+  </syn-form-shell>
 
-<footer class="syn-footer">
-  <div class="syn-footer__inner">
-    <span class="syn-kicker">
-      (c) 2026 Synaptic. Engineered for technical mastery.
-    </span>
-    <nav class="syn-footer__nav" aria-label="Registration footer navigation">
-      <a href="#privacy">Privacy Policy</a>
-      <a href="#terms">Terms of Service</a>
-      <a href="#faculty">Faculty Portal</a>
-      <a href="#status">System Status</a>
-    </nav>
-  </div>
-</footer>
+  <syn-footer
+    synPageFooter
+    [brand]="null"
+    copy="© 2026 Synaptic. Not a real company."
+  />
+</syn-page-shell>

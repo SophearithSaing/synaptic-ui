@@ -1,0 +1,32 @@
+:host {
+  display: block;
+}
+
+.option {
+  align-items: center;
+  display: flex;
+  gap: var(--space-sm);
+
+  border: 1px solid var(--color-outline-variant);
+
+  padding: var(--space-sm);
+
+  cursor: pointer;
+
+  transition:
+    background 160ms ease,
+    border-color 160ms ease;
+
+  &:hover,
+  &--selected {
+    border-color: var(--color-primary);
+  }
+
+  &--selected {
+    background: var(--color-primary-fixed);
+  }
+
+  input {
+    accent-color: var(--color-primary);
+  }
+}

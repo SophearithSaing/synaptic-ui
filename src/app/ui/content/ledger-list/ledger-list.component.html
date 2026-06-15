@@ -1,0 +1,21 @@
+<div class="ledger-list">
+  @for (item of items; track item.title) {
+    <article class="ledger-list__item">
+      @if (item.icon) {
+        <span
+          class="ledger-list__icon material-symbols-outlined"
+          [class.ledger-list__icon--danger]="item.tone === 'danger'"
+          aria-hidden="true"
+        >
+          {{ item.icon }}
+        </span>
+      }
+      <div>
+        <h3 class="ledger-list__title">{{ item.title }}</h3>
+        @if (item.description) {
+          <p class="ledger-list__text">{{ item.description }}</p>
+        }
+      </div>
+    </article>
+  }
+</div>

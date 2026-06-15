@@ -1,6 +1,22 @@
 import { Component, DestroyRef, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
+
+import {
+  SynBrandComponent,
+  SynButtonComponent,
+  SynCatalogCardComponent,
+  SynContainerComponent,
+  SynEmptyStateComponent,
+  SynGridComponent,
+  SynNavBarComponent,
+  SynNavItem,
+  SynNavItemsComponent,
+  SynPageShellComponent,
+  SynProgressCardComponent,
+  SynSectionHeaderComponent,
+  SynStackComponent,
+} from '../../ui';
 
 import { AuthSessionService } from '../../auth-session.service';
 import {
@@ -18,7 +34,20 @@ interface HomeProgressTopic {
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink],
+  imports: [
+    SynBrandComponent,
+    SynButtonComponent,
+    SynCatalogCardComponent,
+    SynContainerComponent,
+    SynEmptyStateComponent,
+    SynGridComponent,
+    SynNavBarComponent,
+    SynNavItemsComponent,
+    SynPageShellComponent,
+    SynProgressCardComponent,
+    SynSectionHeaderComponent,
+    SynStackComponent,
+  ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
@@ -28,6 +57,18 @@ export class HomeComponent implements OnInit {
   public readonly progressSummaries = signal<readonly TopicProgressSummary[]>(
     [],
   );
+
+  public readonly navItems: readonly SynNavItem[] = [
+    {
+      active: true,
+      label: 'Home',
+      routerLink: '/home',
+    },
+    {
+      label: 'Design',
+      routerLink: '/design-system',
+    },
+  ];
 
   public constructor(
     private readonly authSession: AuthSessionService,

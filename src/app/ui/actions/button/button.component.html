@@ -1,0 +1,40 @@
+@if (routerLink) {
+  <a
+    class="button"
+    [ngClass]="buttonClasses"
+    [routerLink]="disabled ? null : routerLink"
+    [attr.aria-disabled]="disabled"
+    (click)="onClick($event)"
+  >
+    <ng-container *ngTemplateOutlet="buttonContent"></ng-container>
+  </a>
+} @else if (href) {
+  <a
+    class="button"
+    [ngClass]="buttonClasses"
+    [href]="disabled ? null : href"
+    [attr.aria-disabled]="disabled"
+    (click)="onClick($event)"
+  >
+    <ng-container *ngTemplateOutlet="buttonContent"></ng-container>
+  </a>
+} @else {
+  <button
+    class="button"
+    [ngClass]="buttonClasses"
+    [disabled]="disabled"
+    [type]="type"
+    (click)="onClick()"
+  >
+    <ng-container *ngTemplateOutlet="buttonContent"></ng-container>
+  </button>
+}
+
+<ng-template #buttonContent>
+  {{ label }}
+  @if (icon) {
+    <span class="button__icon material-symbols-outlined" aria-hidden="true">
+      {{ icon }}
+    </span>
+  }
+</ng-template>

@@ -1,0 +1,21 @@
+<nav class="nav-items" [attr.aria-label]="ariaLabel">
+  @for (item of items; track item.label) {
+    @if (item.routerLink) {
+      <a
+        class="nav-items__link"
+        [class.nav-items__link--active]="item.active === true"
+        [routerLink]="item.routerLink"
+      >
+        {{ item.label }}
+      </a>
+    } @else {
+      <a
+        class="nav-items__link"
+        [class.nav-items__link--active]="item.active === true"
+        [href]="item.href"
+      >
+        {{ item.label }}
+      </a>
+    }
+  }
+</nav>

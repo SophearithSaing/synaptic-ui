@@ -1,0 +1,20 @@
+@if (routerLink) {
+  <a class="brand" [routerLink]="routerLink" [attr.aria-label]="ariaLabel">
+    <ng-container *ngTemplateOutlet="brandContent"></ng-container>
+  </a>
+} @else if (href) {
+  <a class="brand" [href]="href" [attr.aria-label]="ariaLabel">
+    <ng-container *ngTemplateOutlet="brandContent"></ng-container>
+  </a>
+} @else {
+  <span class="brand" [attr.aria-label]="ariaLabel">
+    <ng-container *ngTemplateOutlet="brandContent"></ng-container>
+  </span>
+}
+
+<ng-template #brandContent>
+  <span class="brand__mark" aria-hidden="true">
+    <img class="brand__logo" [src]="logoSrc" alt="" />
+  </span>
+  <span class="brand__name">{{ label }}</span>
+</ng-template>

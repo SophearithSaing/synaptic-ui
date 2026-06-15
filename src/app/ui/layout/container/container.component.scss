@@ -1,0 +1,19 @@
+:host {
+  display: block;
+}
+
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--page-gutter);
+}
+
+.container--narrow {
+  max-width: 820px;
+}
+
+:host-context(.section) .container,
+:host-context(.syn-section) .container {
+  padding: 0;
+}

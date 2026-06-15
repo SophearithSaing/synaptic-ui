@@ -1,16 +1,24 @@
+:host {
+  display: block;
+}
+
 .design-icon-sample {
   align-items: center;
-  border: 1px solid var(--color-outline-variant);
   display: inline-flex;
   flex-direction: column;
   gap: var(--space-unit);
-  min-width: 96px;
+
+  min-width: calc(var(--space-lg) * 2);
+
+  border: 1px solid var(--color-outline-variant);
+
   padding: var(--space-sm);
 }
 
 .design-swatch {
+  height: calc(var(--space-lg) * 2 + var(--space-md) + var(--space-sm));
+
   border-bottom: 1px solid var(--color-outline-variant);
-  height: 132px;
 }
 
 .design-swatch--primary {
@@ -33,53 +41,63 @@
 .design-form-card {
   display: flex;
   flex-direction: column;
-  gap: var(--space-unit);
 }
 
 .design-color-card__body {
+  gap: var(--space-unit);
+
   padding: var(--space-sm);
+}
+
+.design-form-card {
+  gap: var(--space-md);
 }
 
 .design-type-row,
 .design-spacing-row {
   align-items: baseline;
-  border-bottom: 1px solid var(--color-outline-variant);
   display: grid;
   gap: var(--space-sm);
   grid-template-columns: 1fr;
-  padding: var(--space-sm) 0;
-}
 
-.design-type-row .syn-display {
-  margin-bottom: 0;
-}
-
-.design-type-row:first-child,
-.design-spacing-row:first-child {
-  padding-top: 0;
-}
-
-.design-type-row:last-child,
-.design-spacing-row:last-child {
-  border-bottom: 0;
-  padding-bottom: 0;
-}
-
-.design-question-heading {
-  align-items: center;
   border-bottom: 1px solid var(--color-outline-variant);
-  display: flex;
-  gap: var(--space-sm);
-  justify-content: flex-start;
-  padding-bottom: var(--space-sm);
+
+  padding: var(--space-sm) 0;
+
+  &:first-child {
+    padding-top: 0;
+  }
+
+  &:last-child {
+    border-bottom: 0;
+
+    padding-bottom: 0;
+  }
+}
+
+.design-type-row {
+  .syn-display {
+    margin-bottom: 0;
+  }
 }
 
 .design-progress-label {
   text-align: right;
 }
 
-.design-assessment {
+.design-question-heading {
+  align-items: center;
+  display: flex;
   gap: var(--space-sm);
+  justify-content: flex-start;
+
+  border-bottom: 1px solid var(--color-outline-variant);
+
+  padding-bottom: var(--space-sm);
+
+  h3 {
+    margin: 0;
+  }
 }
 
 @media (min-width: 720px) {

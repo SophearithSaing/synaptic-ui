@@ -69,6 +69,48 @@ public clearState(): void {
 }
 ```
 
-## Environment
+## CSS Guidelines
 
-- **Shell:** PowerShell. Use PowerShell-compatible syntax (e.g., `;` instead of `&&` for command chaining).
+Write CSS in an outside-in order: layout first, then the box model, then visuals, then text.
+
+Recommended order:
+
+1. Layout and positioning
+2. Size
+3. Margin
+4. Border
+5. Padding
+6. Visual styles
+7. Typography
+8. Transitions and animations
+9. Nested states/selectors
+
+Example:
+
+```css
+.card {
+  display: flex;
+  position: relative;
+
+  width: 100%;
+  margin: 0 auto;
+
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+
+  padding: 1rem;
+
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 1rem;
+  line-height: 1.5;
+
+  transition: box-shadow 150ms ease;
+
+  &:hover {
+    box-shadow: var(--shadow-md);
+  }
+}
+```
+
+Prefer nested selectors for states and modifiers, such as `&:hover`, `&:focus-visible`, and `&[aria-expanded="true"]`, when supported by the project.

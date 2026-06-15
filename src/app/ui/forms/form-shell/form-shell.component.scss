@@ -1,0 +1,36 @@
+:host {
+  display: block;
+}
+
+.form-shell {
+  display: flex;
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+
+  min-height: calc(100vh - 64px);
+
+  padding: var(--space-lg) var(--page-gutter);
+
+  background: var(--color-surface);
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+
+    background-image: radial-gradient(
+      circle at 2px 2px,
+      var(--color-primary) 1px,
+      transparent 0
+    );
+    background-size: 32px 32px;
+    opacity: 0.05;
+    pointer-events: none;
+  }
+
+  &--center {
+    align-items: center;
+    justify-content: center;
+  }
+}

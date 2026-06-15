@@ -1,0 +1,49 @@
+<nav class="mobile-nav" [attr.aria-label]="ariaLabel">
+  @for (item of items; track item.label) {
+    @if (item.routerLink) {
+      <a
+        class="mobile-nav__link"
+        [class.mobile-nav__link--strong]="item.active === true"
+        [routerLink]="item.routerLink"
+        (click)="onNavigate()"
+      >
+        {{ item.label }}
+      </a>
+    } @else {
+      <a
+        class="mobile-nav__link"
+        [class.mobile-nav__link--strong]="item.active === true"
+        [href]="item.href"
+        (click)="onNavigate()"
+      >
+        {{ item.label }}
+      </a>
+    }
+  }
+
+  @if (actionItems.length) {
+    <div class="mobile-nav__actions">
+      @for (item of actionItems; track item.action.label) {
+        @if (item.action.routerLink) {
+          <a
+            class="mobile-nav__action"
+            [ngClass]="item.classes"
+            [routerLink]="item.action.routerLink"
+            (click)="onNavigate()"
+          >
+            {{ item.action.label }}
+          </a>
+        } @else {
+          <a
+            class="mobile-nav__action"
+            [ngClass]="item.classes"
+            [href]="item.action.href"
+            (click)="onNavigate()"
+          >
+            {{ item.action.label }}
+          </a>
+        }
+      }
+    </div>
+  }
+</nav>

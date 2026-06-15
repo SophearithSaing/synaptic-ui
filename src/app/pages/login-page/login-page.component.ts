@@ -1,6 +1,15 @@
 import { Component, DestroyRef, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
+
+import {
+  SynBrandComponent,
+  SynButtonComponent,
+  SynFormFieldComponent,
+  SynFormPanelComponent,
+  SynInputComponent,
+  SynTextLinkComponent,
+} from '../../ui';
 
 import { AuthApiService } from '../../auth-api.service';
 import { AuthSessionService } from '../../auth-session.service';
@@ -8,7 +17,14 @@ import { AuthSessionService } from '../../auth-session.service';
 @Component({
   selector: 'app-login-page',
   standalone: true,
-  imports: [RouterLink],
+  imports: [
+    SynBrandComponent,
+    SynButtonComponent,
+    SynFormFieldComponent,
+    SynFormPanelComponent,
+    SynInputComponent,
+    SynTextLinkComponent,
+  ],
   templateUrl: './login-page.component.html',
   styleUrl: './login-page.component.scss',
 })

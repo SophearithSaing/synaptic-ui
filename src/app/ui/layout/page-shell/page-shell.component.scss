@@ -1,0 +1,14 @@
+:host {
+  display: flex;
+  flex-direction: column;
+
+  min-height: 100vh;
+
+  background: var(--color-surface);
+  color: var(--color-on-surface);
+}
+
+.page-shell__main {
+  display: block;
+  flex: 1;
+}

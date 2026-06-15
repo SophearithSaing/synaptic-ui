@@ -1,0 +1,10 @@
+<div
+  class="progress-bar"
+  role="progressbar"
+  [attr.aria-label]="progressLabel()"
+  aria-valuemin="0"
+  aria-valuemax="100"
+  [attr.aria-valuenow]="normalizedValue()"
+>
+  <span [style.width.%]="normalizedValue()"></span>
+</div>
