@@ -82,14 +82,19 @@
                   <span class="syn-kicker">
                     Question {{ questionNumber(index) }}
                   </span>
-                  <p class="session-feedback__prompt">{{ question.prompt }}</p>
+                  <p class="session-feedback__prompt">
+                    <syn-inline-code-text [text]="question.prompt" />
+                  </p>
                   <p
                     class="session-feedback__answer"
                     [class.session-feedback__answer--wrong]="
                       feedbackAnswer(question.id)?.score !== 1
                     "
                   >
-                    Your Answer: {{ submittedAnswerText(question) }}
+                    Your Answer:
+                    <syn-inline-code-text
+                      [text]="submittedAnswerText(question)"
+                    />
                   </p>
 
                   @if (feedbackAnswer(question.id)?.score !== 1) {
@@ -105,11 +110,15 @@
                       </h3>
                       <p>
                         <strong>Diagnosis:</strong>
-                        {{ feedbackAnswer(question.id)?.feedback }}
+                        <syn-inline-code-text
+                          [text]="feedbackAnswer(question.id)?.feedback ?? ''"
+                        />
                       </p>
                       <p>
                         <strong>Correction:</strong>
-                        {{ correctAnswerText(question) }}
+                        <syn-inline-code-text
+                          [text]="correctAnswerText(question)"
+                        />
                       </p>
                     </div>
                   }
@@ -179,7 +188,9 @@
                   <span class="syn-question-index">
                     {{ questionNumber(index) }}
                   </span>
-                  <h2>{{ question.prompt }}</h2>
+                  <h2>
+                    <syn-inline-code-text [text]="question.prompt" />
+                  </h2>
                 </div>
 
                 @if (question.type === 'mcq') {
@@ -201,7 +212,9 @@
                           [checked]="optionSelected(question.id, option.id)"
                           (change)="selectOption(question.id, option.id)"
                         />
-                        <span>{{ option.text }}</span>
+                        <span>
+                          <syn-inline-code-text [text]="option.text" />
+                        </span>
                       </label>
                     }
                   </div>

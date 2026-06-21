@@ -8,6 +8,7 @@ import {
   SynContainerComponent,
   SynEmptyStateComponent,
   SynFooterComponent,
+  SynInlineCodeTextComponent,
   SynNavBarComponent,
   SynPageShellComponent,
 } from '../../ui';
@@ -32,6 +33,7 @@ import { TopicCatalogService } from '../../topic-catalog.service';
     SynContainerComponent,
     SynEmptyStateComponent,
     SynFooterComponent,
+    SynInlineCodeTextComponent,
     SynNavBarComponent,
     SynPageShellComponent,
   ],
