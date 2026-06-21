@@ -13,6 +13,43 @@ import { environment } from '../environments/environment';
 
 const API_BASE_URL = environment.API_BASE_URL;
 
+const CATEGORY_ICON_MAP: Record<string, string> = {
+  code: 'code',
+  'computer-science-concepts': 'schema',
+  'cs-concepts': 'schema',
+  deployed_code: 'deployed_code',
+  'languages-tech-stacks': 'code',
+  'operations-infrastructure': 'deployed_code',
+  'ops-infra': 'deployed_code',
+  schema: 'schema',
+  'tech-stacks': 'code',
+};
+
+const TOPIC_ICON_MAP: Record<string, string> = {
+  automation: 'automation',
+  'backend-engineering': 'dns',
+  concurrency: 'sync',
+  conversion_path: 'conversion_path',
+  data_object: 'data_object',
+  database: 'database',
+  databases: 'database',
+  'distributed-systems': 'hub',
+  dns: 'dns',
+  hub: 'hub',
+  kubernetes: 'conversion_path',
+  lan: 'lan',
+  memory: 'memory',
+  'memory-management': 'memory',
+  networking: 'lan',
+  node: 'terminal',
+  'node-js': 'terminal',
+  rust: 'data_object',
+  'rust-fundamentals': 'data_object',
+  sync: 'sync',
+  terminal: 'terminal',
+  'ci-cd-pipelines': 'automation',
+};
+
 const FALLBACK_CATEGORIES: readonly TopicCategory[] = [
   {
     _id: 'cs-concepts',
@@ -140,7 +177,7 @@ export class TopicCatalogService {
 
     return forkJoin({
       categories: this.http.get<readonly TopicCategory[]>(
-        `${API_BASE_URL}/topics/categories`,
+        `${API_BASE_URL}/categories/categories`,
         { headers },
       ),
       topics: this.http.get<readonly Topic[]>(`${API_BASE_URL}/topics`, {
@@ -152,7 +189,10 @@ export class TopicCatalogService {
           readonly categories: readonly TopicCategory[];
           readonly topics: readonly Topic[];
         }): readonly TopicCategoryGroup[] =>
-          this.groupTopics(response.categories, response.topics),
+          this.groupTopics(
+            this.normalizeCategories(response.categories),
+            this.normalizeTopics(response.topics),
+          ),
       ),
       catchError(
         (): Observable<readonly TopicCategoryGroup[]> =>
@@ -168,6 +208,66 @@ export class TopicCatalogService {
    */
   public loadProgress(): readonly TopicProgressSummary[] {
     return FALLBACK_PROGRESS;
+  }
+
+  /**
+   * Normalizes API category id fields for existing UI usage.
+   *
+   * @param categories Topic categories returned by the API.
+   * @returns Categories with `_id` populated.
+   */
+  private normalizeCategories(
+    categories: readonly TopicCategory[],
+  ): readonly TopicCategory[] {
+    return categories.map(
+      (category: TopicCategory): TopicCategory => ({
+        ...category,
+        _id: category._id ?? category.id ?? category.slug,
+        icon: this.resolveIcon(
+          category.icon,
+          category.slug,
+          CATEGORY_ICON_MAP,
+          'schema',
+        ),
+      }),
+    );
+  }
+
+  /**
+   * Normalizes API topic id fields for existing UI usage.
+   *
+   * @param topics Topics returned by the API.
+   * @returns Topics with `_id` populated.
+   */
+  private normalizeTopics(topics: readonly Topic[]): readonly Topic[] {
+    return topics.map(
+      (topic: Topic): Topic => ({
+        ...topic,
+        _id: topic._id ?? topic.id ?? topic.slug,
+        icon: this.resolveIcon(
+          topic.icon,
+          topic.slug,
+          TOPIC_ICON_MAP,
+          'school',
+        ),
+        category:
+          typeof topic.category === 'string'
+            ? topic.category
+            : {
+                ...topic.category,
+                _id:
+                  topic.category._id ??
+                  topic.category.id ??
+                  topic.category.slug,
+                icon: this.resolveIcon(
+                  topic.category.icon,
+                  topic.category.slug,
+                  CATEGORY_ICON_MAP,
+                  'schema',
+                ),
+              },
+      }),
+    );
   }
 
   /**
@@ -189,6 +289,24 @@ export class TopicCatalogService {
         ),
       }),
     );
+  }
+
+  /**
+   * Resolves a supported Material Symbol icon name.
+   *
+   * @param icon API icon value.
+   * @param slug API slug value.
+   * @param iconMap Known API values mapped to Material Symbols.
+   * @param fallback Fallback Material Symbol icon.
+   * @returns Material Symbol icon name.
+   */
+  private resolveIcon(
+    icon: string,
+    slug: string,
+    iconMap: Record<string, string>,
+    fallback: string,
+  ): string {
+    return iconMap[icon] ?? iconMap[slug] ?? fallback;
   }
 
   /**

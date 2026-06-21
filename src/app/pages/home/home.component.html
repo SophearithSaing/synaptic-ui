@@ -29,12 +29,18 @@
 
           @if (inProgressTopics().length) {
             <syn-grid [columns]="2">
-              @for (summary of inProgressTopics(); track summary.topic._id) {
+              @for (summary of inProgressTopics(); track sessionTrackBy(summary)) {
                 <syn-progress-card
                   [title]="summary.topic.title"
-                  [level]="summary.progress.level"
-                  [progress]="summary.progress.progress"
+                  [level]="summary.session.currentLevel"
+                  [progress]="sessionProgress(summary.session)"
                   [icon]="summary.topic.icon"
+                  [routerLink]="
+                    '/session/'
+                    + summary.topic._id
+                    + '/continue/'
+                    + summary.session.id
+                  "
                   actionLabel="Continue"
                 />
               }
@@ -79,15 +85,16 @@
 
                   <syn-grid [columns]="3">
                     @for (topic of group.topics; track topicTrackBy(topic)) {
-                      <syn-catalog-card
-                        [label]="group.category.title"
+                      <syn-card
+                        interactive
+                        actionLabel="Start"
                         [icon]="topic.icon"
+                        [label]="group.category.title"
                         [title]="topic.title"
                         [description]="topic.description"
+                        [routerLink]="'/session/' + topic._id"
                         [tags]="topic.tags"
-                      >
-                        <syn-button label="Start" variant="secondary" />
-                      </syn-catalog-card>
+                      />
                     } @empty {
                       <syn-empty-state
                         title="No topics available"

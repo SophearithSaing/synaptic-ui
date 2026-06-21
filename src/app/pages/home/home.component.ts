@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import {
   SynBrandComponent,
   SynButtonComponent,
-  SynCatalogCardComponent,
+  SynCardComponent,
   SynContainerComponent,
   SynEmptyStateComponent,
   SynGridComponent,
@@ -19,16 +19,14 @@ import {
 } from '../../ui';
 
 import { AuthSessionService } from '../../auth-session.service';
-import {
-  Topic,
-  TopicCategoryGroup,
-  TopicProgressSummary,
-} from '../../models/topic.models';
+import { InProgressSession } from '../../models/session.models';
+import { Topic, TopicCategoryGroup } from '../../models/topic.models';
+import { SessionService } from '../../session.service';
 import { TopicCatalogService } from '../../topic-catalog.service';
 
 interface HomeProgressTopic {
+  readonly session: InProgressSession;
   readonly topic: Topic;
-  readonly progress: TopicProgressSummary;
 }
 
 @Component({
@@ -37,7 +35,7 @@ interface HomeProgressTopic {
   imports: [
     SynBrandComponent,
     SynButtonComponent,
-    SynCatalogCardComponent,
+    SynCardComponent,
     SynContainerComponent,
     SynEmptyStateComponent,
     SynGridComponent,
@@ -54,7 +52,7 @@ interface HomeProgressTopic {
 export class HomeComponent implements OnInit {
   public readonly categoryGroups = signal<readonly TopicCategoryGroup[]>([]);
   public readonly loading = signal(true);
-  public readonly progressSummaries = signal<readonly TopicProgressSummary[]>(
+  public readonly inProgressSessions = signal<readonly InProgressSession[]>(
     [],
   );
 
@@ -73,6 +71,7 @@ export class HomeComponent implements OnInit {
   public constructor(
     private readonly authSession: AuthSessionService,
     private readonly router: Router,
+    private readonly sessionService: SessionService,
     private readonly topicCatalog: TopicCatalogService,
     private readonly destroyRef: DestroyRef,
   ) {}
@@ -81,13 +80,24 @@ export class HomeComponent implements OnInit {
    * Loads the topic catalog when the authenticated workspace opens.
    */
   public ngOnInit(): void {
-    this.progressSummaries.set(this.topicCatalog.loadProgress());
     this.topicCatalog
       .loadCatalog()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((groups: readonly TopicCategoryGroup[]): void => {
         this.categoryGroups.set(groups);
         this.loading.set(false);
+      });
+
+    this.sessionService
+      .loadInProgressSessions()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (sessions: readonly InProgressSession[]): void => {
+          this.inProgressSessions.set(sessions);
+        },
+        error: (): void => {
+          this.inProgressSessions.set([]);
+        },
       });
   }
 
@@ -105,23 +115,12 @@ export class HomeComponent implements OnInit {
    * @returns Topic progress summaries enriched with topic details.
    */
   public inProgressTopics(): readonly HomeProgressTopic[] {
-    return this.progressSummaries()
-      .map((progress: TopicProgressSummary): HomeProgressTopic | null => {
-        const topic = this.findTopic(progress.topicId);
-
-        if (topic === null) {
-          return null;
-        }
-
-        return {
-          topic,
-          progress,
-        };
-      })
-      .filter(
-        (summary: HomeProgressTopic | null): summary is HomeProgressTopic =>
-          summary !== null,
-      );
+    return this.inProgressSessions().map(
+      (session: InProgressSession): HomeProgressTopic => ({
+        session,
+        topic: this.findTopic(session.topic._id) ?? session.topic,
+      }),
+    );
   }
 
   /**
@@ -142,6 +141,26 @@ export class HomeComponent implements OnInit {
    */
   public topicTrackBy(topic: Topic): string {
     return topic._id;
+  }
+
+  /**
+   * Returns a stable in-progress session id for template tracking.
+   *
+   * @param summary In-progress summary rendered by the template.
+   * @returns Stable session id.
+   */
+  public sessionTrackBy(summary: HomeProgressTopic): string {
+    return summary.session.id;
+  }
+
+  /**
+   * Returns a bounded progress percentage for a session level.
+   *
+   * @param session In-progress session to inspect.
+   * @returns Progress percentage for display.
+   */
+  public sessionProgress(session: InProgressSession): number {
+    return Math.max(0, Math.min(100, session.currentLevel));
   }
 
   /**

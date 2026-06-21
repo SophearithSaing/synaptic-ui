@@ -3,6 +3,7 @@ export { SynCatalogCardComponent } from './catalog-card/catalog-card.component';
 export { SynChipComponent } from './chip/chip.component';
 export { SynEmptyStateComponent } from './empty-state/empty-state.component';
 export { SynInfoCardComponent } from './info-card/info-card.component';
+export { SynInlineCodeTextComponent } from './inline-code-text/inline-code-text.component';
 export { SynLedgerListComponent } from './ledger-list/ledger-list.component';
 export { SynProgressCardComponent } from './progress-card/progress-card.component';
 export { SynTokenComponent } from './token/token.component';

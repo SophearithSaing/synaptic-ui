@@ -18,6 +18,7 @@
   --color-outline-variant: #c4c6cf;
   --color-error: #ba1a1a;
   --color-error-container: #ffdad6;
+  --color-success: #146c2e;
   --color-on-error: #ffffff;
   --color-on-error-container: #93000a;
   --font-serif: 'Source Serif 4', Georgia, serif;
@@ -28,6 +29,9 @@
   --space-md: 24px;
   --space-lg: 48px;
   --space-xl: 96px;
+  --radius-sm: calc(var(--space-unit) / 2);
+  --font-size-headline-lg: 32px;
+  --font-size-body-md: 16px;
   --container-max: 1140px;
   --page-gutter: 16px;
 }
@@ -268,6 +272,15 @@ h4 {
   padding-left: 18px;
 
   color: var(--color-secondary);
+}
+
+.syn-error-message {
+  border: 1px solid var(--color-error);
+
+  padding: var(--space-sm);
+
+  background: var(--color-error-container);
+  color: var(--color-on-error-container);
 }
 
 .syn-question-index {

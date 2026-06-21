@@ -1,15 +1,16 @@
-import { NgClass } from '@angular/common';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 import {
   booleanAttribute,
   Component,
   Input,
   OnChanges,
 } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'syn-card',
   standalone: true,
-  imports: [NgClass],
+  imports: [NgClass, NgTemplateOutlet, RouterLink],
   templateUrl: './card.component.html',
   styleUrl: './card.component.scss',
 })
@@ -19,6 +20,20 @@ export class SynCardComponent implements OnChanges {
   @Input({ transform: booleanAttribute }) public interactive = false;
 
   @Input({ transform: booleanAttribute }) public ledger = false;
+
+  @Input() public actionLabel: string | null = null;
+
+  @Input() public description: string | null = null;
+
+  @Input() public href: string | null = null;
+
+  @Input() public icon: string | null = null;
+
+  @Input() public label: string | null = null;
+
+  @Input() public routerLink: string | null = null;
+
+  @Input() public tags: readonly string[] = [];
 
   @Input() public title: string | null = null;
 

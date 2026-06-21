@@ -1,5 +1,6 @@
 export interface TopicCategory {
   readonly _id: string;
+  readonly id?: string;
   readonly title: string;
   readonly slug: string;
   readonly description: string;
@@ -10,6 +11,7 @@ export interface TopicCategory {
 
 export interface Topic {
   readonly _id: string;
+  readonly id?: string;
   readonly title: string;
   readonly slug: string;
   readonly description: string;

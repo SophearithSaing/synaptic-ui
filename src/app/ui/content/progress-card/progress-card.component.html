@@ -27,8 +27,14 @@
     <span class="progress-card__label">
       {{ normalizedProgress() }}% Progress
     </span>
-    <button class="progress-card__button" type="button" (click)="onAction()">
-      {{ actionLabel }}
-    </button>
+    @if (routerLink) {
+      <a class="progress-card__button" [routerLink]="routerLink">
+        {{ actionLabel }}
+      </a>
+    } @else {
+      <button class="progress-card__button" type="button" (click)="onAction()">
+        {{ actionLabel }}
+      </button>
+    }
   </div>
 </article>

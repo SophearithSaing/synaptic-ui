@@ -1,0 +1,7 @@
+@for (segment of segments(); track $index) {
+  @if (segment.code) {
+    <code class="inline-code-text__code">{{ segment.text }}</code>
+  } @else {
+    {{ segment.text }}
+  }
+}
