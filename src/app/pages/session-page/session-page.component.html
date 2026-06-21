@@ -83,7 +83,12 @@
                     Question {{ questionNumber(index) }}
                   </span>
                   <p class="session-feedback__prompt">{{ question.prompt }}</p>
-                  <p class="session-feedback__answer">
+                  <p
+                    class="session-feedback__answer"
+                    [class.session-feedback__answer--wrong]="
+                      feedbackAnswer(question.id)?.score !== 1
+                    "
+                  >
                     Your Answer: {{ submittedAnswerText(question) }}
                   </p>
 
@@ -98,9 +103,13 @@
                         </span>
                         Clinical Feedback
                       </h3>
-                      <p>{{ feedbackAnswer(question.id)?.feedback }}</p>
                       <p>
-                        Expected: {{ correctAnswerText(question) }}
+                        <strong>Diagnosis:</strong>
+                        {{ feedbackAnswer(question.id)?.feedback }}
+                      </p>
+                      <p>
+                        <strong>Correction:</strong>
+                        {{ correctAnswerText(question) }}
                       </p>
                     </div>
                   }

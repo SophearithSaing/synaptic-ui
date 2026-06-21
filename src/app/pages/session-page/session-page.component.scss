@@ -17,13 +17,6 @@
   display: flex;
 }
 
-.session-page__status,
-.session-work__progress,
-.session-question__option,
-.session-feedback__clinical h3 {
-  align-items: center;
-}
-
 .session-page__actions {
   flex-wrap: wrap;
   gap: var(--space-sm);
@@ -193,7 +186,7 @@
 .session-feedback__icon {
   flex: 0 0 auto;
   margin-top: var(--space-unit);
-  color: var(--color-primary);
+  color: var(--color-success);
 }
 
 .session-feedback__item--error .session-feedback__icon {
@@ -207,6 +200,14 @@
 
 .session-feedback__content {
   flex: 1;
+}
+
+.session-feedback__prompt {
+  font-weight: 600;
+}
+
+.session-feedback__answer--wrong {
+  text-decoration: line-through;
 }
 
 .session-feedback__clinical {
