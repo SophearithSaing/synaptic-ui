@@ -1,8 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'syn-progress-card',
   standalone: true,
+  imports: [RouterLink],
   templateUrl: './progress-card.component.html',
   styleUrl: './progress-card.component.scss',
 })
@@ -14,6 +16,8 @@ export class SynProgressCardComponent {
   @Input() public level: number | null = null;
 
   @Input() public progress = 0;
+
+  @Input() public routerLink: string | null = null;
 
   @Input({ required: true }) public title = '';
 
