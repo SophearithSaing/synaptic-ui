@@ -1,6 +1,19 @@
 <article class="card" [ngClass]="cardClasses">
+  @if (label) {
+    <span class="card__label">{{ label }}</span>
+  }
   @if (title) {
     <h3 class="card__title">{{ title }}</h3>
+  }
+  @if (description) {
+    <p class="card__description">{{ description }}</p>
+  }
+  @if (tags.length) {
+    <div class="card__tags" aria-label="Tags">
+      @for (tag of tags; track tag) {
+        <span class="card__tag">{{ tag }}</span>
+      }
+    </div>
   }
   <ng-content></ng-content>
 </article>
