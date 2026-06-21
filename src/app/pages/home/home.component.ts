@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import {
   SynBrandComponent,
   SynButtonComponent,
-  SynCatalogCardComponent,
+  SynCardComponent,
   SynContainerComponent,
   SynEmptyStateComponent,
   SynGridComponent,
@@ -37,7 +37,7 @@ interface HomeProgressTopic {
   imports: [
     SynBrandComponent,
     SynButtonComponent,
-    SynCatalogCardComponent,
+    SynCardComponent,
     SynContainerComponent,
     SynEmptyStateComponent,
     SynGridComponent,

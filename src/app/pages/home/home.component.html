@@ -79,15 +79,15 @@
 
                   <syn-grid [columns]="3">
                     @for (topic of group.topics; track topicTrackBy(topic)) {
-                      <syn-catalog-card
+                      <syn-card
+                        interactive
                         [label]="group.category.title"
-                        [icon]="topic.icon"
                         [title]="topic.title"
                         [description]="topic.description"
                         [tags]="topic.tags"
                       >
                         <syn-button label="Start" variant="secondary" />
-                      </syn-catalog-card>
+                      </syn-card>
                     } @empty {
                       <syn-empty-state
                         title="No topics available"
