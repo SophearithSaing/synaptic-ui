@@ -1,6 +1,29 @@
-<article class="card" [ngClass]="cardClasses">
-  @if (label) {
-    <span class="card__label">{{ label }}</span>
+@if (routerLink) {
+  <a class="card" [ngClass]="cardClasses" [routerLink]="routerLink">
+    <ng-container *ngTemplateOutlet="cardContent"></ng-container>
+  </a>
+} @else if (href) {
+  <a class="card" [ngClass]="cardClasses" [href]="href">
+    <ng-container *ngTemplateOutlet="cardContent"></ng-container>
+  </a>
+} @else {
+  <article class="card" [ngClass]="cardClasses">
+    <ng-container *ngTemplateOutlet="cardContent"></ng-container>
+  </article>
+}
+
+<ng-template #cardContent>
+  @if (label || icon) {
+    <div class="card__bar">
+      @if (label) {
+        <span class="card__label">{{ label }}</span>
+      }
+      @if (icon) {
+        <span class="card__icon material-symbols-outlined" aria-hidden="true">
+          {{ icon }}
+        </span>
+      }
+    </div>
   }
   @if (title) {
     <h3 class="card__title">{{ title }}</h3>
@@ -16,4 +39,7 @@
     </div>
   }
   <ng-content></ng-content>
-</article>
+  @if (actionLabel) {
+    <span class="card__action">{{ actionLabel }}</span>
+  }
+</ng-template>

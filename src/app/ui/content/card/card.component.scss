@@ -31,6 +31,13 @@
   }
 }
 
+.card__bar {
+  align-items: center;
+  display: flex;
+  gap: var(--space-sm);
+  justify-content: space-between;
+}
+
 .card__label {
   color: var(--color-on-surface-variant);
   font-family: var(--font-mono);
@@ -39,6 +46,11 @@
   letter-spacing: 0;
   line-height: 1.5;
   text-transform: uppercase;
+}
+
+.card__icon {
+  color: var(--color-primary);
+  font-size: 24px;
 }
 
 .card__title {
@@ -78,4 +90,24 @@
   letter-spacing: 0;
   line-height: 1.5;
   text-transform: uppercase;
+}
+
+.card__action {
+  align-self: flex-start;
+
+  margin-top: auto;
+  border: 1px solid var(--color-outline);
+
+  padding: 10px 18px;
+
+  color: var(--color-on-surface);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.5;
+  text-transform: uppercase;
+
+  .card:hover & {
+    background: var(--color-surface-container-low);
+  }
 }
