@@ -1,0 +1,235 @@
+<syn-page-shell>
+  <syn-nav-bar synPageHeader>
+    <syn-brand synNavBarBrand routerLink="/home" ariaLabel="Synaptic home" />
+
+    <div synNavBarActions class="session-page__status">
+      <span class="syn-kicker">Session Active</span>
+    </div>
+  </syn-nav-bar>
+
+  <main class="session-page">
+    <syn-container>
+      @if (loading()) {
+        <syn-empty-state
+          title="Loading session"
+          description="Preparing your current question set."
+        />
+      } @else if (error() && questionSet() === null) {
+        <syn-empty-state title="Session unavailable" [description]="error()!">
+          <syn-button label="Exit to Home" routerLink="/home" />
+        </syn-empty-state>
+      } @else if (topic() === null || questionSet() === null) {
+        <syn-empty-state
+          title="Session unavailable"
+          description="Return home and choose a topic to begin again."
+        >
+          <syn-button label="Exit to Home" routerLink="/home" />
+        </syn-empty-state>
+      } @else if (feedback()) {
+        <section class="session-feedback" aria-labelledby="feedback-title">
+          <header class="session-feedback__header">
+            <div>
+              <h1 id="feedback-title" class="syn-display">
+                Session Summary
+              </h1>
+              <p class="syn-body-lg">Module: {{ topic()!.title }}</p>
+            </div>
+
+            <div class="session-feedback__metrics">
+              <article class="session-feedback__metric">
+                <span class="syn-kicker">Retention Score</span>
+                <strong>{{ scorePercent() }}%</strong>
+              </article>
+              <article class="session-feedback__metric">
+                <span class="syn-kicker">Questions Correct</span>
+                <strong>
+                  {{ correctCount() }} / {{ questionSet()!.questions.length }}
+                </strong>
+              </article>
+              <article class="session-feedback__metric">
+                <span class="syn-kicker">Level</span>
+                <strong>{{ questionSet()!.level }}</strong>
+              </article>
+            </div>
+          </header>
+
+          <section class="session-feedback__ledger" aria-label="Question ledger">
+            <h2 class="syn-heading-md">Question Ledger</h2>
+
+            @for (
+              question of questionSet()!.questions;
+              track questionTrackBy(question);
+              let index = $index
+            ) {
+              <article
+                class="session-feedback__item"
+                [class.session-feedback__item--error]="
+                  feedbackAnswer(question.id)?.score !== 1
+                "
+              >
+                <span
+                  class="session-feedback__icon material-symbols-outlined"
+                  aria-hidden="true"
+                >
+                  {{
+                    feedbackAnswer(question.id)?.score === 1
+                      ? 'check_circle'
+                      : 'cancel'
+                  }}
+                </span>
+
+                <div class="session-feedback__content">
+                  <span class="syn-kicker">
+                    Question {{ questionNumber(index) }}
+                  </span>
+                  <p class="session-feedback__prompt">{{ question.prompt }}</p>
+                  <p class="session-feedback__answer">
+                    Your Answer: {{ submittedAnswerText(question) }}
+                  </p>
+
+                  @if (feedbackAnswer(question.id)?.score !== 1) {
+                    <div class="session-feedback__clinical">
+                      <h3>
+                        <span
+                          class="material-symbols-outlined"
+                          aria-hidden="true"
+                        >
+                          clinical_notes
+                        </span>
+                        Clinical Feedback
+                      </h3>
+                      <p>{{ feedbackAnswer(question.id)?.feedback }}</p>
+                      <p>
+                        Expected: {{ correctAnswerText(question) }}
+                      </p>
+                    </div>
+                  }
+                </div>
+              </article>
+            }
+          </section>
+
+          <div class="session-page__actions session-page__actions--end">
+            @if (hasWrongAnswer()) {
+              <syn-button label="Back Home" (buttonClick)="endSession()" />
+            } @else {
+              <syn-button
+                label="End Session"
+                variant="secondary"
+                (buttonClick)="endSession()"
+              />
+              <syn-button
+                label="Next Question"
+                (buttonClick)="nextQuestion()"
+              />
+            }
+          </div>
+        </section>
+      } @else if (!questionSet()!.questions.length) {
+        <syn-empty-state
+          title="No questions available"
+          description="This session did not return any questions from the API."
+        >
+          <syn-button label="Exit to Home" routerLink="/home" />
+        </syn-empty-state>
+      } @else {
+        <section class="session-work" aria-labelledby="session-title">
+          <header class="session-work__header">
+            <div class="session-work__title-row">
+              <h1 id="session-title" class="syn-heading-lg">
+                {{ topic()!.title }}
+              </h1>
+              <span class="session-work__level">
+                Level {{ questionSet()!.level }}
+              </span>
+            </div>
+
+            <div class="session-work__progress" aria-label="Question progress">
+              <span>Progress</span>
+              <div>
+                <span
+                  [style.width.%]="
+                    (100 / questionSet()!.questions.length) * answeredCount()
+                  "
+                ></span>
+              </div>
+              <strong>
+                {{ answeredCount() }} / {{ questionSet()!.questions.length }}
+              </strong>
+            </div>
+          </header>
+
+          <form class="session-work__form" (submit)="$event.preventDefault()">
+            @for (
+              question of questionSet()!.questions;
+              track questionTrackBy(question);
+              let index = $index
+            ) {
+              <article class="session-question">
+                <div class="session-question__header">
+                  <span class="syn-question-index">
+                    {{ questionNumber(index) }}
+                  </span>
+                  <h2>{{ question.prompt }}</h2>
+                </div>
+
+                @if (question.type === 'mcq') {
+                  <div class="session-question__options">
+                    @for (
+                      option of question.options;
+                      track optionTrackBy(option)
+                    ) {
+                      <label
+                        class="session-question__option"
+                        [class.session-question__option--selected]="
+                          optionSelected(question.id, option.id)
+                        "
+                      >
+                        <input
+                          type="radio"
+                          [name]="question.id"
+                          [value]="option.id"
+                          [checked]="optionSelected(question.id, option.id)"
+                          (change)="selectOption(question.id, option.id)"
+                        />
+                        <span>{{ option.text }}</span>
+                      </label>
+                    }
+                  </div>
+                } @else {
+                  <textarea
+                    class="session-question__textarea"
+                    rows="6"
+                    placeholder="Construct your response here..."
+                    [value]="answerText(question.id)"
+                    (input)="writeAnswer(question.id, $event)"
+                  ></textarea>
+                }
+              </article>
+            }
+
+            @if (error()) {
+              <p class="session-page__error">{{ error() }}</p>
+            }
+
+            <div class="session-page__actions">
+              <syn-button
+                label="Exit to Home"
+                variant="secondary"
+                routerLink="/home"
+              />
+              <syn-button
+                label="Submit Answer"
+                type="submit"
+                [disabled]="!canSubmit()"
+                (buttonClick)="submitSet()"
+              />
+            </div>
+          </form>
+        </section>
+      }
+    </syn-container>
+  </main>
+
+  <syn-footer copy="© 2024 Synaptic" />
+</syn-page-shell>
