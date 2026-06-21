@@ -1,0 +1,16 @@
+:host {
+  display: inline;
+}
+
+.inline-code-text__code {
+  border: 1px solid var(--color-outline-variant);
+  border-radius: var(--radius-sm);
+
+  padding: 0 calc(var(--space-unit) / 2);
+
+  background: var(--color-surface-container-low);
+  color: var(--color-on-surface);
+  font-family: var(--font-mono);
+  font-size: 0.8em;
+  font-weight: 400;
+}
