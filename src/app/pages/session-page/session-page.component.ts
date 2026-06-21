@@ -46,6 +46,7 @@ export class SessionPageComponent implements OnInit {
   public readonly feedback = signal<SessionSubmitResponse | null>(null);
   public readonly loading = signal(true);
   public readonly questionSet = signal<QuestionSet | null>(null);
+  public readonly submitting = signal(false);
   public readonly topic = signal<Topic | null>(null);
 
   public constructor(
@@ -122,9 +123,12 @@ export class SessionPageComponent implements OnInit {
     const topic = this.topic();
     const questionSet = this.questionSet();
 
-    if (topic === null || questionSet === null) {
+    if (topic === null || questionSet === null || this.submitting()) {
       return;
     }
+
+    this.submitting.set(true);
+    this.error.set(null);
 
     this.sessionService
       .submitAnswers(topic, questionSet, this.submissions())
@@ -133,9 +137,11 @@ export class SessionPageComponent implements OnInit {
         next: (feedback: SessionSubmitResponse): void => {
           this.feedback.set(feedback);
           this.error.set(null);
+          this.submitting.set(false);
         },
         error: (error: Error): void => {
           this.error.set(error.message);
+          this.submitting.set(false);
         },
       });
   }

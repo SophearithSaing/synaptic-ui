@@ -6,7 +6,6 @@
   padding: var(--space-lg) 0;
 }
 
-.session-page__status,
 .session-page__actions,
 .session-work__title-row,
 .session-work__progress,
@@ -63,11 +62,6 @@
   justify-content: space-between;
 }
 
-.session-work__title-row h1 {
-  font-size: var(--font-size-headline-lg);
-  line-height: 1.3;
-}
-
 .session-work__level,
 .session-question,
 .session-question__option,
@@ -108,6 +102,11 @@
   gap: var(--space-lg);
 }
 
+.session-work__form--submitting {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
 .session-question {
   gap: var(--space-md);
   padding: var(--space-md);
@@ -146,7 +145,6 @@
 }
 
 .session-question__option input {
-  margin-top: calc(var(--space-unit) / 2);
   accent-color: var(--color-primary);
 }
 

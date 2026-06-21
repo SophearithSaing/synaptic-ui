@@ -177,7 +177,12 @@
             </div>
           </header>
 
-          <form class="session-work__form" (submit)="$event.preventDefault()">
+          <form
+            class="session-work__form"
+            [class.session-work__form--submitting]="submitting()"
+            [attr.aria-busy]="submitting()"
+            (submit)="$event.preventDefault()"
+          >
             @for (
               question of questionSet()!.questions;
               track questionTrackBy(question);
@@ -241,9 +246,9 @@
                 routerLink="/home"
               />
               <syn-button
-                label="Submit Answer"
+                [label]="submitting() ? 'Evaluating...' : 'Submit Answer'"
                 type="submit"
-                [disabled]="!canSubmit()"
+                [disabled]="!canSubmit() || submitting()"
                 (buttonClick)="submitSet()"
               />
             </div>
