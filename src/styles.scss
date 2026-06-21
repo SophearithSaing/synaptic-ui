@@ -274,6 +274,15 @@ h4 {
   color: var(--color-secondary);
 }
 
+.syn-error-message {
+  border: 1px solid var(--color-error);
+
+  padding: var(--space-sm);
+
+  background: var(--color-error-container);
+  color: var(--color-on-error-container);
+}
+
 .syn-question-index {
   align-items: center;
   display: inline-flex;

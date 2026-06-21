@@ -29,9 +29,7 @@
         <section class="session-feedback" aria-labelledby="feedback-title">
           <header class="session-feedback__header">
             <div>
-              <h1 id="feedback-title" class="syn-display">
-                Session Summary
-              </h1>
+              <h1 id="feedback-title" class="syn-display">Session Summary</h1>
               <p class="syn-body-lg">Module: {{ topic()!.title }}</p>
             </div>
 
@@ -53,7 +51,10 @@
             </div>
           </header>
 
-          <section class="session-feedback__ledger" aria-label="Question ledger">
+          <section
+            class="session-feedback__ledger"
+            aria-label="Question ledger"
+          >
             <h2 class="syn-heading-md">Question Ledger</h2>
 
             @for (
@@ -236,7 +237,7 @@
             }
 
             @if (error()) {
-              <p class="session-page__error">{{ error() }}</p>
+              <p class="syn-error-message">{{ error() }}</p>
             }
 
             <div class="session-page__actions">
