@@ -76,6 +76,46 @@ export class TopicCatalogService {
   }
 
   /**
+   * Returns a stable topic id from API topic records.
+   *
+   * @param topic Topic returned by the API.
+   * @returns Topic id value.
+   */
+  public topicId(topic: Topic): string {
+    return topic.id;
+  }
+
+  /**
+   * Resolves topic icon names for existing UI usage.
+   *
+   * @param topic Topic returned by the API.
+   * @returns Topic with a supported Material Symbol icon.
+   */
+  public resolveTopicIcon(topic: Topic): Topic {
+    return {
+      ...topic,
+      icon: this.resolveIcon(
+        topic.icon,
+        topic.slug,
+        TOPIC_ICON_MAP,
+        'school',
+      ),
+      category:
+        typeof topic.category === 'string'
+          ? topic.category
+          : {
+              ...topic.category,
+              icon: this.resolveIcon(
+                topic.category.icon,
+                topic.category.slug,
+                CATEGORY_ICON_MAP,
+                'schema',
+              ),
+            },
+    };
+  }
+
+  /**
    * Resolves category icon names for existing UI usage.
    *
    * @param categories Topic categories returned by the API.
@@ -105,27 +145,7 @@ export class TopicCatalogService {
    */
   private resolveTopicIcons(topics: readonly Topic[]): readonly Topic[] {
     return topics.map(
-      (topic: Topic): Topic => ({
-        ...topic,
-        icon: this.resolveIcon(
-          topic.icon,
-          topic.slug,
-          TOPIC_ICON_MAP,
-          'school',
-        ),
-        category:
-          typeof topic.category === 'string'
-            ? topic.category
-            : {
-                ...topic.category,
-                icon: this.resolveIcon(
-                  topic.category.icon,
-                  topic.category.slug,
-                  CATEGORY_ICON_MAP,
-                  'schema',
-                ),
-              },
-      }),
+      (topic: Topic): Topic => this.resolveTopicIcon(topic),
     );
   }
 
@@ -144,7 +164,8 @@ export class TopicCatalogService {
       (category: TopicCategory): TopicCategoryGroup => ({
         category,
         topics: topics.filter(
-          (topic: Topic): boolean => this.categoryId(topic) === category.id,
+          (topic: Topic): boolean =>
+            this.categoryId(topic) === this.categoryIdValue(category),
         ),
       }),
     );
@@ -179,6 +200,16 @@ export class TopicCatalogService {
       return topic.category;
     }
 
-    return topic.category.id;
+    return this.categoryIdValue(topic.category);
+  }
+
+  /**
+   * Returns a stable category id from API category records.
+   *
+   * @param category Category returned by the API.
+   * @returns Category id value.
+   */
+  private categoryIdValue(category: TopicCategory): string {
+    return category.id;
   }
 }
