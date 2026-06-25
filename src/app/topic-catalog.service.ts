@@ -1,14 +1,8 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, forkJoin, map, Observable, of } from 'rxjs';
+import { forkJoin, map, Observable } from 'rxjs';
 
-import { AuthSessionService } from './auth-session.service';
-import {
-  Topic,
-  TopicCategory,
-  TopicCategoryGroup,
-  TopicProgressSummary,
-} from './models/topic.models';
+import { Topic, TopicCategory, TopicCategoryGroup } from './models/topic.models';
 import { environment } from '../environments/environment';
 
 const API_BASE_URL = environment.API_BASE_URL;
@@ -50,139 +44,23 @@ const TOPIC_ICON_MAP: Record<string, string> = {
   'ci-cd-pipelines': 'automation',
 };
 
-const FALLBACK_CATEGORIES: readonly TopicCategory[] = [
-  {
-    _id: 'cs-concepts',
-    title: 'Computer Science Concepts',
-    slug: 'cs-concepts',
-    description: 'Core theories and fundamental CS principles.',
-    icon: 'schema',
-  },
-  {
-    _id: 'tech-stacks',
-    title: 'Languages & Tech Stacks',
-    slug: 'tech-stacks',
-    description: 'Programming languages, runtimes, and backend foundations.',
-    icon: 'code',
-  },
-  {
-    _id: 'ops-infra',
-    title: 'Operations & Infrastructure',
-    slug: 'ops-infra',
-    description: 'Delivery, containers, orchestration, and platform practice.',
-    icon: 'deployed_code',
-  },
-];
-
-const FALLBACK_TOPICS: readonly Topic[] = [
-  {
-    _id: 'memory-management',
-    title: 'Memory Management',
-    slug: 'memory-management',
-    description: 'Understanding stack, heap, and garbage collection.',
-    icon: 'memory',
-    tags: ['systems', 'runtime'],
-    category: FALLBACK_CATEGORIES[0],
-  },
-  {
-    _id: 'concurrency',
-    title: 'Concurrency',
-    slug: 'concurrency',
-    description: 'Reason about scheduling, synchronization, and parallelism.',
-    icon: 'sync',
-    tags: ['systems', 'parallelism'],
-    category: FALLBACK_CATEGORIES[0],
-  },
-  {
-    _id: 'distributed-systems',
-    title: 'Distributed Systems',
-    slug: 'distributed-systems',
-    description: 'Explore replication, consensus, and failure models.',
-    icon: 'hub',
-    tags: ['distributed', 'networking'],
-    category: FALLBACK_CATEGORIES[0],
-  },
-  {
-    _id: 'node-js',
-    title: 'Node.js',
-    slug: 'node-js',
-    description: 'Backend runtime behavior, event loops, and async patterns.',
-    icon: 'terminal',
-    tags: ['backend', 'runtime'],
-    category: FALLBACK_CATEGORIES[1],
-  },
-  {
-    _id: 'rust-fundamentals',
-    title: 'Rust Fundamentals',
-    slug: 'rust-fundamentals',
-    description: 'Ownership, borrowing, lifetimes, and memory safety.',
-    icon: 'data_object',
-    tags: ['systems', 'memory-safety'],
-    category: FALLBACK_CATEGORIES[1],
-  },
-  {
-    _id: 'kubernetes',
-    title: 'Kubernetes',
-    slug: 'kubernetes',
-    description: 'Cluster orchestration, workload scheduling, and services.',
-    icon: 'conversion_path',
-    tags: ['orchestration', 'containers'],
-    category: FALLBACK_CATEGORIES[2],
-  },
-  {
-    _id: 'ci-cd-pipelines',
-    title: 'CI/CD Pipelines',
-    slug: 'ci-cd-pipelines',
-    description: 'Automation patterns for repeatable delivery workflows.',
-    icon: 'automation',
-    tags: ['automation', 'devops'],
-    category: FALLBACK_CATEGORIES[2],
-  },
-];
-
-const FALLBACK_PROGRESS: readonly TopicProgressSummary[] = [
-  // TODO: Remove prototype progress once session progress is API-backed.
-  {
-    topicId: 'distributed-systems',
-    level: 42,
-    progress: 42,
-  },
-  {
-    topicId: 'memory-management',
-    level: 12,
-    progress: 12,
-  },
-];
-
 @Injectable({
   providedIn: 'root',
 })
 export class TopicCatalogService {
-  public constructor(
-    private readonly http: HttpClient,
-    private readonly authSession: AuthSessionService,
-  ) {}
+  public constructor(private readonly http: HttpClient) {}
 
   /**
-   * Loads topic categories and topics from the API when possible.
+   * Loads topic categories and topics from the API.
    *
    * @returns Observable of topic category groups.
    */
   public loadCatalog(): Observable<readonly TopicCategoryGroup[]> {
-    const headers = this.authHeaders();
-
-    if (headers === null) {
-      return of(this.groupTopics(FALLBACK_CATEGORIES, FALLBACK_TOPICS));
-    }
-
     return forkJoin({
       categories: this.http.get<readonly TopicCategory[]>(
         `${API_BASE_URL}/categories/categories`,
-        { headers },
       ),
-      topics: this.http.get<readonly Topic[]>(`${API_BASE_URL}/topics`, {
-        headers,
-      }),
+      topics: this.http.get<readonly Topic[]>(`${API_BASE_URL}/topics`),
     }).pipe(
       map(
         (response: {
@@ -190,39 +68,65 @@ export class TopicCatalogService {
           readonly topics: readonly Topic[];
         }): readonly TopicCategoryGroup[] =>
           this.groupTopics(
-            this.normalizeCategories(response.categories),
-            this.normalizeTopics(response.topics),
+            this.resolveCategoryIcons(response.categories),
+            this.resolveTopicIcons(response.topics),
           ),
-      ),
-      catchError(
-        (): Observable<readonly TopicCategoryGroup[]> =>
-          of(this.groupTopics(FALLBACK_CATEGORIES, FALLBACK_TOPICS)),
       ),
     );
   }
 
   /**
-   * Returns temporary progress summaries for the current prototype home.
+   * Returns a stable topic id from API topic records.
    *
-   * @returns Temporary topic progress summaries.
+   * @param topic Topic returned by the API.
+   * @returns Topic id value.
    */
-  public loadProgress(): readonly TopicProgressSummary[] {
-    return FALLBACK_PROGRESS;
+  public topicId(topic: Topic): string {
+    return topic.id;
   }
 
   /**
-   * Normalizes API category id fields for existing UI usage.
+   * Resolves topic icon names for existing UI usage.
+   *
+   * @param topic Topic returned by the API.
+   * @returns Topic with a supported Material Symbol icon.
+   */
+  public resolveTopicIcon(topic: Topic): Topic {
+    return {
+      ...topic,
+      icon: this.resolveIcon(
+        topic.icon,
+        topic.slug,
+        TOPIC_ICON_MAP,
+        'school',
+      ),
+      category:
+        typeof topic.category === 'string'
+          ? topic.category
+          : {
+              ...topic.category,
+              icon: this.resolveIcon(
+                topic.category.icon,
+                topic.category.slug,
+                CATEGORY_ICON_MAP,
+                'schema',
+              ),
+            },
+    };
+  }
+
+  /**
+   * Resolves category icon names for existing UI usage.
    *
    * @param categories Topic categories returned by the API.
-   * @returns Categories with `_id` populated.
+   * @returns Categories with supported Material Symbol icons.
    */
-  private normalizeCategories(
+  private resolveCategoryIcons(
     categories: readonly TopicCategory[],
   ): readonly TopicCategory[] {
     return categories.map(
       (category: TopicCategory): TopicCategory => ({
         ...category,
-        _id: category._id ?? category.id ?? category.slug,
         icon: this.resolveIcon(
           category.icon,
           category.slug,
@@ -234,39 +138,14 @@ export class TopicCatalogService {
   }
 
   /**
-   * Normalizes API topic id fields for existing UI usage.
+   * Resolves topic icon names for existing UI usage.
    *
    * @param topics Topics returned by the API.
-   * @returns Topics with `_id` populated.
+   * @returns Topics with supported Material Symbol icons.
    */
-  private normalizeTopics(topics: readonly Topic[]): readonly Topic[] {
+  private resolveTopicIcons(topics: readonly Topic[]): readonly Topic[] {
     return topics.map(
-      (topic: Topic): Topic => ({
-        ...topic,
-        _id: topic._id ?? topic.id ?? topic.slug,
-        icon: this.resolveIcon(
-          topic.icon,
-          topic.slug,
-          TOPIC_ICON_MAP,
-          'school',
-        ),
-        category:
-          typeof topic.category === 'string'
-            ? topic.category
-            : {
-                ...topic.category,
-                _id:
-                  topic.category._id ??
-                  topic.category.id ??
-                  topic.category.slug,
-                icon: this.resolveIcon(
-                  topic.category.icon,
-                  topic.category.slug,
-                  CATEGORY_ICON_MAP,
-                  'schema',
-                ),
-              },
-      }),
+      (topic: Topic): Topic => this.resolveTopicIcon(topic),
     );
   }
 
@@ -285,7 +164,8 @@ export class TopicCatalogService {
       (category: TopicCategory): TopicCategoryGroup => ({
         category,
         topics: topics.filter(
-          (topic: Topic): boolean => this.categoryId(topic) === category._id,
+          (topic: Topic): boolean =>
+            this.categoryId(topic) === this.categoryIdValue(category),
         ),
       }),
     );
@@ -297,7 +177,7 @@ export class TopicCatalogService {
    * @param icon API icon value.
    * @param slug API slug value.
    * @param iconMap Known API values mapped to Material Symbols.
-   * @param fallback Fallback Material Symbol icon.
+   * @param fallback Fallback icon for unknown values.
    * @returns Material Symbol icon name.
    */
   private resolveIcon(
@@ -320,23 +200,16 @@ export class TopicCatalogService {
       return topic.category;
     }
 
-    return topic.category._id;
+    return this.categoryIdValue(topic.category);
   }
 
   /**
-   * Builds authenticated API headers when a bearer token exists.
+   * Returns a stable category id from API category records.
    *
-   * @returns HTTP headers with bearer auth, or null when no token exists.
+   * @param category Category returned by the API.
+   * @returns Category id value.
    */
-  private authHeaders(): HttpHeaders | null {
-    const token = this.authSession.accessToken();
-
-    if (token === null) {
-      return null;
-    }
-
-    return new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-    });
+  private categoryIdValue(category: TopicCategory): string {
+    return category.id;
   }
 }

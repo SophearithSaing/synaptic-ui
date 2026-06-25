@@ -65,18 +65,14 @@
               <article
                 class="session-feedback__item"
                 [class.session-feedback__item--error]="
-                  feedbackAnswer(question.id)?.score !== 1
+                  !answerIsCorrect(question.id)
                 "
               >
                 <span
                   class="session-feedback__icon material-symbols-outlined"
                   aria-hidden="true"
                 >
-                  {{
-                    feedbackAnswer(question.id)?.score === 1
-                      ? 'check_circle'
-                      : 'cancel'
-                  }}
+                  {{ answerIsCorrect(question.id) ? 'check_circle' : 'cancel' }}
                 </span>
 
                 <div class="session-feedback__content">
@@ -89,7 +85,7 @@
                   <p
                     class="session-feedback__answer"
                     [class.session-feedback__answer--wrong]="
-                      feedbackAnswer(question.id)?.score !== 1
+                      !answerIsCorrect(question.id)
                     "
                   >
                     Your Answer:
@@ -98,9 +94,30 @@
                     />
                   </p>
 
-                  @if (feedbackAnswer(question.id)?.score !== 1) {
+                  @if (answerIsCorrect(question.id)) {
                     <div class="session-feedback__clinical">
-                      <h3>
+                      <h3 class="syn-kicker">
+                        <span
+                          class="material-symbols-outlined"
+                          aria-hidden="true"
+                        >
+                          clinical_notes
+                        </span>
+                        Clinical Feedback
+                      </h3>
+                      <p>
+                        <strong>Synthesis:</strong>
+                        <syn-inline-code-text
+                          [text]="feedbackAnswer(question.id)?.feedback ?? ''"
+                        />
+                      </p>
+                    </div>
+                  } @else {
+                    <div
+                      class="session-feedback__clinical
+                        session-feedback__clinical--error"
+                    >
+                      <h3 class="syn-kicker">
                         <span
                           class="material-symbols-outlined"
                           aria-hidden="true"

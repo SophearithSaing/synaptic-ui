@@ -27,19 +27,32 @@
             headingId="in-progress-title"
           />
 
-          @if (inProgressTopics().length) {
+          @if (sessionsError()) {
+            <syn-empty-state
+              title="Progress unavailable"
+              [description]="sessionsError()!"
+              icon="error"
+            >
+              <p class="syn-error-message">
+                Session progress could not be loaded.
+              </p>
+            </syn-empty-state>
+          } @else if (inProgressTopics().length) {
             <syn-grid [columns]="2">
-              @for (summary of inProgressTopics(); track sessionTrackBy(summary)) {
+              @for (
+                summary of inProgressTopics();
+                track sessionTrackBy(summary)
+              ) {
                 <syn-progress-card
                   [title]="summary.topic.title"
                   [level]="summary.session.currentLevel"
                   [progress]="sessionProgress(summary.session)"
                   [icon]="summary.topic.icon"
                   [routerLink]="
-                    '/session/'
-                    + summary.topic._id
-                    + '/continue/'
-                    + summary.session.id
+                    '/session/' +
+                    summary.topic.id +
+                    '/continue/' +
+                    summary.session.id
                   "
                   actionLabel="Continue"
                 />
@@ -64,19 +77,29 @@
               title="Loading topic catalog"
               description="Preparing the authenticated topic list."
             />
+          } @else if (catalogError()) {
+            <syn-empty-state
+              title="Catalog unavailable"
+              [description]="catalogError()!"
+              icon="error"
+            >
+              <p class="syn-error-message">
+                Available topics could not be loaded.
+              </p>
+            </syn-empty-state>
           } @else {
             <div class="home__category-list">
               @for (group of categoryGroups(); track categoryTrackBy(group)) {
                 <section
                   class="home__category"
-                  [attr.aria-labelledby]="'category-' + group.category._id"
+                  [attr.aria-labelledby]="'category-' + group.category.id"
                 >
                   <div class="home__category-heading">
                     <span class="material-symbols-outlined syn-icon">
                       {{ group.category.icon }}
                     </span>
                     <div>
-                      <h3 id="category-{{ group.category._id }}">
+                      <h3 id="category-{{ group.category.id }}">
                         {{ group.category.title }}
                       </h3>
                       <p>{{ group.category.description }}</p>
@@ -92,7 +115,7 @@
                         [label]="group.category.title"
                         [title]="topic.title"
                         [description]="topic.description"
-                        [routerLink]="'/session/' + topic._id"
+                        [routerLink]="'/session/' + topic.id"
                         [tags]="topic.tags"
                       />
                     } @empty {

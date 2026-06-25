@@ -12,7 +12,7 @@ export interface SessionQuestionFeedback {
   readonly incorrect: string;
 }
 
-export interface SessionQuestionRubric {
+export interface SessionQuestionRubrics {
   readonly keyPoints: readonly string[];
   readonly misconceptions: readonly string[];
 }
@@ -25,7 +25,7 @@ export interface SessionQuestion {
   readonly correctOptionId?: string;
   readonly targetConcepts: readonly string[];
   readonly feedback: SessionQuestionFeedback;
-  readonly rubric: SessionQuestionRubric;
+  readonly rubrics: SessionQuestionRubrics;
 }
 
 export interface QuestionSet {
@@ -34,6 +34,8 @@ export interface QuestionSet {
   readonly setType: string;
   readonly level: number;
   readonly questions: readonly SessionQuestion[];
+  readonly createdAt: string;
+  readonly updatedAt: string;
 }
 
 export interface SessionAnswerSubmission {
@@ -50,9 +52,16 @@ export interface EvaluatedAnswer {
   readonly score: number;
   readonly feedback: string;
   readonly targetConcepts: readonly string[];
-  readonly strength: readonly string[];
-  readonly weakness: readonly string[];
+  readonly strengths: readonly string[];
+  readonly weaknesses: readonly string[];
   readonly evaluatedBy: 'system' | 'ai';
+}
+
+export interface SessionOverallEvaluation {
+  readonly summary: string;
+  readonly strengths: readonly string[];
+  readonly weaknesses: readonly string[];
+  readonly recommendations: readonly string[];
 }
 
 export interface SetAttempt {
@@ -65,10 +74,13 @@ export interface SetAttempt {
   readonly answers: readonly EvaluatedAnswer[];
   readonly setScore: number;
   readonly passed: boolean;
-  readonly strength: readonly string[];
-  readonly weakness: readonly string[];
+  readonly strengths: readonly string[];
+  readonly weaknesses: readonly string[];
+  readonly aiSummary?: string;
   readonly submittedAt: string;
   readonly evaluatedAt: string;
+  readonly createdAt: string;
+  readonly updatedAt: string;
 }
 
 export interface StartSessionResponse {
@@ -82,6 +94,10 @@ export interface InProgressSession {
   readonly topic: Topic;
   readonly currentLevel: number;
   readonly status: string;
+  readonly overallEvaluation?: SessionOverallEvaluation;
+  readonly startAt?: string;
+  readonly finishAt?: string;
+  readonly createdAt: string;
   readonly updatedAt: string;
 }
 

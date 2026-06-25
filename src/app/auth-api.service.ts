@@ -2,22 +2,15 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
+import {
+  AuthenticatedResponse,
+  AuthenticatedUser,
+  LoginRequest,
+  RegisterRequest,
+} from './models/auth.models';
 import { environment } from '../environments/environment';
 
 const API_BASE_URL = environment.API_BASE_URL;
-
-interface AuthTokenResponse {
-  readonly access_token: string;
-}
-
-interface LoginRequest {
-  readonly email: string;
-  readonly password: string;
-}
-
-interface RegisterRequest extends LoginRequest {
-  readonly username: string;
-}
 
 @Injectable({
   providedIn: 'root',
@@ -29,10 +22,10 @@ export class AuthApiService {
    * Sends user credentials to the login endpoint.
    *
    * @param request Login credentials from the login form.
-   * @returns Observable containing an API access token.
+   * @returns Observable confirming cookie-backed authentication.
    */
-  public login(request: LoginRequest): Observable<AuthTokenResponse> {
-    return this.http.post<AuthTokenResponse>(
+  public login(request: LoginRequest): Observable<AuthenticatedResponse> {
+    return this.http.post<AuthenticatedResponse>(
       `${API_BASE_URL}/auth/login`,
       request,
     );
@@ -42,12 +35,42 @@ export class AuthApiService {
    * Sends new account details to the registration endpoint.
    *
    * @param request Registration details from the sign up form.
-   * @returns Observable containing an API access token.
+   * @returns Observable confirming cookie-backed authentication.
    */
-  public register(request: RegisterRequest): Observable<AuthTokenResponse> {
-    return this.http.post<AuthTokenResponse>(
+  public register(request: RegisterRequest): Observable<AuthenticatedResponse> {
+    return this.http.post<AuthenticatedResponse>(
       `${API_BASE_URL}/auth/register`,
       request,
     );
+  }
+
+  /**
+   * Loads the current authenticated user.
+   *
+   * @returns Observable containing the current authenticated user.
+   */
+  public me(): Observable<AuthenticatedUser> {
+    return this.http.get<AuthenticatedUser>(`${API_BASE_URL}/auth/me`);
+  }
+
+  /**
+   * Refreshes the cookie-backed authenticated session.
+   *
+   * @returns Observable confirming renewed authentication.
+   */
+  public refresh(): Observable<AuthenticatedResponse> {
+    return this.http.post<AuthenticatedResponse>(
+      `${API_BASE_URL}/auth/refresh`,
+      {},
+    );
+  }
+
+  /**
+   * Revokes the current refresh session and clears auth cookies.
+   *
+   * @returns Observable completing when logout succeeds.
+   */
+  public logout(): Observable<void> {
+    return this.http.post<void>(`${API_BASE_URL}/auth/logout`, {});
   }
 }

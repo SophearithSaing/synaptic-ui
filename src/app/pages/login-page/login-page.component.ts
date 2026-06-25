@@ -1,6 +1,7 @@
 import { Component, DestroyRef, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Observable, switchMap } from 'rxjs';
 
 import {
   SynBrandComponent,
@@ -13,6 +14,8 @@ import {
 
 import { AuthApiService } from '../../auth-api.service';
 import { AuthSessionService } from '../../auth-session.service';
+import { mapAuthError } from '../../auth-error-mapping';
+import { AuthenticatedUser } from '../../models/auth.models';
 
 @Component({
   selector: 'app-login-page',
@@ -36,6 +39,7 @@ export class LoginPageComponent {
     private readonly authApi: AuthApiService,
     private readonly authSession: AuthSessionService,
     private readonly destroyRef: DestroyRef,
+    private readonly route: ActivatedRoute,
     private readonly router: Router,
   ) {}
 
@@ -54,23 +58,45 @@ export class LoginPageComponent {
     }
 
     const formData = new FormData(form);
-    const email = String(formData.get('email') ?? '');
+    const identifier = String(formData.get('identifier') ?? '').trim();
     const password = String(formData.get('password') ?? '');
 
     this.errorMessage.set(null);
     this.submitting.set(true);
     this.authApi
-      .login({ email, password })
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .login({ identifier, password })
+      .pipe(
+        switchMap((): Observable<AuthenticatedUser> => this.authApi.me()),
+        takeUntilDestroyed(this.destroyRef),
+      )
       .subscribe({
-        next: (response: { readonly access_token: string }): void => {
-          this.authSession.signIn(response.access_token);
-          void this.router.navigate(['/home']);
+        next: (user: AuthenticatedUser): void => {
+          this.authSession.signIn(user);
+          void this.router.navigateByUrl(this.returnUrl());
         },
-        error: (): void => {
-          this.errorMessage.set('Unable to log in with those credentials.');
+        error: (err: unknown): void => {
+          this.errorMessage.set(mapAuthError(err));
           this.submitting.set(false);
         },
       });
+  }
+
+  /**
+   * Returns the post-login destination from query params.
+   *
+   * @returns Safe post-login URL.
+   */
+  private returnUrl(): string {
+    const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
+
+    if (returnUrl === null || !returnUrl.startsWith('/')) {
+      return '/home';
+    }
+
+    if (returnUrl.startsWith('//')) {
+      return '/home';
+    }
+
+    return returnUrl;
   }
 }

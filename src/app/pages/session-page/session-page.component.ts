@@ -19,6 +19,7 @@ import {
   SessionQuestion,
   SessionQuestionOption,
   SessionSubmitResponse,
+  StartSessionResponse,
 } from '../../models/session.models';
 import { Topic, TopicCategoryGroup } from '../../models/topic.models';
 import { SessionService } from '../../session.service';
@@ -41,10 +42,13 @@ import { TopicCatalogService } from '../../topic-catalog.service';
   styleUrl: './session-page.component.scss',
 })
 export class SessionPageComponent implements OnInit {
+  private readonly correctAnswerThreshold = 0.5;
+
   public readonly answers = signal<Record<string, string>>({});
   public readonly error = signal<string | null>(null);
   public readonly feedback = signal<SessionSubmitResponse | null>(null);
   public readonly loading = signal(true);
+  public readonly activeSessionId = signal<string | null>(null);
   public readonly questionSet = signal<QuestionSet | null>(null);
   public readonly submitting = signal(false);
   public readonly topic = signal<Topic | null>(null);
@@ -120,10 +124,10 @@ export class SessionPageComponent implements OnInit {
    * Submits the current question set for feedback.
    */
   public submitSet(): void {
-    const topic = this.topic();
     const questionSet = this.questionSet();
+    const sessionId = this.activeSessionId();
 
-    if (topic === null || questionSet === null || this.submitting()) {
+    if (sessionId === null || questionSet === null || this.submitting()) {
       return;
     }
 
@@ -131,13 +135,14 @@ export class SessionPageComponent implements OnInit {
     this.error.set(null);
 
     this.sessionService
-      .submitAnswers(topic, questionSet, this.submissions())
+      .submitAnswers(sessionId, questionSet, this.submissions())
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (feedback: SessionSubmitResponse): void => {
           this.feedback.set(feedback);
           this.error.set(null);
           this.submitting.set(false);
+          this.scrollToPageTop();
         },
         error: (error: Error): void => {
           this.error.set(error.message);
@@ -160,12 +165,7 @@ export class SessionPageComponent implements OnInit {
     this.questionSet.set(nextQuestionSet);
     this.feedback.set(null);
     this.answers.set({});
-    window.setTimeout((): void => {
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth',
-      });
-    });
+    this.scrollToPageTop();
   }
 
   /**
@@ -302,6 +302,16 @@ export class SessionPageComponent implements OnInit {
   }
 
   /**
+   * Reports whether a question's feedback meets the correct threshold.
+   *
+   * @param questionId Question id to inspect.
+   * @returns True when the evaluated score is correct.
+   */
+  public answerIsCorrect(questionId: string): boolean {
+    return this.isCorrectAnswer(this.feedbackAnswer(questionId));
+  }
+
+  /**
    * Returns the number of correctly answered questions.
    *
    * @returns Count of correct answers.
@@ -309,7 +319,7 @@ export class SessionPageComponent implements OnInit {
   public correctCount(): number {
     return (
       this.feedback()?.attempt.answers.filter(
-        (answer: EvaluatedAnswer): boolean => answer.score >= 0.8,
+        (answer: EvaluatedAnswer): boolean => this.isCorrectAnswer(answer),
       ).length ?? 0
     );
   }
@@ -322,7 +332,7 @@ export class SessionPageComponent implements OnInit {
   public hasWrongAnswer(): boolean {
     return (
       this.feedback()?.attempt.answers.some(
-        (answer: EvaluatedAnswer): boolean => answer.score < 0.8,
+        (answer: EvaluatedAnswer): boolean => !this.isCorrectAnswer(answer),
       ) ?? false
     );
   }
@@ -348,6 +358,28 @@ export class SessionPageComponent implements OnInit {
   }
 
   /**
+   * Reports whether an evaluated answer meets the correct threshold.
+   *
+   * @param answer Evaluated answer to inspect.
+   * @returns True when the answer score is at least the correct threshold.
+   */
+  private isCorrectAnswer(answer: EvaluatedAnswer | null): boolean {
+    return (answer?.score ?? 0) >= this.correctAnswerThreshold;
+  }
+
+  /**
+   * Scrolls the page back to the top after a view state transition.
+   */
+  private scrollToPageTop(): void {
+    window.setTimeout((): void => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
+    });
+  }
+
+  /**
    * Loads the active question set for the selected topic.
    *
    * @param topic Topic selected by the student.
@@ -355,21 +387,56 @@ export class SessionPageComponent implements OnInit {
   private loadQuestionSet(topic: Topic): void {
     const sessionId = this.route.snapshot.paramMap.get('sessionId');
     const isContinue = this.router.url.includes('/continue');
-    const source = isContinue
-      ? this.sessionService.continueSession(topic, sessionId)
-      : this.sessionService.startSession(topic);
 
-    source.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: (questionSet: QuestionSet): void => {
-        this.questionSet.set(questionSet);
-        this.error.set(null);
-        this.loading.set(false);
-      },
-      error: (error: Error): void => {
-        this.error.set(error.message);
-        this.loading.set(false);
-      },
-    });
+    if (isContinue) {
+      this.loadContinuedQuestionSet(sessionId);
+      return;
+    }
+
+    this.sessionService
+      .startSession(topic)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (response: StartSessionResponse): void => {
+          this.activeSessionId.set(response.sessionId);
+          this.questionSet.set(response.questionSet);
+          this.error.set(null);
+          this.loading.set(false);
+        },
+        error: (error: Error): void => {
+          this.error.set(error.message);
+          this.loading.set(false);
+        },
+      });
+  }
+
+  /**
+   * Loads a question set for an existing session.
+   *
+   * @param sessionId Session id from the route.
+   */
+  private loadContinuedQuestionSet(sessionId: string | null): void {
+    if (sessionId === null) {
+      this.error.set('A session id is required to continue this session.');
+      this.loading.set(false);
+      return;
+    }
+
+    this.activeSessionId.set(sessionId);
+    this.sessionService
+      .continueSession(sessionId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (questionSet: QuestionSet): void => {
+          this.questionSet.set(questionSet);
+          this.error.set(null);
+          this.loading.set(false);
+        },
+        error: (error: Error): void => {
+          this.error.set(error.message);
+          this.loading.set(false);
+        },
+      });
   }
 
   /**
@@ -386,7 +453,7 @@ export class SessionPageComponent implements OnInit {
     for (const group of groups) {
       const topic = group.topics.find(
         (candidate: Topic): boolean =>
-          candidate._id === topicId || candidate.slug === topicId,
+          candidate.id === topicId || candidate.slug === topicId,
       );
 
       if (topic !== undefined) {

@@ -1,6 +1,7 @@
 import { Component, DestroyRef, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
+import { Observable, switchMap } from 'rxjs';
 
 import {
   SynBrandComponent,
@@ -21,6 +22,13 @@ import {
 
 import { AuthApiService } from '../../auth-api.service';
 import { AuthSessionService } from '../../auth-session.service';
+import { mapAuthError } from '../../auth-error-mapping';
+import {
+  validateEmail,
+  validatePassword,
+  validateUsername,
+} from '../../auth-validation';
+import { AuthenticatedUser } from '../../models/auth.models';
 
 @Component({
   selector: 'app-register-page',
@@ -102,8 +110,31 @@ export class RegisterPageComponent {
     }
 
     const formData = new FormData(form);
+    const username = String(formData.get('username') ?? '').trim();
+    const email = String(formData.get('email') ?? '').trim().toLowerCase();
     const password = String(formData.get('password') ?? '');
     const confirmPassword = String(formData.get('confirmPassword') ?? '');
+
+    const usernameError = validateUsername(username);
+
+    if (usernameError !== null) {
+      this.errorMessage.set(usernameError);
+      return;
+    }
+
+    const emailError = validateEmail(email);
+
+    if (emailError !== null) {
+      this.errorMessage.set(emailError);
+      return;
+    }
+
+    const passwordError = validatePassword(password);
+
+    if (passwordError !== null) {
+      this.errorMessage.set(passwordError);
+      return;
+    }
 
     if (password !== confirmPassword) {
       this.errorMessage.set('Passwords must match.');
@@ -114,20 +145,21 @@ export class RegisterPageComponent {
     this.submitting.set(true);
     this.authApi
       .register({
-        email: String(formData.get('email') ?? ''),
+        email,
         password,
-        username: String(formData.get('username') ?? ''),
+        username,
       })
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(
+        switchMap((): Observable<AuthenticatedUser> => this.authApi.me()),
+        takeUntilDestroyed(this.destroyRef),
+      )
       .subscribe({
-        next: (response: { readonly access_token: string }): void => {
-          this.authSession.signIn(response.access_token);
+        next: (user: AuthenticatedUser): void => {
+          this.authSession.signIn(user);
           void this.router.navigate(['/home']);
         },
-        error: (): void => {
-          this.errorMessage.set(
-            'Unable to create an account with those details.',
-          );
+        error: (err: unknown): void => {
+          this.errorMessage.set(mapAuthError(err));
           this.submitting.set(false);
         },
       });

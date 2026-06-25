@@ -1,46 +1,35 @@
 import { Injectable, signal } from '@angular/core';
 
+import { AuthenticatedUser } from './models/auth.models';
+
 @Injectable({
   providedIn: 'root',
 })
 export class AuthSessionService {
-  private readonly tokenStorageKey = 'synaptic.accessToken';
-
-  public readonly accessToken = signal<string | null>(this.readAccessToken());
+  public readonly user = signal<AuthenticatedUser | null>(null);
 
   /**
-   * Stores the API access token for the authenticated session.
+   * Stores the current authenticated user in client state.
    *
-   * @param accessToken API bearer token returned by authentication.
+   * @param user Current authenticated user returned by the API.
    */
-  public signIn(accessToken: string): void {
-    this.accessToken.set(accessToken);
-    localStorage.setItem(this.tokenStorageKey, accessToken);
+  public signIn(user: AuthenticatedUser): void {
+    this.user.set(user);
   }
 
   /**
-   * Clears the local authenticated session.
+   * Clears the local authenticated user state.
    */
   public signOut(): void {
-    this.accessToken.set(null);
-    localStorage.removeItem(this.tokenStorageKey);
+    this.user.set(null);
   }
 
   /**
-   * Reports whether the current session has an API access token.
+   * Reports whether the current client state has an authenticated user.
    *
-   * @returns True when the current session has an API access token.
+   * @returns True when the current client state has an authenticated user.
    */
   public isAuthenticated(): boolean {
-    return this.accessToken() !== null;
-  }
-
-  /**
-   * Reads a persisted API access token when real authentication has occurred.
-   *
-   * @returns Persisted API access token, or null when none exists.
-   */
-  private readAccessToken(): string | null {
-    return localStorage.getItem(this.tokenStorageKey);
+    return this.user() !== null;
   }
 }

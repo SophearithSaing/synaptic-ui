@@ -11,8 +11,7 @@
 .session-work__progress,
 .session-question__header,
 .session-question__option,
-.session-feedback__item,
-.session-feedback__clinical h3 {
+.session-feedback__item {
   display: flex;
 }
 
@@ -211,15 +210,14 @@
 }
 
 .session-feedback__clinical {
-  border-left: 4px solid var(--color-error);
+  border-left: 4px solid var(--color-primary);
   padding: var(--space-sm);
-  background: var(--color-error-container);
+  background: var(--color-surface-container-low);
 }
 
-.session-feedback__clinical h3 {
-  gap: var(--space-unit);
-  color: var(--color-on-error-container);
-  font-size: 12px;
+.session-feedback__clinical--error {
+  border-color: var(--color-error);
+  background: var(--color-error-container);
 }
 
 @media (min-width: 720px) {
@@ -229,10 +227,12 @@
 }
 
 @media (max-width: 719px) {
-  .session-question__options,
+  .session-question__options {
+    padding-left: 0;
+  }
+
   .session-question__textarea {
     width: 100%;
     margin-left: 0;
-    padding-left: 0;
   }
 }
