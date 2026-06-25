@@ -52,11 +52,13 @@ interface HomeProgressTopic {
   styleUrl: './home.component.scss',
 })
 export class HomeComponent implements OnInit {
+  public readonly catalogError = signal<string | null>(null);
   public readonly categoryGroups = signal<readonly TopicCategoryGroup[]>([]);
   public readonly loading = signal(true);
   public readonly inProgressSessions = signal<readonly InProgressSession[]>(
     [],
   );
+  public readonly sessionsError = signal<string | null>(null);
 
   public readonly navItems: readonly SynNavItem[] = [
     {
@@ -86,9 +88,19 @@ export class HomeComponent implements OnInit {
     this.topicCatalog
       .loadCatalog()
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((groups: readonly TopicCategoryGroup[]): void => {
-        this.categoryGroups.set(groups);
-        this.loading.set(false);
+      .subscribe({
+        next: (groups: readonly TopicCategoryGroup[]): void => {
+          this.catalogError.set(null);
+          this.categoryGroups.set(groups);
+          this.loading.set(false);
+        },
+        error: (): void => {
+          this.catalogError.set(
+            'Unable to load the topic catalog from the API.',
+          );
+          this.categoryGroups.set([]);
+          this.loading.set(false);
+        },
       });
 
     this.sessionService
@@ -96,9 +108,13 @@ export class HomeComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (sessions: readonly InProgressSession[]): void => {
+          this.sessionsError.set(null);
           this.inProgressSessions.set(sessions);
         },
         error: (): void => {
+          this.sessionsError.set(
+            'Unable to load your in-progress sessions from the API.',
+          );
           this.inProgressSessions.set([]);
         },
       });
