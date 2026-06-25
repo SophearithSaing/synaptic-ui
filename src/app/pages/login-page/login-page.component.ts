@@ -14,6 +14,7 @@ import {
 
 import { AuthApiService } from '../../auth-api.service';
 import { AuthSessionService } from '../../auth-session.service';
+import { mapAuthError } from '../../auth-error-mapping';
 import { AuthenticatedUser } from '../../models/auth.models';
 
 @Component({
@@ -57,7 +58,7 @@ export class LoginPageComponent {
     }
 
     const formData = new FormData(form);
-    const identifier = String(formData.get('identifier') ?? '');
+    const identifier = String(formData.get('identifier') ?? '').trim();
     const password = String(formData.get('password') ?? '');
 
     this.errorMessage.set(null);
@@ -73,8 +74,8 @@ export class LoginPageComponent {
           this.authSession.signIn(user);
           void this.router.navigateByUrl(this.returnUrl());
         },
-        error: (): void => {
-          this.errorMessage.set('Unable to log in with those credentials.');
+        error: (err: unknown): void => {
+          this.errorMessage.set(mapAuthError(err));
           this.submitting.set(false);
         },
       });
