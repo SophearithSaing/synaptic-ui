@@ -8,8 +8,14 @@ import {
   HttpRequest,
 } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { Router } from '@angular/router';
-import { catchError, Observable, switchMap, throwError } from 'rxjs';
+import {
+  catchError,
+  finalize,
+  Observable,
+  shareReplay,
+  switchMap,
+  throwError,
+} from 'rxjs';
 
 import { AuthSessionService } from './auth-session.service';
 import { CsrfService } from './csrf.service';
@@ -17,6 +23,8 @@ import { environment } from '../environments/environment';
 
 const API_BASE_URL = environment.API_BASE_URL;
 const MUTATING_METHODS = new Set(['POST', 'PUT', 'PATCH', 'DELETE']);
+
+let refreshRequest$: Observable<unknown> | null = null;
 
 /**
  * Adds API credentials, CSRF headers, and refresh retry handling.
@@ -32,7 +40,6 @@ export const authHttpInterceptor: HttpInterceptorFn = (
   const authSession = inject(AuthSessionService);
   const csrfService = inject(CsrfService);
   const httpBackend = inject(HttpBackend);
-  const router = inject(Router);
   const apiRequest = withApiCredentials(request);
 
   return sendApiRequest(apiRequest, next, csrfService).pipe(
@@ -45,7 +52,6 @@ export const authHttpInterceptor: HttpInterceptorFn = (
           csrfService,
           httpBackend,
           authSession,
-          router,
         ),
     ),
   );
@@ -85,7 +91,6 @@ function sendApiRequest(
  * @param csrfService Service that provides CSRF tokens.
  * @param httpBackend Backend used to bypass interceptors for refresh.
  * @param authSession Current auth session service.
- * @param router Angular router for login redirects.
  * @returns Retried request stream or an error stream.
  */
 function handleAuthError(
@@ -95,7 +100,6 @@ function handleAuthError(
   csrfService: CsrfService,
   httpBackend: HttpBackend,
   authSession: AuthSessionService,
-  router: Router,
 ): Observable<HttpEvent<unknown>> {
   if (!shouldRefresh(error, request)) {
     return throwError((): unknown => error);
@@ -109,7 +113,6 @@ function handleAuthError(
     catchError((refreshError: unknown): Observable<never> => {
       csrfService.clear();
       authSession.signOut();
-      void router.navigate(['/login']);
 
       return throwError((): unknown => refreshError);
     }),
@@ -127,9 +130,13 @@ function refreshSession(
   csrfService: CsrfService,
   httpBackend: HttpBackend,
 ): Observable<unknown> {
+  if (refreshRequest$ !== null) {
+    return refreshRequest$;
+  }
+
   const http = new HttpClient(httpBackend);
 
-  return csrfService.token().pipe(
+  refreshRequest$ = csrfService.token().pipe(
     switchMap(
       (token: string): Observable<unknown> =>
         http.post(
@@ -143,7 +150,13 @@ function refreshSession(
           },
         ),
     ),
+    finalize((): void => {
+      refreshRequest$ = null;
+    }),
+    shareReplay({ bufferSize: 1, refCount: false }),
   );
+
+  return refreshRequest$;
 }
 
 /**
