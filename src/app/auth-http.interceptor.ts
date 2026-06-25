@@ -14,6 +14,7 @@ import {
   Observable,
   shareReplay,
   switchMap,
+  tap,
   throwError,
 } from 'rxjs';
 
@@ -106,16 +107,16 @@ function handleAuthError(
   }
 
   return refreshSession(csrfService, httpBackend).pipe(
-    switchMap(
-      (): Observable<HttpEvent<unknown>> =>
-        sendApiRequest(request, next, csrfService),
-    ),
     catchError((refreshError: unknown): Observable<never> => {
       csrfService.clear();
       authSession.signOut();
 
       return throwError((): unknown => refreshError);
     }),
+    switchMap(
+      (): Observable<HttpEvent<unknown>> =>
+        sendApiRequest(request, next, csrfService),
+    ),
   );
 }
 
@@ -136,6 +137,8 @@ function refreshSession(
 
   const http = new HttpClient(httpBackend);
 
+  csrfService.clear();
+
   refreshRequest$ = csrfService.token().pipe(
     switchMap(
       (token: string): Observable<unknown> =>
@@ -150,6 +153,9 @@ function refreshSession(
           },
         ),
     ),
+    tap((): void => {
+      csrfService.clear();
+    }),
     finalize((): void => {
       refreshRequest$ = null;
     }),
