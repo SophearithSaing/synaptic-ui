@@ -10,13 +10,12 @@
     [error]="errorMessage()"
     (formSubmit)="onSubmit($event)"
   >
-    <syn-form-field label="Institutional Email" forId="loginEmail">
+    <syn-form-field label="Username or Email" forId="loginIdentifier">
       <syn-input
-        inputId="loginEmail"
-        name="email"
-        type="email"
-        autocomplete="email"
-        icon="mail"
+        inputId="loginIdentifier"
+        name="identifier"
+        autocomplete="username"
+        icon="person"
         placeholder="student@example.com"
         required
       />
