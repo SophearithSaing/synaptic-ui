@@ -1,8 +1,7 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, forkJoin, map, Observable, of } from 'rxjs';
 
-import { AuthSessionService } from './auth-session.service';
 import {
   Topic,
   TopicCategory,
@@ -158,10 +157,7 @@ const FALLBACK_PROGRESS: readonly TopicProgressSummary[] = [
   providedIn: 'root',
 })
 export class TopicCatalogService {
-  public constructor(
-    private readonly http: HttpClient,
-    private readonly authSession: AuthSessionService,
-  ) {}
+  public constructor(private readonly http: HttpClient) {}
 
   /**
    * Loads topic categories and topics from the API when possible.
@@ -169,20 +165,11 @@ export class TopicCatalogService {
    * @returns Observable of topic category groups.
    */
   public loadCatalog(): Observable<readonly TopicCategoryGroup[]> {
-    const headers = this.authHeaders();
-
-    if (headers === null) {
-      return of(this.groupTopics(FALLBACK_CATEGORIES, FALLBACK_TOPICS));
-    }
-
     return forkJoin({
       categories: this.http.get<readonly TopicCategory[]>(
         `${API_BASE_URL}/categories/categories`,
-        { headers },
       ),
-      topics: this.http.get<readonly Topic[]>(`${API_BASE_URL}/topics`, {
-        headers,
-      }),
+      topics: this.http.get<readonly Topic[]>(`${API_BASE_URL}/topics`),
     }).pipe(
       map(
         (response: {
@@ -321,22 +308,5 @@ export class TopicCatalogService {
     }
 
     return topic.category._id;
-  }
-
-  /**
-   * Builds authenticated API headers when a bearer token exists.
-   *
-   * @returns HTTP headers with bearer auth, or null when no token exists.
-   */
-  private authHeaders(): HttpHeaders | null {
-    const token = this.authSession.accessToken();
-
-    if (token === null) {
-      return null;
-    }
-
-    return new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-    });
   }
 }

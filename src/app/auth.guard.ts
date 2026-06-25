@@ -4,7 +4,7 @@ import { CanActivateFn, Router, UrlTree } from '@angular/router';
 import { AuthSessionService } from './auth-session.service';
 
 /**
- * Allows access only when the temporary local session is authenticated.
+ * Allows access only when the client has authenticated user state.
  */
 export const authGuard: CanActivateFn = (): boolean | UrlTree => {
   const authSession = inject(AuthSessionService);

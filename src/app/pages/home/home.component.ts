@@ -1,6 +1,7 @@
 import { Component, DestroyRef, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
+import { finalize } from 'rxjs';
 
 import {
   SynBrandComponent,
@@ -18,6 +19,7 @@ import {
   SynStackComponent,
 } from '../../ui';
 
+import { AuthApiService } from '../../auth-api.service';
 import { AuthSessionService } from '../../auth-session.service';
 import { InProgressSession } from '../../models/session.models';
 import { Topic, TopicCategoryGroup } from '../../models/topic.models';
@@ -69,6 +71,7 @@ export class HomeComponent implements OnInit {
   ];
 
   public constructor(
+    private readonly authApi: AuthApiService,
     private readonly authSession: AuthSessionService,
     private readonly router: Router,
     private readonly sessionService: SessionService,
@@ -102,11 +105,19 @@ export class HomeComponent implements OnInit {
   }
 
   /**
-   * Clears the temporary local session and returns to the landing page.
+   * Revokes the API session and returns to the landing page.
    */
   public logOut(): void {
-    this.authSession.signOut();
-    void this.router.navigate(['/']);
+    this.authApi
+      .logout()
+      .pipe(
+        finalize((): void => {
+          this.authSession.signOut();
+          void this.router.navigate(['/']);
+        }),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe();
   }
 
   /**

@@ -1,8 +1,6 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable, tap, throwError } from 'rxjs';
-
-import { AuthSessionService } from './auth-session.service';
 import {
   InProgressSession,
   QuestionSet,
@@ -21,10 +19,7 @@ const API_BASE_URL = environment.API_BASE_URL;
 export class SessionService {
   private readonly sessionStoragePrefix = 'synaptic.session.';
 
-  public constructor(
-    private readonly http: HttpClient,
-    private readonly authSession: AuthSessionService,
-  ) {}
+  public constructor(private readonly http: HttpClient) {}
 
   /**
    * Starts a session for the selected topic.
@@ -33,23 +28,19 @@ export class SessionService {
    * @returns Observable of the first question set.
    */
   public startSession(topic: Topic): Observable<QuestionSet> {
-    const headers = this.requiredAuthHeaders();
-
-    if (headers === null) {
-      return throwError((): Error => new Error('Authentication is required.'));
-    }
-
     return this.http
       .post<StartSessionResponse>(
         `${API_BASE_URL}/sessions/start`,
         { topicId: topic._id },
-        { headers },
       )
       .pipe(
         tap((response: StartSessionResponse): void => {
           this.storeSessionId(topic._id, response.sessionId);
         }),
-        map((response: StartSessionResponse): QuestionSet => response.questionSet),
+        map(
+          (response: StartSessionResponse): QuestionSet =>
+            response.questionSet,
+        ),
       );
   }
 
@@ -59,16 +50,9 @@ export class SessionService {
    * @returns Observable of active in-progress sessions.
    */
   public loadInProgressSessions(): Observable<readonly InProgressSession[]> {
-    const headers = this.requiredAuthHeaders();
-
-    if (headers === null) {
-      return throwError((): Error => new Error('Authentication is required.'));
-    }
-
     return this.http
       .get<readonly InProgressSession[]>(
         `${API_BASE_URL}/sessions/in-progress`,
-        { headers },
       )
       .pipe(
         tap((sessions: readonly InProgressSession[]): void => {
@@ -89,12 +73,7 @@ export class SessionService {
     topic: Topic,
     activeSessionId: string | null = null,
   ): Observable<QuestionSet> {
-    const headers = this.requiredAuthHeaders();
     const sessionId = activeSessionId ?? this.sessionId(topic._id);
-
-    if (headers === null) {
-      return throwError((): Error => new Error('Authentication is required.'));
-    }
 
     if (sessionId === null) {
       return throwError(
@@ -106,7 +85,6 @@ export class SessionService {
       .post<QuestionSet>(
         `${API_BASE_URL}/sessions/continue`,
         { sessionId },
-        { headers },
       )
       .pipe(
         tap((): void => {
@@ -128,12 +106,7 @@ export class SessionService {
     questionSet: QuestionSet,
     answers: readonly SessionAnswerSubmission[],
   ): Observable<SessionSubmitResponse> {
-    const headers = this.requiredAuthHeaders();
     const sessionId = this.sessionId(topic._id);
-
-    if (headers === null) {
-      return throwError((): Error => new Error('Authentication is required.'));
-    }
 
     if (sessionId === null) {
       return throwError(
@@ -149,7 +122,6 @@ export class SessionService {
         questionSetId: questionSet.id,
         answers,
       },
-      { headers },
     );
   }
 
@@ -157,7 +129,7 @@ export class SessionService {
    * Persists a returned session id for later continue and submit calls.
    *
    * @param topicId Topic id associated with the session.
-   * @param questionSet API question set response.
+   * @param sessionId API session id response.
    */
   private storeSessionId(topicId: string, sessionId: string): void {
     localStorage.setItem(this.sessionStorageKey(topicId), sessionId);
@@ -181,22 +153,5 @@ export class SessionService {
    */
   private sessionStorageKey(topicId: string): string {
     return `${this.sessionStoragePrefix}${topicId}`;
-  }
-
-  /**
-   * Builds authenticated API headers when a bearer token exists.
-   *
-   * @returns HTTP headers with bearer auth, or null when no token exists.
-   */
-  private requiredAuthHeaders(): HttpHeaders | null {
-    const token = this.authSession.accessToken();
-
-    if (token === null) {
-      return null;
-    }
-
-    return new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-    });
   }
 }
