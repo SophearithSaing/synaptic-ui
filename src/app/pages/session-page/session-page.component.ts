@@ -142,6 +142,7 @@ export class SessionPageComponent implements OnInit {
           this.feedback.set(feedback);
           this.error.set(null);
           this.submitting.set(false);
+          this.scrollToPageTop();
         },
         error: (error: Error): void => {
           this.error.set(error.message);
@@ -164,12 +165,7 @@ export class SessionPageComponent implements OnInit {
     this.questionSet.set(nextQuestionSet);
     this.feedback.set(null);
     this.answers.set({});
-    window.setTimeout((): void => {
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth',
-      });
-    });
+    this.scrollToPageTop();
   }
 
   /**
@@ -369,6 +365,18 @@ export class SessionPageComponent implements OnInit {
    */
   private isCorrectAnswer(answer: EvaluatedAnswer | null): boolean {
     return (answer?.score ?? 0) >= this.correctAnswerThreshold;
+  }
+
+  /**
+   * Scrolls the page back to the top after a view state transition.
+   */
+  private scrollToPageTop(): void {
+    window.setTimeout((): void => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
+    });
   }
 
   /**
