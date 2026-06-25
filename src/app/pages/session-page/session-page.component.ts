@@ -19,6 +19,7 @@ import {
   SessionQuestion,
   SessionQuestionOption,
   SessionSubmitResponse,
+  StartSessionResponse,
 } from '../../models/session.models';
 import { Topic, TopicCategoryGroup } from '../../models/topic.models';
 import { SessionService } from '../../session.service';
@@ -45,6 +46,7 @@ export class SessionPageComponent implements OnInit {
   public readonly error = signal<string | null>(null);
   public readonly feedback = signal<SessionSubmitResponse | null>(null);
   public readonly loading = signal(true);
+  public readonly activeSessionId = signal<string | null>(null);
   public readonly questionSet = signal<QuestionSet | null>(null);
   public readonly submitting = signal(false);
   public readonly topic = signal<Topic | null>(null);
@@ -120,10 +122,10 @@ export class SessionPageComponent implements OnInit {
    * Submits the current question set for feedback.
    */
   public submitSet(): void {
-    const topic = this.topic();
     const questionSet = this.questionSet();
+    const sessionId = this.activeSessionId();
 
-    if (topic === null || questionSet === null || this.submitting()) {
+    if (sessionId === null || questionSet === null || this.submitting()) {
       return;
     }
 
@@ -131,7 +133,7 @@ export class SessionPageComponent implements OnInit {
     this.error.set(null);
 
     this.sessionService
-      .submitAnswers(topic, questionSet, this.submissions())
+      .submitAnswers(sessionId, questionSet, this.submissions())
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (feedback: SessionSubmitResponse): void => {
@@ -355,21 +357,56 @@ export class SessionPageComponent implements OnInit {
   private loadQuestionSet(topic: Topic): void {
     const sessionId = this.route.snapshot.paramMap.get('sessionId');
     const isContinue = this.router.url.includes('/continue');
-    const source = isContinue
-      ? this.sessionService.continueSession(topic, sessionId)
-      : this.sessionService.startSession(topic);
 
-    source.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: (questionSet: QuestionSet): void => {
-        this.questionSet.set(questionSet);
-        this.error.set(null);
-        this.loading.set(false);
-      },
-      error: (error: Error): void => {
-        this.error.set(error.message);
-        this.loading.set(false);
-      },
-    });
+    if (isContinue) {
+      this.loadContinuedQuestionSet(sessionId);
+      return;
+    }
+
+    this.sessionService
+      .startSession(topic)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (response: StartSessionResponse): void => {
+          this.activeSessionId.set(response.sessionId);
+          this.questionSet.set(response.questionSet);
+          this.error.set(null);
+          this.loading.set(false);
+        },
+        error: (error: Error): void => {
+          this.error.set(error.message);
+          this.loading.set(false);
+        },
+      });
+  }
+
+  /**
+   * Loads a question set for an existing session.
+   *
+   * @param sessionId Session id from the route.
+   */
+  private loadContinuedQuestionSet(sessionId: string | null): void {
+    if (sessionId === null) {
+      this.error.set('A session id is required to continue this session.');
+      this.loading.set(false);
+      return;
+    }
+
+    this.activeSessionId.set(sessionId);
+    this.sessionService
+      .continueSession(sessionId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (questionSet: QuestionSet): void => {
+          this.questionSet.set(questionSet);
+          this.error.set(null);
+          this.loading.set(false);
+        },
+        error: (error: Error): void => {
+          this.error.set(error.message);
+          this.loading.set(false);
+        },
+      });
   }
 
   /**

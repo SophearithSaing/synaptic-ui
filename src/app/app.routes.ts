@@ -38,11 +38,6 @@ export const routes: Routes = [
     component: SessionPageComponent,
   },
   {
-    path: 'session/:topicId/continue',
-    canActivate: [authGuard],
-    component: SessionPageComponent,
-  },
-  {
     path: 'register',
     canActivate: [unauthGuard],
     component: RegisterPageComponent,
