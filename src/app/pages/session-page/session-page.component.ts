@@ -42,6 +42,8 @@ import { TopicCatalogService } from '../../topic-catalog.service';
   styleUrl: './session-page.component.scss',
 })
 export class SessionPageComponent implements OnInit {
+  private readonly correctAnswerThreshold = 0.5;
+
   public readonly answers = signal<Record<string, string>>({});
   public readonly error = signal<string | null>(null);
   public readonly feedback = signal<SessionSubmitResponse | null>(null);
@@ -304,6 +306,16 @@ export class SessionPageComponent implements OnInit {
   }
 
   /**
+   * Reports whether a question's feedback meets the correct threshold.
+   *
+   * @param questionId Question id to inspect.
+   * @returns True when the evaluated score is correct.
+   */
+  public answerIsCorrect(questionId: string): boolean {
+    return this.isCorrectAnswer(this.feedbackAnswer(questionId));
+  }
+
+  /**
    * Returns the number of correctly answered questions.
    *
    * @returns Count of correct answers.
@@ -311,7 +323,7 @@ export class SessionPageComponent implements OnInit {
   public correctCount(): number {
     return (
       this.feedback()?.attempt.answers.filter(
-        (answer: EvaluatedAnswer): boolean => answer.score >= 0.8,
+        (answer: EvaluatedAnswer): boolean => this.isCorrectAnswer(answer),
       ).length ?? 0
     );
   }
@@ -324,7 +336,7 @@ export class SessionPageComponent implements OnInit {
   public hasWrongAnswer(): boolean {
     return (
       this.feedback()?.attempt.answers.some(
-        (answer: EvaluatedAnswer): boolean => answer.score < 0.8,
+        (answer: EvaluatedAnswer): boolean => !this.isCorrectAnswer(answer),
       ) ?? false
     );
   }
@@ -347,6 +359,16 @@ export class SessionPageComponent implements OnInit {
    */
   public optionTrackBy(option: SessionQuestionOption): string {
     return option.id;
+  }
+
+  /**
+   * Reports whether an evaluated answer meets the correct threshold.
+   *
+   * @param answer Evaluated answer to inspect.
+   * @returns True when the answer score is at least the correct threshold.
+   */
+  private isCorrectAnswer(answer: EvaluatedAnswer | null): boolean {
+    return (answer?.score ?? 0) >= this.correctAnswerThreshold;
   }
 
   /**
