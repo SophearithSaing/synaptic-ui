@@ -386,7 +386,7 @@ export class SessionPageComponent implements OnInit {
     for (const group of groups) {
       const topic = group.topics.find(
         (candidate: Topic): boolean =>
-          candidate._id === topicId || candidate.slug === topicId,
+          candidate.id === topicId || candidate.slug === topicId,
       );
 
       if (topic !== undefined) {

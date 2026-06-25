@@ -129,7 +129,7 @@ export class HomeComponent implements OnInit {
     return this.inProgressSessions().map(
       (session: InProgressSession): HomeProgressTopic => ({
         session,
-        topic: this.findTopic(session.topic._id) ?? session.topic,
+        topic: this.findTopic(session.topic.id) ?? session.topic,
       }),
     );
   }
@@ -141,7 +141,7 @@ export class HomeComponent implements OnInit {
    * @returns Stable category id.
    */
   public categoryTrackBy(group: TopicCategoryGroup): string {
-    return group.category._id;
+    return group.category.id;
   }
 
   /**
@@ -151,7 +151,7 @@ export class HomeComponent implements OnInit {
    * @returns Stable topic id.
    */
   public topicTrackBy(topic: Topic): string {
-    return topic._id;
+    return topic.id;
   }
 
   /**
@@ -183,7 +183,7 @@ export class HomeComponent implements OnInit {
   private findTopic(topicId: string): Topic | null {
     for (const group of this.categoryGroups()) {
       const topic = group.topics.find(
-        (candidate: Topic): boolean => candidate._id === topicId,
+        (candidate: Topic): boolean => candidate.id === topicId,
       );
 
       if (topic !== undefined) {

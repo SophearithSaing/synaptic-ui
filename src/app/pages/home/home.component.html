@@ -37,7 +37,7 @@
                   [icon]="summary.topic.icon"
                   [routerLink]="
                     '/session/'
-                    + summary.topic._id
+                    + summary.topic.id
                     + '/continue/'
                     + summary.session.id
                   "
@@ -69,14 +69,14 @@
               @for (group of categoryGroups(); track categoryTrackBy(group)) {
                 <section
                   class="home__category"
-                  [attr.aria-labelledby]="'category-' + group.category._id"
+                  [attr.aria-labelledby]="'category-' + group.category.id"
                 >
                   <div class="home__category-heading">
                     <span class="material-symbols-outlined syn-icon">
                       {{ group.category.icon }}
                     </span>
                     <div>
-                      <h3 id="category-{{ group.category._id }}">
+                      <h3 id="category-{{ group.category.id }}">
                         {{ group.category.title }}
                       </h3>
                       <p>{{ group.category.description }}</p>
@@ -92,7 +92,7 @@
                         [label]="group.category.title"
                         [title]="topic.title"
                         [description]="topic.description"
-                        [routerLink]="'/session/' + topic._id"
+                        [routerLink]="'/session/' + topic.id"
                         [tags]="topic.tags"
                       />
                     } @empty {

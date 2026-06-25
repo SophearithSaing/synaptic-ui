@@ -13,6 +13,7 @@ import { environment } from '../environments/environment';
 
 const API_BASE_URL = environment.API_BASE_URL;
 
+
 @Injectable({
   providedIn: 'root',
 })
@@ -31,11 +32,11 @@ export class SessionService {
     return this.http
       .post<StartSessionResponse>(
         `${API_BASE_URL}/sessions/start`,
-        { topicId: topic._id },
+        { topicId: topic.id },
       )
       .pipe(
         tap((response: StartSessionResponse): void => {
-          this.storeSessionId(topic._id, response.sessionId);
+          this.storeSessionId(topic.id, response.sessionId);
         }),
         map(
           (response: StartSessionResponse): QuestionSet =>
@@ -57,7 +58,7 @@ export class SessionService {
       .pipe(
         tap((sessions: readonly InProgressSession[]): void => {
           sessions.forEach((session: InProgressSession): void => {
-            this.storeSessionId(session.topic._id, session.id);
+            this.storeSessionId(session.topic.id, session.id);
           });
         }),
       );
@@ -73,7 +74,7 @@ export class SessionService {
     topic: Topic,
     activeSessionId: string | null = null,
   ): Observable<QuestionSet> {
-    const sessionId = activeSessionId ?? this.sessionId(topic._id);
+    const sessionId = activeSessionId ?? this.sessionId(topic.id);
 
     if (sessionId === null) {
       return throwError(
@@ -88,7 +89,7 @@ export class SessionService {
       )
       .pipe(
         tap((): void => {
-          this.storeSessionId(topic._id, sessionId);
+          this.storeSessionId(topic.id, sessionId);
         }),
       );
   }
@@ -106,7 +107,7 @@ export class SessionService {
     questionSet: QuestionSet,
     answers: readonly SessionAnswerSubmission[],
   ): Observable<SessionSubmitResponse> {
-    const sessionId = this.sessionId(topic._id);
+    const sessionId = this.sessionId(topic.id);
 
     if (sessionId === null) {
       return throwError(

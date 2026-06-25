@@ -49,95 +49,118 @@ const TOPIC_ICON_MAP: Record<string, string> = {
   'ci-cd-pipelines': 'automation',
 };
 
+const FALLBACK_TIMESTAMP = '2026-01-01T00:00:00.000Z';
+
 const FALLBACK_CATEGORIES: readonly TopicCategory[] = [
   {
-    _id: 'cs-concepts',
+    id: 'cs-concepts',
     title: 'Computer Science Concepts',
     slug: 'cs-concepts',
     description: 'Core theories and fundamental CS principles.',
     icon: 'schema',
+    createdAt: FALLBACK_TIMESTAMP,
+    updatedAt: FALLBACK_TIMESTAMP,
   },
   {
-    _id: 'tech-stacks',
+    id: 'tech-stacks',
     title: 'Languages & Tech Stacks',
     slug: 'tech-stacks',
     description: 'Programming languages, runtimes, and backend foundations.',
     icon: 'code',
+    createdAt: FALLBACK_TIMESTAMP,
+    updatedAt: FALLBACK_TIMESTAMP,
   },
   {
-    _id: 'ops-infra',
+    id: 'ops-infra',
     title: 'Operations & Infrastructure',
     slug: 'ops-infra',
     description: 'Delivery, containers, orchestration, and platform practice.',
     icon: 'deployed_code',
+    createdAt: FALLBACK_TIMESTAMP,
+    updatedAt: FALLBACK_TIMESTAMP,
   },
 ];
 
 const FALLBACK_TOPICS: readonly Topic[] = [
   {
-    _id: 'memory-management',
+    id: 'memory-management',
     title: 'Memory Management',
     slug: 'memory-management',
     description: 'Understanding stack, heap, and garbage collection.',
     icon: 'memory',
     tags: ['systems', 'runtime'],
     category: FALLBACK_CATEGORIES[0],
+    createdAt: FALLBACK_TIMESTAMP,
+    updatedAt: FALLBACK_TIMESTAMP,
   },
   {
-    _id: 'concurrency',
+    id: 'concurrency',
     title: 'Concurrency',
     slug: 'concurrency',
     description: 'Reason about scheduling, synchronization, and parallelism.',
     icon: 'sync',
     tags: ['systems', 'parallelism'],
     category: FALLBACK_CATEGORIES[0],
+    createdAt: FALLBACK_TIMESTAMP,
+    updatedAt: FALLBACK_TIMESTAMP,
   },
   {
-    _id: 'distributed-systems',
+    id: 'distributed-systems',
     title: 'Distributed Systems',
     slug: 'distributed-systems',
     description: 'Explore replication, consensus, and failure models.',
     icon: 'hub',
     tags: ['distributed', 'networking'],
     category: FALLBACK_CATEGORIES[0],
+    createdAt: FALLBACK_TIMESTAMP,
+    updatedAt: FALLBACK_TIMESTAMP,
   },
   {
-    _id: 'node-js',
+    id: 'node-js',
     title: 'Node.js',
     slug: 'node-js',
     description: 'Backend runtime behavior, event loops, and async patterns.',
     icon: 'terminal',
     tags: ['backend', 'runtime'],
     category: FALLBACK_CATEGORIES[1],
+    createdAt: FALLBACK_TIMESTAMP,
+    updatedAt: FALLBACK_TIMESTAMP,
   },
   {
-    _id: 'rust-fundamentals',
+    id: 'rust-fundamentals',
     title: 'Rust Fundamentals',
     slug: 'rust-fundamentals',
     description: 'Ownership, borrowing, lifetimes, and memory safety.',
     icon: 'data_object',
     tags: ['systems', 'memory-safety'],
     category: FALLBACK_CATEGORIES[1],
+    createdAt: FALLBACK_TIMESTAMP,
+    updatedAt: FALLBACK_TIMESTAMP,
   },
   {
-    _id: 'kubernetes',
+    id: 'kubernetes',
     title: 'Kubernetes',
     slug: 'kubernetes',
     description: 'Cluster orchestration, workload scheduling, and services.',
     icon: 'conversion_path',
     tags: ['orchestration', 'containers'],
     category: FALLBACK_CATEGORIES[2],
+    createdAt: FALLBACK_TIMESTAMP,
+    updatedAt: FALLBACK_TIMESTAMP,
   },
   {
-    _id: 'ci-cd-pipelines',
+    id: 'ci-cd-pipelines',
     title: 'CI/CD Pipelines',
     slug: 'ci-cd-pipelines',
     description: 'Automation patterns for repeatable delivery workflows.',
     icon: 'automation',
     tags: ['automation', 'devops'],
     category: FALLBACK_CATEGORIES[2],
+    createdAt: FALLBACK_TIMESTAMP,
+    updatedAt: FALLBACK_TIMESTAMP,
   },
 ];
+
 
 const FALLBACK_PROGRESS: readonly TopicProgressSummary[] = [
   // TODO: Remove prototype progress once session progress is API-backed.
@@ -177,8 +200,8 @@ export class TopicCatalogService {
           readonly topics: readonly Topic[];
         }): readonly TopicCategoryGroup[] =>
           this.groupTopics(
-            this.normalizeCategories(response.categories),
-            this.normalizeTopics(response.topics),
+            this.resolveCategoryIcons(response.categories),
+            this.resolveTopicIcons(response.topics),
           ),
       ),
       catchError(
@@ -198,18 +221,17 @@ export class TopicCatalogService {
   }
 
   /**
-   * Normalizes API category id fields for existing UI usage.
+   * Resolves category icon names for existing UI usage.
    *
    * @param categories Topic categories returned by the API.
-   * @returns Categories with `_id` populated.
+   * @returns Categories with supported Material Symbol icons.
    */
-  private normalizeCategories(
+  private resolveCategoryIcons(
     categories: readonly TopicCategory[],
   ): readonly TopicCategory[] {
     return categories.map(
       (category: TopicCategory): TopicCategory => ({
         ...category,
-        _id: category._id ?? category.id ?? category.slug,
         icon: this.resolveIcon(
           category.icon,
           category.slug,
@@ -221,16 +243,15 @@ export class TopicCatalogService {
   }
 
   /**
-   * Normalizes API topic id fields for existing UI usage.
+   * Resolves topic icon names for existing UI usage.
    *
    * @param topics Topics returned by the API.
-   * @returns Topics with `_id` populated.
+   * @returns Topics with supported Material Symbol icons.
    */
-  private normalizeTopics(topics: readonly Topic[]): readonly Topic[] {
+  private resolveTopicIcons(topics: readonly Topic[]): readonly Topic[] {
     return topics.map(
       (topic: Topic): Topic => ({
         ...topic,
-        _id: topic._id ?? topic.id ?? topic.slug,
         icon: this.resolveIcon(
           topic.icon,
           topic.slug,
@@ -242,10 +263,6 @@ export class TopicCatalogService {
             ? topic.category
             : {
                 ...topic.category,
-                _id:
-                  topic.category._id ??
-                  topic.category.id ??
-                  topic.category.slug,
                 icon: this.resolveIcon(
                   topic.category.icon,
                   topic.category.slug,
@@ -272,7 +289,7 @@ export class TopicCatalogService {
       (category: TopicCategory): TopicCategoryGroup => ({
         category,
         topics: topics.filter(
-          (topic: Topic): boolean => this.categoryId(topic) === category._id,
+          (topic: Topic): boolean => this.categoryId(topic) === category.id,
         ),
       }),
     );
@@ -307,6 +324,6 @@ export class TopicCatalogService {
       return topic.category;
     }
 
-    return topic.category._id;
+    return topic.category.id;
   }
 }
