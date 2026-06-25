@@ -1,6 +1,6 @@
 import { Component, DestroyRef, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, switchMap } from 'rxjs';
 
 import {
@@ -38,6 +38,7 @@ export class LoginPageComponent {
     private readonly authApi: AuthApiService,
     private readonly authSession: AuthSessionService,
     private readonly destroyRef: DestroyRef,
+    private readonly route: ActivatedRoute,
     private readonly router: Router,
   ) {}
 
@@ -70,12 +71,31 @@ export class LoginPageComponent {
       .subscribe({
         next: (user: AuthenticatedUser): void => {
           this.authSession.signIn(user);
-          void this.router.navigate(['/home']);
+          void this.router.navigateByUrl(this.returnUrl());
         },
         error: (): void => {
           this.errorMessage.set('Unable to log in with those credentials.');
           this.submitting.set(false);
         },
       });
+  }
+
+  /**
+   * Returns the post-login destination from query params.
+   *
+   * @returns Safe post-login URL.
+   */
+  private returnUrl(): string {
+    const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
+
+    if (returnUrl === null || !returnUrl.startsWith('/')) {
+      return '/home';
+    }
+
+    if (returnUrl.startsWith('//')) {
+      return '/home';
+    }
+
+    return returnUrl;
   }
 }
