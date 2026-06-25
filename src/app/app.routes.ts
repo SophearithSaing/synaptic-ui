@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 
-import { authGuard } from './auth.guard';
+import { authGuard, unauthGuard } from './auth.guard';
 import { DesignSystemComponent } from './pages/design-system/design-system.component';
 import { HomeComponent } from './pages/home/home.component';
 import { LandingPageComponent } from './pages/landing-page/landing-page.component';
@@ -19,6 +19,7 @@ export const routes: Routes = [
   },
   {
     path: 'login',
+    canActivate: [unauthGuard],
     component: LoginPageComponent,
   },
   {
@@ -43,6 +44,7 @@ export const routes: Routes = [
   },
   {
     path: 'register',
+    canActivate: [unauthGuard],
     component: RegisterPageComponent,
   },
 ];
