@@ -24,9 +24,3 @@ export interface TopicCategoryGroup {
   readonly category: TopicCategory;
   readonly topics: readonly Topic[];
 }
-
-export interface TopicProgressSummary {
-  readonly topicId: string;
-  readonly level: number;
-  readonly progress: number;
-}

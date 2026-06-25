@@ -1,13 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, forkJoin, map, Observable, of } from 'rxjs';
+import { forkJoin, map, Observable } from 'rxjs';
 
-import {
-  Topic,
-  TopicCategory,
-  TopicCategoryGroup,
-  TopicProgressSummary,
-} from './models/topic.models';
+import { Topic, TopicCategory, TopicCategoryGroup } from './models/topic.models';
 import { environment } from '../environments/environment';
 
 const API_BASE_URL = environment.API_BASE_URL;
@@ -49,133 +44,6 @@ const TOPIC_ICON_MAP: Record<string, string> = {
   'ci-cd-pipelines': 'automation',
 };
 
-const FALLBACK_TIMESTAMP = '2026-01-01T00:00:00.000Z';
-
-const FALLBACK_CATEGORIES: readonly TopicCategory[] = [
-  {
-    id: 'cs-concepts',
-    title: 'Computer Science Concepts',
-    slug: 'cs-concepts',
-    description: 'Core theories and fundamental CS principles.',
-    icon: 'schema',
-    createdAt: FALLBACK_TIMESTAMP,
-    updatedAt: FALLBACK_TIMESTAMP,
-  },
-  {
-    id: 'tech-stacks',
-    title: 'Languages & Tech Stacks',
-    slug: 'tech-stacks',
-    description: 'Programming languages, runtimes, and backend foundations.',
-    icon: 'code',
-    createdAt: FALLBACK_TIMESTAMP,
-    updatedAt: FALLBACK_TIMESTAMP,
-  },
-  {
-    id: 'ops-infra',
-    title: 'Operations & Infrastructure',
-    slug: 'ops-infra',
-    description: 'Delivery, containers, orchestration, and platform practice.',
-    icon: 'deployed_code',
-    createdAt: FALLBACK_TIMESTAMP,
-    updatedAt: FALLBACK_TIMESTAMP,
-  },
-];
-
-const FALLBACK_TOPICS: readonly Topic[] = [
-  {
-    id: 'memory-management',
-    title: 'Memory Management',
-    slug: 'memory-management',
-    description: 'Understanding stack, heap, and garbage collection.',
-    icon: 'memory',
-    tags: ['systems', 'runtime'],
-    category: FALLBACK_CATEGORIES[0],
-    createdAt: FALLBACK_TIMESTAMP,
-    updatedAt: FALLBACK_TIMESTAMP,
-  },
-  {
-    id: 'concurrency',
-    title: 'Concurrency',
-    slug: 'concurrency',
-    description: 'Reason about scheduling, synchronization, and parallelism.',
-    icon: 'sync',
-    tags: ['systems', 'parallelism'],
-    category: FALLBACK_CATEGORIES[0],
-    createdAt: FALLBACK_TIMESTAMP,
-    updatedAt: FALLBACK_TIMESTAMP,
-  },
-  {
-    id: 'distributed-systems',
-    title: 'Distributed Systems',
-    slug: 'distributed-systems',
-    description: 'Explore replication, consensus, and failure models.',
-    icon: 'hub',
-    tags: ['distributed', 'networking'],
-    category: FALLBACK_CATEGORIES[0],
-    createdAt: FALLBACK_TIMESTAMP,
-    updatedAt: FALLBACK_TIMESTAMP,
-  },
-  {
-    id: 'node-js',
-    title: 'Node.js',
-    slug: 'node-js',
-    description: 'Backend runtime behavior, event loops, and async patterns.',
-    icon: 'terminal',
-    tags: ['backend', 'runtime'],
-    category: FALLBACK_CATEGORIES[1],
-    createdAt: FALLBACK_TIMESTAMP,
-    updatedAt: FALLBACK_TIMESTAMP,
-  },
-  {
-    id: 'rust-fundamentals',
-    title: 'Rust Fundamentals',
-    slug: 'rust-fundamentals',
-    description: 'Ownership, borrowing, lifetimes, and memory safety.',
-    icon: 'data_object',
-    tags: ['systems', 'memory-safety'],
-    category: FALLBACK_CATEGORIES[1],
-    createdAt: FALLBACK_TIMESTAMP,
-    updatedAt: FALLBACK_TIMESTAMP,
-  },
-  {
-    id: 'kubernetes',
-    title: 'Kubernetes',
-    slug: 'kubernetes',
-    description: 'Cluster orchestration, workload scheduling, and services.',
-    icon: 'conversion_path',
-    tags: ['orchestration', 'containers'],
-    category: FALLBACK_CATEGORIES[2],
-    createdAt: FALLBACK_TIMESTAMP,
-    updatedAt: FALLBACK_TIMESTAMP,
-  },
-  {
-    id: 'ci-cd-pipelines',
-    title: 'CI/CD Pipelines',
-    slug: 'ci-cd-pipelines',
-    description: 'Automation patterns for repeatable delivery workflows.',
-    icon: 'automation',
-    tags: ['automation', 'devops'],
-    category: FALLBACK_CATEGORIES[2],
-    createdAt: FALLBACK_TIMESTAMP,
-    updatedAt: FALLBACK_TIMESTAMP,
-  },
-];
-
-
-const FALLBACK_PROGRESS: readonly TopicProgressSummary[] = [
-  // TODO: Remove prototype progress once session progress is API-backed.
-  {
-    topicId: 'distributed-systems',
-    level: 42,
-    progress: 42,
-  },
-  {
-    topicId: 'memory-management',
-    level: 12,
-    progress: 12,
-  },
-];
-
 @Injectable({
   providedIn: 'root',
 })
@@ -183,7 +51,7 @@ export class TopicCatalogService {
   public constructor(private readonly http: HttpClient) {}
 
   /**
-   * Loads topic categories and topics from the API when possible.
+   * Loads topic categories and topics from the API.
    *
    * @returns Observable of topic category groups.
    */
@@ -204,20 +72,7 @@ export class TopicCatalogService {
             this.resolveTopicIcons(response.topics),
           ),
       ),
-      catchError(
-        (): Observable<readonly TopicCategoryGroup[]> =>
-          of(this.groupTopics(FALLBACK_CATEGORIES, FALLBACK_TOPICS)),
-      ),
     );
-  }
-
-  /**
-   * Returns temporary progress summaries for the current prototype home.
-   *
-   * @returns Temporary topic progress summaries.
-   */
-  public loadProgress(): readonly TopicProgressSummary[] {
-    return FALLBACK_PROGRESS;
   }
 
   /**
@@ -301,7 +156,7 @@ export class TopicCatalogService {
    * @param icon API icon value.
    * @param slug API slug value.
    * @param iconMap Known API values mapped to Material Symbols.
-   * @param fallback Fallback Material Symbol icon.
+   * @param fallback Fallback icon for unknown values.
    * @returns Material Symbol icon name.
    */
   private resolveIcon(
