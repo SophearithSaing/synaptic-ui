@@ -27,7 +27,7 @@
       (click)="toggleMobileNav()"
     >
       <span class="material-symbols-outlined" aria-hidden="true">
-        {{ mobileNavOpen() ? "close" : "menu" }}
+        {{ mobileNavOpen() ? 'close' : 'menu' }}
       </span>
     </button>
 
@@ -124,10 +124,5 @@
     </syn-container>
   </syn-section>
 
-  <syn-footer
-    synPageFooter
-    brand="Synaptic"
-    copy="(c) 2026 Synaptic. Built for technical mastery."
-    [links]="footerLinks"
-  />
+  <syn-footer synPageFooter [links]="footerLinks" />
 </syn-page-shell>

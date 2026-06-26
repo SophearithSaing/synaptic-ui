@@ -13,9 +13,7 @@ import { SynNavItem } from '../models/nav-item.model';
 export class SynFooterComponent {
   @Input() public ariaLabel = 'Footer navigation';
 
-  @Input() public brand: string | null = 'Synaptic';
-
-  @Input() public copy: string | null = null;
+  @Input() public copy: string | null = '© 2026 Synaptic. Not a real company.';
 
   @Input() public links: readonly SynNavItem[] = [];
 }

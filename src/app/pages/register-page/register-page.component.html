@@ -17,7 +17,7 @@
       (click)="toggleMobileNav()"
     >
       <span class="material-symbols-outlined" aria-hidden="true">
-        {{ mobileNavOpen() ? "close" : "menu" }}
+        {{ mobileNavOpen() ? 'close' : 'menu' }}
       </span>
     </button>
 
@@ -100,9 +100,5 @@
     </syn-form-panel>
   </syn-form-shell>
 
-  <syn-footer
-    synPageFooter
-    [brand]="null"
-    copy="© 2026 Synaptic. Not a real company."
-  />
+  <syn-footer synPageFooter />
 </syn-page-shell>

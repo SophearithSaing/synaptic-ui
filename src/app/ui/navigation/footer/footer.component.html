@@ -1,12 +1,6 @@
 <footer class="footer">
-  <div
-    class="footer__inner"
-    [class.footer__inner--center]="!links.length"
-  >
+  <div class="footer__inner" [class.footer__inner--center]="!links.length">
     <div>
-      @if (brand) {
-        <span class="footer__brand">{{ brand }}</span>
-      }
       @if (copy) {
         <span class="footer__copy">{{ copy }}</span>
       }
