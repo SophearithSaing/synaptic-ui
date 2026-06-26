@@ -5,11 +5,10 @@ import {
   RouterStateSnapshot,
   UrlTree,
 } from '@angular/router';
-import { catchError, map, Observable, of, tap } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
-import { AuthApiService } from './auth-api.service';
+import { AuthInitializationService } from './auth-initialization.service';
 import { AuthSessionService } from './auth-session.service';
-import { AuthenticatedUser } from './models/auth.models';
 
 /**
  * Allows access only when the API confirms an authenticated user.
@@ -22,28 +21,29 @@ export const authGuard: CanActivateFn = (
   _route,
   state: RouterStateSnapshot,
 ): boolean | UrlTree | Observable<boolean | UrlTree> => {
-  const authApi = inject(AuthApiService);
+  const authInitialization = inject(AuthInitializationService);
   const authSession = inject(AuthSessionService);
   const router = inject(Router);
 
-  if (authSession.isAuthenticated()) {
-    return true;
+  if (authSession.hasInitialized()) {
+    return authSession.isAuthenticated()
+      ? true
+      : router.createUrlTree(['/login'], {
+          queryParams: {
+            returnUrl: state.url,
+          },
+        });
   }
 
-  return authApi.me().pipe(
-    tap((user: AuthenticatedUser): void => {
-      authSession.signIn(user);
-    }),
-    map((): boolean => true),
-    catchError(
-      (): Observable<UrlTree> =>
-        of(
-          router.createUrlTree(['/login'], {
+  return authInitialization.initialize().pipe(
+    map((): boolean | UrlTree =>
+      authSession.isAuthenticated()
+        ? true
+        : router.createUrlTree(['/login'], {
             queryParams: {
               returnUrl: state.url,
             },
           }),
-        ),
     ),
   );
 };
@@ -57,19 +57,21 @@ export const unauthGuard: CanActivateFn = ():
   | boolean
   | UrlTree
   | Observable<boolean | UrlTree> => {
-  const authApi = inject(AuthApiService);
+  const authInitialization = inject(AuthInitializationService);
   const authSession = inject(AuthSessionService);
   const router = inject(Router);
 
-  if (authSession.isAuthenticated()) {
-    return router.createUrlTree(['/home']);
+  if (authSession.hasInitialized()) {
+    return authSession.isAuthenticated()
+      ? router.createUrlTree(['/home'])
+      : true;
   }
 
-  return authApi.me().pipe(
-    tap((user: AuthenticatedUser): void => {
-      authSession.signIn(user);
-    }),
-    map((): UrlTree => router.createUrlTree(['/home'])),
-    catchError((): Observable<boolean> => of(true)),
+  return authInitialization.initialize().pipe(
+    map((): boolean | UrlTree =>
+      authSession.isAuthenticated()
+        ? router.createUrlTree(['/home'])
+        : true,
+    ),
   );
 };

@@ -6,6 +6,7 @@ import { AuthenticatedUser } from './models/auth.models';
   providedIn: 'root',
 })
 export class AuthSessionService {
+  public readonly initialized = signal(false);
   public readonly user = signal<AuthenticatedUser | null>(null);
 
   /**
@@ -22,6 +23,22 @@ export class AuthSessionService {
    */
   public signOut(): void {
     this.user.set(null);
+  }
+
+  /**
+   * Marks the first-load authentication check as complete.
+   */
+  public completeInitialization(): void {
+    this.initialized.set(true);
+  }
+
+  /**
+   * Reports whether the first-load authentication check has completed.
+   *
+   * @returns True when initial authentication state is known.
+   */
+  public hasInitialized(): boolean {
+    return this.initialized();
   }
 
   /**
