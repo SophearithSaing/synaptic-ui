@@ -1,1 +1,11 @@
-<router-outlet />
+@if (authInitialized()) {
+  <router-outlet />
+} @else {
+  <main class="initial-loader" aria-label="Loading Synaptic">
+    <span class="initial-loader__brand">
+      <img class="initial-loader__logo" src="assets/logo.png" alt="" />
+      <span class="initial-loader__name">Synaptic</span>
+    </span>
+    <span class="initial-loader__spinner" aria-hidden="true"></span>
+  </main>
+}
