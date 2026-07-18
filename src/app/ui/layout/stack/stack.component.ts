@@ -5,7 +5,6 @@ import { SynStackDirection, SynStackSize } from '../models/stack.model';
 
 @Component({
   selector: 'syn-stack',
-  standalone: true,
   imports: [NgClass],
   templateUrl: './stack.component.html',
   styleUrl: './stack.component.scss',

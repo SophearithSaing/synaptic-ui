@@ -5,7 +5,6 @@ import { SynChipTone } from '../models/chip.model';
 
 @Component({
   selector: 'syn-chip',
-  standalone: true,
   imports: [NgClass],
   templateUrl: './chip.component.html',
   styleUrl: './chip.component.scss',

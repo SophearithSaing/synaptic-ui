@@ -17,7 +17,6 @@ interface SynMobileNavActionItem {
 
 @Component({
   selector: 'syn-mobile-nav',
-  standalone: true,
   imports: [NgClass, RouterLink],
   templateUrl: './mobile-nav.component.html',
   styleUrl: './mobile-nav.component.scss',

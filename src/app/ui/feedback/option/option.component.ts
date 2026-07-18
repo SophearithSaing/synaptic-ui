@@ -12,7 +12,6 @@ import { SynOptionType } from '../models/option.model';
 
 @Component({
   selector: 'syn-option',
-  standalone: true,
   imports: [NgClass],
   templateUrl: './option.component.html',
   styleUrl: './option.component.scss',

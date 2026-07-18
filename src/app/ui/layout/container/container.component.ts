@@ -3,7 +3,6 @@ import { booleanAttribute, Component, Input, OnChanges } from '@angular/core';
 
 @Component({
   selector: 'syn-container',
-  standalone: true,
   imports: [NgClass],
   templateUrl: './container.component.html',
   styleUrl: './container.component.scss',

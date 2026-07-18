@@ -3,7 +3,6 @@ import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'syn-form-field',
-  standalone: true,
   imports: [NgClass],
   templateUrl: './form-field.component.html',
   styleUrl: './form-field.component.scss',

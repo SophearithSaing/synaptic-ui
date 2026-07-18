@@ -3,7 +3,6 @@ import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'syn-form-shell',
-  standalone: true,
   imports: [NgClass],
   templateUrl: './form-shell.component.html',
   styleUrl: './form-shell.component.scss',

@@ -3,7 +3,6 @@ import { booleanAttribute, Component, Input, OnChanges } from '@angular/core';
 
 @Component({
   selector: 'syn-section-header',
-  standalone: true,
   imports: [NgClass],
   templateUrl: './section-header.component.html',
   styleUrl: './section-header.component.scss',

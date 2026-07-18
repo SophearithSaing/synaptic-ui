@@ -3,7 +3,6 @@ import { booleanAttribute, Component, Input, OnChanges } from '@angular/core';
 
 @Component({
   selector: 'syn-info-card',
-  standalone: true,
   imports: [NgClass],
   templateUrl: './info-card.component.html',
   styleUrl: './info-card.component.scss',

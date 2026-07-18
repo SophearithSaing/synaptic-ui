@@ -62,7 +62,6 @@ interface SpacingToken {
 
 @Component({
   selector: 'app-design-system',
-  standalone: true,
   imports: [
     SynBrandComponent,
     SynButtonComponent,

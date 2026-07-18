@@ -36,7 +36,6 @@ interface CurriculumTrack {
 
 @Component({
   selector: 'app-landing-page',
-  standalone: true,
   imports: [
     SynBrandComponent,
     SynButtonComponent,

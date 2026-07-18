@@ -4,7 +4,6 @@ import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'syn-text-link',
-  standalone: true,
   imports: [NgClass, NgTemplateOutlet, RouterLink],
   templateUrl: './text-link.component.html',
   styleUrl: './text-link.component.scss',

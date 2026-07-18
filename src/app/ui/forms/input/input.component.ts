@@ -12,7 +12,6 @@ import { SynInputAutocomplete, SynInputType } from '../models/input.model';
 
 @Component({
   selector: 'syn-input',
-  standalone: true,
   imports: [NgClass],
   templateUrl: './input.component.html',
   styleUrl: './input.component.scss',

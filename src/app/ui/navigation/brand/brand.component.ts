@@ -4,7 +4,6 @@ import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'syn-brand',
-  standalone: true,
   imports: [NgTemplateOutlet, RouterLink],
   templateUrl: './brand.component.html',
   styleUrl: './brand.component.scss',

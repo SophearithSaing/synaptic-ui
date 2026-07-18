@@ -33,7 +33,6 @@ interface HomeProgressTopic {
 
 @Component({
   selector: 'app-home',
-  standalone: true,
   imports: [
     SynBrandComponent,
     SynButtonComponent,

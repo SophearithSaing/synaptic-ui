@@ -27,7 +27,6 @@ import { TopicCatalogService } from '../../topic-catalog.service';
 
 @Component({
   selector: 'app-session-page',
-  standalone: true,
   imports: [
     SynBrandComponent,
     SynButtonComponent,

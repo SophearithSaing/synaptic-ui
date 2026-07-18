@@ -13,7 +13,6 @@ import { SynButtonType, SynButtonVariant } from '../models/button.model';
 
 @Component({
   selector: 'syn-button',
-  standalone: true,
   imports: [NgClass, NgTemplateOutlet, RouterLink],
   templateUrl: './button.component.html',
   styleUrl: './button.component.scss',

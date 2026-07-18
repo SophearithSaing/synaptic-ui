@@ -32,7 +32,6 @@ import { AuthenticatedUser } from '../../models/auth.models';
 
 @Component({
   selector: 'app-register-page',
-  standalone: true,
   imports: [
     SynBrandComponent,
     SynButtonComponent,

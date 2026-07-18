@@ -4,7 +4,6 @@ import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'syn-catalog-card',
-  standalone: true,
   imports: [NgTemplateOutlet, RouterLink],
   templateUrl: './catalog-card.component.html',
   styleUrl: './catalog-card.component.scss',

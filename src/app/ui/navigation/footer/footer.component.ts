@@ -5,7 +5,6 @@ import { SynNavItem } from '../models/nav-item.model';
 
 @Component({
   selector: 'syn-footer',
-  standalone: true,
   imports: [RouterLink],
   templateUrl: './footer.component.html',
   styleUrl: './footer.component.scss',

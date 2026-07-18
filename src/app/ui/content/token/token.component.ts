@@ -5,7 +5,6 @@ import { SynTokenTone } from '../models/token.model';
 
 @Component({
   selector: 'syn-token',
-  standalone: true,
   imports: [NgClass],
   templateUrl: './token.component.html',
   styleUrl: './token.component.scss',
