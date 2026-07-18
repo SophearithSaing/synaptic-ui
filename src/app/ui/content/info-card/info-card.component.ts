@@ -1,10 +1,17 @@
 import { NgClass } from '@angular/common';
-import { booleanAttribute, Component, Input, OnChanges } from '@angular/core';
+import {
+  booleanAttribute,
+  Component,
+  Input,
+  OnChanges,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 
 @Component({
   selector: 'syn-info-card',
   imports: [NgClass],
   templateUrl: './info-card.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './info-card.component.scss',
 })
 export class SynInfoCardComponent implements OnChanges {

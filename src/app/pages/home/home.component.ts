@@ -1,4 +1,10 @@
-import { Component, DestroyRef, OnInit, signal } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  OnInit,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { finalize } from 'rxjs';
@@ -48,6 +54,7 @@ interface HomeProgressTopic {
     SynStackComponent,
   ],
   templateUrl: './home.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './home.component.scss',
 })
 export class HomeComponent implements OnInit {

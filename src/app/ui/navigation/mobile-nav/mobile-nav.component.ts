@@ -5,6 +5,7 @@ import {
   Input,
   OnChanges,
   Output,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
@@ -19,6 +20,7 @@ interface SynMobileNavActionItem {
   selector: 'syn-mobile-nav',
   imports: [NgClass, RouterLink],
   templateUrl: './mobile-nav.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './mobile-nav.component.scss',
 })
 export class SynMobileNavComponent implements OnChanges {

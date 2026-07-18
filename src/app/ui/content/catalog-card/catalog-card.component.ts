@@ -1,11 +1,12 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'syn-catalog-card',
   imports: [NgTemplateOutlet, RouterLink],
   templateUrl: './catalog-card.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './catalog-card.component.scss',
 })
 export class SynCatalogCardComponent {

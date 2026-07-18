@@ -1,9 +1,10 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'syn-progress-bar',
   standalone: true,
   templateUrl: './progress-bar.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './progress-bar.component.scss',
 })
 export class SynProgressBarComponent {

@@ -1,5 +1,11 @@
 import { NgClass } from '@angular/common';
-import { booleanAttribute, Component, Input, OnChanges } from '@angular/core';
+import {
+  booleanAttribute,
+  Component,
+  Input,
+  OnChanges,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 
 import { SynStackDirection, SynStackSize } from '../models/stack.model';
 
@@ -7,6 +13,7 @@ import { SynStackDirection, SynStackSize } from '../models/stack.model';
   selector: 'syn-stack',
   imports: [NgClass],
   templateUrl: './stack.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './stack.component.scss',
 })
 export class SynStackComponent implements OnChanges {

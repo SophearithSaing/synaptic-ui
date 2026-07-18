@@ -6,6 +6,7 @@ import {
   Input,
   OnChanges,
   Output,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
@@ -15,6 +16,7 @@ import { SynButtonType, SynButtonVariant } from '../models/button.model';
   selector: 'syn-button',
   imports: [NgClass, NgTemplateOutlet, RouterLink],
   templateUrl: './button.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './button.component.scss',
 })
 export class SynButtonComponent implements OnChanges {

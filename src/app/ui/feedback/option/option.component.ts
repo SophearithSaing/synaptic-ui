@@ -6,6 +6,7 @@ import {
   Input,
   OnChanges,
   Output,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 
 import { SynOptionType } from '../models/option.model';
@@ -14,6 +15,7 @@ import { SynOptionType } from '../models/option.model';
   selector: 'syn-option',
   imports: [NgClass],
   templateUrl: './option.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './option.component.scss',
 })
 export class SynOptionComponent implements OnChanges {

@@ -1,4 +1,9 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterOutlet } from '@angular/router';
 
@@ -9,6 +14,7 @@ import { AuthSessionService } from './auth-session.service';
   selector: 'app-root',
   imports: [RouterOutlet],
   templateUrl: './app.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './app.component.scss',
 })
 export class AppComponent implements OnInit {

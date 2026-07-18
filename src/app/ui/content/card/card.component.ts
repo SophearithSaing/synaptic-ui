@@ -1,11 +1,18 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { booleanAttribute, Component, Input, OnChanges } from '@angular/core';
+import {
+  booleanAttribute,
+  Component,
+  Input,
+  OnChanges,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'syn-card',
   imports: [NgClass, NgTemplateOutlet, RouterLink],
   templateUrl: './card.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './card.component.scss',
 })
 export class SynCardComponent implements OnChanges {

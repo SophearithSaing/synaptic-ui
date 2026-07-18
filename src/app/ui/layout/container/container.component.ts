@@ -1,10 +1,17 @@
 import { NgClass } from '@angular/common';
-import { booleanAttribute, Component, Input, OnChanges } from '@angular/core';
+import {
+  booleanAttribute,
+  Component,
+  Input,
+  OnChanges,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 
 @Component({
   selector: 'syn-container',
   imports: [NgClass],
   templateUrl: './container.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './container.component.scss',
 })
 export class SynContainerComponent implements OnChanges {

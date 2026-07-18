@@ -1,11 +1,18 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { booleanAttribute, Component, Input, OnChanges } from '@angular/core';
+import {
+  booleanAttribute,
+  Component,
+  Input,
+  OnChanges,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'syn-text-link',
   imports: [NgClass, NgTemplateOutlet, RouterLink],
   templateUrl: './text-link.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './text-link.component.scss',
 })
 export class SynTextLinkComponent implements OnChanges {

@@ -1,10 +1,17 @@
-import { booleanAttribute, Component, Input, OnChanges } from '@angular/core';
+import {
+  booleanAttribute,
+  Component,
+  Input,
+  OnChanges,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'syn-form-shell',
   imports: [NgClass],
   templateUrl: './form-shell.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './form-shell.component.scss',
 })
 export class SynFormShellComponent implements OnChanges {

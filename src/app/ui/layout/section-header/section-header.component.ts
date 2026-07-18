@@ -1,10 +1,17 @@
 import { NgClass } from '@angular/common';
-import { booleanAttribute, Component, Input, OnChanges } from '@angular/core';
+import {
+  booleanAttribute,
+  Component,
+  Input,
+  OnChanges,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 
 @Component({
   selector: 'syn-section-header',
   imports: [NgClass],
   templateUrl: './section-header.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './section-header.component.scss',
 })
 export class SynSectionHeaderComponent implements OnChanges {

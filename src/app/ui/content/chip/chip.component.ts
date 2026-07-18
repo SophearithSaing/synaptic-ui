@@ -1,5 +1,10 @@
 import { NgClass } from '@angular/common';
-import { Component, Input, OnChanges } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 
 import { SynChipTone } from '../models/chip.model';
 
@@ -7,6 +12,7 @@ import { SynChipTone } from '../models/chip.model';
   selector: 'syn-chip',
   imports: [NgClass],
   templateUrl: './chip.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './chip.component.scss',
 })
 export class SynChipComponent implements OnChanges {
