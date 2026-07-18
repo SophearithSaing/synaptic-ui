@@ -5,7 +5,6 @@ import { SynNavItem } from '../models/nav-item.model';
 
 @Component({
   selector: 'syn-nav-items',
-  standalone: true,
   imports: [RouterLink],
   templateUrl: './nav-items.component.html',
   styleUrl: './nav-items.component.scss',

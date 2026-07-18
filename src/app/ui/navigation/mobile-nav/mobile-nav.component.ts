@@ -54,14 +54,12 @@ export class SynMobileNavComponent implements OnChanges {
    * @returns Mobile navigation action view models.
    */
   private createActionItems(): readonly SynMobileNavActionItem[] {
-    return this.actions.map(
-      (action: SynNavAction): SynMobileNavActionItem => ({
-        action,
-        classes: {
-          'mobile-nav__action--primary': action.variant === 'primary',
-          'mobile-nav__action--secondary': action.variant === 'secondary',
-        },
-      }),
-    );
+    return this.actions.map((action: SynNavAction): SynMobileNavActionItem => ({
+      action,
+      classes: {
+        'mobile-nav__action--primary': action.variant === 'primary',
+        'mobile-nav__action--secondary': action.variant === 'secondary',
+      },
+    }));
   }
 }

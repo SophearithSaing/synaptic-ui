@@ -1,15 +1,7 @@
 import { NgClass } from '@angular/common';
-import {
-  booleanAttribute,
-  Component,
-  Input,
-  OnChanges,
-} from '@angular/core';
+import { booleanAttribute, Component, Input, OnChanges } from '@angular/core';
 
-import {
-  SynStackDirection,
-  SynStackSize,
-} from '../models/stack.model';
+import { SynStackDirection, SynStackSize } from '../models/stack.model';
 
 @Component({
   selector: 'syn-stack',

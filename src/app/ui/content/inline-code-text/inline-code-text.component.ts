@@ -23,12 +23,10 @@ export class SynInlineCodeTextComponent {
     const parts = this.text.split('`');
 
     return parts
-      .map(
-        (part: string, index: number): InlineCodeSegment => ({
-          code: index % 2 === 1,
-          text: part,
-        }),
-      )
+      .map((part: string, index: number): InlineCodeSegment => ({
+        code: index % 2 === 1,
+        text: part,
+      }))
       .filter((segment: InlineCodeSegment): boolean => segment.text.length > 0);
   }
 }

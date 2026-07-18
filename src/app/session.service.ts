@@ -51,10 +51,9 @@ export class SessionService {
    * @returns Observable of the current question set.
    */
   public continueSession(sessionId: string): Observable<QuestionSet> {
-    return this.http.post<QuestionSet>(
-      `${API_BASE_URL}/sessions/continue`,
-      { sessionId },
-    );
+    return this.http.post<QuestionSet>(`${API_BASE_URL}/sessions/continue`, {
+      sessionId,
+    });
   }
 
   /**

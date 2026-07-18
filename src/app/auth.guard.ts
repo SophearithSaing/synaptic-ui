@@ -54,9 +54,7 @@ export const authGuard: CanActivateFn = (
  * @returns Guard decision or home redirect tree.
  */
 export const unauthGuard: CanActivateFn = ():
-  | boolean
-  | UrlTree
-  | Observable<boolean | UrlTree> => {
+  boolean | UrlTree | Observable<boolean | UrlTree> => {
   const authInitialization = inject(AuthInitializationService);
   const authSession = inject(AuthSessionService);
   const router = inject(Router);
@@ -67,11 +65,11 @@ export const unauthGuard: CanActivateFn = ():
       : true;
   }
 
-  return authInitialization.initialize().pipe(
-    map((): boolean | UrlTree =>
-      authSession.isAuthenticated()
-        ? router.createUrlTree(['/home'])
-        : true,
-    ),
-  );
+  return authInitialization
+    .initialize()
+    .pipe(
+      map((): boolean | UrlTree =>
+        authSession.isAuthenticated() ? router.createUrlTree(['/home']) : true,
+      ),
+    );
 };

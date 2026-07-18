@@ -111,7 +111,9 @@ export class RegisterPageComponent {
 
     const formData = new FormData(form);
     const username = String(formData.get('username') ?? '').trim();
-    const email = String(formData.get('email') ?? '').trim().toLowerCase();
+    const email = String(formData.get('email') ?? '')
+      .trim()
+      .toLowerCase();
     const password = String(formData.get('password') ?? '');
     const confirmPassword = String(formData.get('confirmPassword') ?? '');
 

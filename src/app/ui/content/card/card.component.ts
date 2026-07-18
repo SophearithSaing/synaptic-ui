@@ -1,10 +1,5 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import {
-  booleanAttribute,
-  Component,
-  Input,
-  OnChanges,
-} from '@angular/core';
+import { booleanAttribute, Component, Input, OnChanges } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 @Component({

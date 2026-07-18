@@ -8,10 +8,7 @@ import {
   Output,
 } from '@angular/core';
 
-import {
-  SynInputAutocomplete,
-  SynInputType,
-} from '../models/input.model';
+import { SynInputAutocomplete, SynInputType } from '../models/input.model';
 
 @Component({
   selector: 'syn-input',

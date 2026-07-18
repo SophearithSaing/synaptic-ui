@@ -21,9 +21,9 @@
   --color-success: #146c2e;
   --color-on-error: #ffffff;
   --color-on-error-container: #93000a;
-  --font-serif: 'Source Serif 4', Georgia, serif;
-  --font-sans: 'Inter', Arial, sans-serif;
-  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+  --font-serif: "Source Serif 4", Georgia, serif;
+  --font-sans: "Inter", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", "Courier New", monospace;
   --space-unit: 8px;
   --space-sm: 12px;
   --space-md: 24px;
@@ -160,15 +160,15 @@ h4 {
   direction: ltr;
   display: inline-block;
 
-  font-family: 'Material Symbols Outlined';
-  font-feature-settings: 'liga';
+  font-family: "Material Symbols Outlined";
+  font-feature-settings: "liga";
   font-size: 24px;
   font-style: normal;
   font-variation-settings:
-    'FILL' 0,
-    'wght' 400,
-    'GRAD' 0,
-    'opsz' 24;
+    "FILL" 0,
+    "wght" 400,
+    "GRAD" 0,
+    "opsz" 24;
   font-weight: normal;
   letter-spacing: 0;
   line-height: 1;

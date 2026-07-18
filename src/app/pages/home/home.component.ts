@@ -55,9 +55,7 @@ export class HomeComponent implements OnInit {
   public readonly catalogError = signal<string | null>(null);
   public readonly categoryGroups = signal<readonly TopicCategoryGroup[]>([]);
   public readonly loading = signal(true);
-  public readonly inProgressSessions = signal<readonly InProgressSession[]>(
-    [],
-  );
+  public readonly inProgressSessions = signal<readonly InProgressSession[]>([]);
   public readonly sessionsError = signal<string | null>(null);
 
   public readonly navItems: readonly SynNavItem[] = [
