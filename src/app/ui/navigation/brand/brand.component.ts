@@ -1,12 +1,12 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'syn-brand',
-  standalone: true,
   imports: [NgTemplateOutlet, RouterLink],
   templateUrl: './brand.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './brand.component.scss',
 })
 export class SynBrandComponent {

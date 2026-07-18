@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 
 import {
   SynBrandComponent,
@@ -62,7 +62,6 @@ interface SpacingToken {
 
 @Component({
   selector: 'app-design-system',
-  standalone: true,
   imports: [
     SynBrandComponent,
     SynButtonComponent,
@@ -92,6 +91,7 @@ interface SpacingToken {
     SynTokenComponent,
   ],
   templateUrl: './design-system.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './design-system.component.scss',
 })
 export class DesignSystemComponent {

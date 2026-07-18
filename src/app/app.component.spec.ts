@@ -1,13 +1,29 @@
 import { provideRouter } from '@angular/router';
 import { TestBed } from '@angular/core/testing';
+import { of } from 'rxjs';
 
 import { AppComponent } from './app.component';
+import { AuthInitializationService } from './auth-initialization.service';
+import { AuthSessionService } from './auth-session.service';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
+    const authInitialization = jasmine.createSpyObj<AuthInitializationService>(
+      'AuthInitializationService',
+      ['initialize'],
+    );
+
+    authInitialization.initialize.and.returnValue(of(undefined));
+
     await TestBed.configureTestingModule({
       imports: [AppComponent],
-      providers: [provideRouter([])],
+      providers: [
+        provideRouter([]),
+        {
+          provide: AuthInitializationService,
+          useValue: authInitialization,
+        },
+      ],
     }).compileComponents();
   });
 
@@ -19,6 +35,8 @@ describe('AppComponent', () => {
   });
 
   it('should render the routed shell', () => {
+    TestBed.inject(AuthSessionService).completeInitialization();
+
     const fixture = TestBed.createComponent(AppComponent);
 
     fixture.detectChanges();

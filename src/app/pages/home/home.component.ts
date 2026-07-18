@@ -1,4 +1,10 @@
-import { Component, DestroyRef, OnInit, signal } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  OnInit,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { finalize } from 'rxjs';
@@ -33,7 +39,6 @@ interface HomeProgressTopic {
 
 @Component({
   selector: 'app-home',
-  standalone: true,
   imports: [
     SynBrandComponent,
     SynButtonComponent,
@@ -49,15 +54,14 @@ interface HomeProgressTopic {
     SynStackComponent,
   ],
   templateUrl: './home.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './home.component.scss',
 })
 export class HomeComponent implements OnInit {
   public readonly catalogError = signal<string | null>(null);
   public readonly categoryGroups = signal<readonly TopicCategoryGroup[]>([]);
   public readonly loading = signal(true);
-  public readonly inProgressSessions = signal<readonly InProgressSession[]>(
-    [],
-  );
+  public readonly inProgressSessions = signal<readonly InProgressSession[]>([]);
   public readonly sessionsError = signal<string | null>(null);
 
   public readonly navItems: readonly SynNavItem[] = [

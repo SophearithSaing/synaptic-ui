@@ -5,6 +5,7 @@ import {
   Input,
   OnChanges,
   Output,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
@@ -17,9 +18,9 @@ interface SynMobileNavActionItem {
 
 @Component({
   selector: 'syn-mobile-nav',
-  standalone: true,
   imports: [NgClass, RouterLink],
   templateUrl: './mobile-nav.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './mobile-nav.component.scss',
 })
 export class SynMobileNavComponent implements OnChanges {
@@ -54,14 +55,12 @@ export class SynMobileNavComponent implements OnChanges {
    * @returns Mobile navigation action view models.
    */
   private createActionItems(): readonly SynMobileNavActionItem[] {
-    return this.actions.map(
-      (action: SynNavAction): SynMobileNavActionItem => ({
-        action,
-        classes: {
-          'mobile-nav__action--primary': action.variant === 'primary',
-          'mobile-nav__action--secondary': action.variant === 'secondary',
-        },
-      }),
-    );
+    return this.actions.map((action: SynNavAction): SynMobileNavActionItem => ({
+      action,
+      classes: {
+        'mobile-nav__action--primary': action.variant === 'primary',
+        'mobile-nav__action--secondary': action.variant === 'secondary',
+      },
+    }));
   }
 }

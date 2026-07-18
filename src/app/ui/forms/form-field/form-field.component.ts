@@ -1,11 +1,16 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'syn-form-field',
-  standalone: true,
   imports: [NgClass],
   templateUrl: './form-field.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './form-field.component.scss',
 })
 export class SynFormFieldComponent implements OnChanges {

@@ -4,13 +4,14 @@ import {
   Component,
   Input,
   OnChanges,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 
 @Component({
   selector: 'syn-container',
-  standalone: true,
   imports: [NgClass],
   templateUrl: './container.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './container.component.scss',
 })
 export class SynContainerComponent implements OnChanges {

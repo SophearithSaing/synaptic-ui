@@ -1,4 +1,10 @@
-import { Component, DestroyRef, OnInit, signal } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  OnInit,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -27,7 +33,6 @@ import { TopicCatalogService } from '../../topic-catalog.service';
 
 @Component({
   selector: 'app-session-page',
-  standalone: true,
   imports: [
     SynBrandComponent,
     SynButtonComponent,
@@ -39,6 +44,7 @@ import { TopicCatalogService } from '../../topic-catalog.service';
     SynPageShellComponent,
   ],
   templateUrl: './session-page.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './session-page.component.scss',
 })
 export class SessionPageComponent implements OnInit {

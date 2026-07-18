@@ -6,18 +6,16 @@ import {
   Input,
   OnChanges,
   Output,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 
-import {
-  SynInputAutocomplete,
-  SynInputType,
-} from '../models/input.model';
+import { SynInputAutocomplete, SynInputType } from '../models/input.model';
 
 @Component({
   selector: 'syn-input',
-  standalone: true,
   imports: [NgClass],
   templateUrl: './input.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './input.component.scss',
 })
 export class SynInputComponent implements OnChanges {

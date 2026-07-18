@@ -4,13 +4,14 @@ import {
   Component,
   Input,
   OnChanges,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 
 @Component({
   selector: 'syn-info-card',
-  standalone: true,
   imports: [NgClass],
   templateUrl: './info-card.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './info-card.component.scss',
 })
 export class SynInfoCardComponent implements OnChanges {

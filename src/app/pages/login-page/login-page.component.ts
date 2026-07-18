@@ -1,4 +1,9 @@
-import { Component, DestroyRef, signal } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, switchMap } from 'rxjs';
@@ -19,7 +24,6 @@ import { AuthenticatedUser } from '../../models/auth.models';
 
 @Component({
   selector: 'app-login-page',
-  standalone: true,
   imports: [
     SynBrandComponent,
     SynButtonComponent,
@@ -29,6 +33,7 @@ import { AuthenticatedUser } from '../../models/auth.models';
     SynTextLinkComponent,
   ],
   templateUrl: './login-page.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './login-page.component.scss',
 })
 export class LoginPageComponent {

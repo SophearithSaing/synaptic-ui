@@ -72,7 +72,7 @@
                   class="session-feedback__icon material-symbols-outlined"
                   aria-hidden="true"
                 >
-                  {{ answerIsCorrect(question.id) ? 'check_circle' : 'cancel' }}
+                  {{ answerIsCorrect(question.id) ? "check_circle" : "cancel" }}
                 </span>
 
                 <div class="session-feedback__content">
@@ -215,7 +215,7 @@
                   </h2>
                 </div>
 
-                @if (question.type === 'mcq') {
+                @if (question.type === "mcq") {
                   <div class="session-question__options">
                     @for (
                       option of question.options;

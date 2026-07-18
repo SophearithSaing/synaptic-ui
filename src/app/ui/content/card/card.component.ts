@@ -4,14 +4,15 @@ import {
   Component,
   Input,
   OnChanges,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'syn-card',
-  standalone: true,
   imports: [NgClass, NgTemplateOutlet, RouterLink],
   templateUrl: './card.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './card.component.scss',
 })
 export class SynCardComponent implements OnChanges {

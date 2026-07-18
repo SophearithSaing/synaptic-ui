@@ -1,13 +1,18 @@
 import { NgClass } from '@angular/common';
-import { Component, Input, OnChanges } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 
 import { SynGridColumns } from '../models/grid.model';
 
 @Component({
   selector: 'syn-grid',
-  standalone: true,
   imports: [NgClass],
   templateUrl: './grid.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './grid.component.scss',
 })
 export class SynGridComponent implements OnChanges {

@@ -4,13 +4,14 @@ import {
   Component,
   Input,
   OnChanges,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 
 @Component({
   selector: 'syn-section',
-  standalone: true,
   imports: [NgClass],
   templateUrl: './section.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './section.component.scss',
 })
 export class SynSectionComponent implements OnChanges {

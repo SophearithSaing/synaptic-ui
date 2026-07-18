@@ -1,4 +1,9 @@
-import { Component, DestroyRef, signal } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { Observable, switchMap } from 'rxjs';
@@ -32,7 +37,6 @@ import { AuthenticatedUser } from '../../models/auth.models';
 
 @Component({
   selector: 'app-register-page',
-  standalone: true,
   imports: [
     SynBrandComponent,
     SynButtonComponent,
@@ -48,6 +52,7 @@ import { AuthenticatedUser } from '../../models/auth.models';
     SynTextLinkComponent,
   ],
   templateUrl: './register-page.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './register-page.component.scss',
 })
 export class RegisterPageComponent {
@@ -111,7 +116,9 @@ export class RegisterPageComponent {
 
     const formData = new FormData(form);
     const username = String(formData.get('username') ?? '').trim();
-    const email = String(formData.get('email') ?? '').trim().toLowerCase();
+    const email = String(formData.get('email') ?? '')
+      .trim()
+      .toLowerCase();
     const password = String(formData.get('password') ?? '');
     const confirmPassword = String(formData.get('confirmPassword') ?? '');
 

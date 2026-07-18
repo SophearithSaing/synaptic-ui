@@ -1,9 +1,16 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 
 @Component({
   selector: 'syn-form-panel',
   standalone: true,
   templateUrl: './form-panel.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './form-panel.component.scss',
 })
 export class SynFormPanelComponent {

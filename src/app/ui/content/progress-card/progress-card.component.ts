@@ -1,11 +1,17 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'syn-progress-card',
-  standalone: true,
   imports: [RouterLink],
   templateUrl: './progress-card.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './progress-card.component.scss',
 })
 export class SynProgressCardComponent {

@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 
 import {
   SynBrandComponent,
@@ -36,7 +36,6 @@ interface CurriculumTrack {
 
 @Component({
   selector: 'app-landing-page',
-  standalone: true,
   imports: [
     SynBrandComponent,
     SynButtonComponent,
@@ -56,6 +55,7 @@ interface CurriculumTrack {
     SynTextLinkComponent,
   ],
   templateUrl: './landing-page.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './landing-page.component.scss',
 })
 export class LandingPageComponent {

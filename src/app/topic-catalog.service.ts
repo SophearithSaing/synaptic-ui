@@ -2,7 +2,11 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { forkJoin, map, Observable } from 'rxjs';
 
-import { Topic, TopicCategory, TopicCategoryGroup } from './models/topic.models';
+import {
+  Topic,
+  TopicCategory,
+  TopicCategoryGroup,
+} from './models/topic.models';
 import { environment } from '../environments/environment';
 
 const API_BASE_URL = environment.API_BASE_URL;
@@ -94,12 +98,7 @@ export class TopicCatalogService {
   public resolveTopicIcon(topic: Topic): Topic {
     return {
       ...topic,
-      icon: this.resolveIcon(
-        topic.icon,
-        topic.slug,
-        TOPIC_ICON_MAP,
-        'school',
-      ),
+      icon: this.resolveIcon(topic.icon, topic.slug, TOPIC_ICON_MAP, 'school'),
       category:
         typeof topic.category === 'string'
           ? topic.category
@@ -124,17 +123,15 @@ export class TopicCatalogService {
   private resolveCategoryIcons(
     categories: readonly TopicCategory[],
   ): readonly TopicCategory[] {
-    return categories.map(
-      (category: TopicCategory): TopicCategory => ({
-        ...category,
-        icon: this.resolveIcon(
-          category.icon,
-          category.slug,
-          CATEGORY_ICON_MAP,
-          'schema',
-        ),
-      }),
-    );
+    return categories.map((category: TopicCategory): TopicCategory => ({
+      ...category,
+      icon: this.resolveIcon(
+        category.icon,
+        category.slug,
+        CATEGORY_ICON_MAP,
+        'schema',
+      ),
+    }));
   }
 
   /**
@@ -144,9 +141,7 @@ export class TopicCatalogService {
    * @returns Topics with supported Material Symbol icons.
    */
   private resolveTopicIcons(topics: readonly Topic[]): readonly Topic[] {
-    return topics.map(
-      (topic: Topic): Topic => this.resolveTopicIcon(topic),
-    );
+    return topics.map((topic: Topic): Topic => this.resolveTopicIcon(topic));
   }
 
   /**
@@ -160,15 +155,13 @@ export class TopicCatalogService {
     categories: readonly TopicCategory[],
     topics: readonly Topic[],
   ): readonly TopicCategoryGroup[] {
-    return categories.map(
-      (category: TopicCategory): TopicCategoryGroup => ({
-        category,
-        topics: topics.filter(
-          (topic: Topic): boolean =>
-            this.categoryId(topic) === this.categoryIdValue(category),
-        ),
-      }),
-    );
+    return categories.map((category: TopicCategory): TopicCategoryGroup => ({
+      category,
+      topics: topics.filter(
+        (topic: Topic): boolean =>
+          this.categoryId(topic) === this.categoryIdValue(category),
+      ),
+    }));
   }
 
   /**

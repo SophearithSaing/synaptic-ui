@@ -4,18 +4,16 @@ import {
   Component,
   Input,
   OnChanges,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 
-import {
-  SynStackDirection,
-  SynStackSize,
-} from '../models/stack.model';
+import { SynStackDirection, SynStackSize } from '../models/stack.model';
 
 @Component({
   selector: 'syn-stack',
-  standalone: true,
   imports: [NgClass],
   templateUrl: './stack.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './stack.component.scss',
 })
 export class SynStackComponent implements OnChanges {

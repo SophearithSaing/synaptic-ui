@@ -1,13 +1,18 @@
 import { NgClass } from '@angular/common';
-import { Component, Input, OnChanges } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 
 import { SynTokenTone } from '../models/token.model';
 
 @Component({
   selector: 'syn-token',
-  standalone: true,
   imports: [NgClass],
   templateUrl: './token.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './token.component.scss',
 })
 export class SynTokenComponent implements OnChanges {
