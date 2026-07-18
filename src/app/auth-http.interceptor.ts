@@ -44,16 +44,15 @@ export const authHttpInterceptor: HttpInterceptorFn = (
   const apiRequest = withApiCredentials(request);
 
   return sendApiRequest(apiRequest, next, csrfService).pipe(
-    catchError(
-      (error: unknown): Observable<HttpEvent<unknown>> =>
-        handleAuthError(
-          error,
-          apiRequest,
-          next,
-          csrfService,
-          httpBackend,
-          authSession,
-        ),
+    catchError((error: unknown): Observable<HttpEvent<unknown>> =>
+      handleAuthError(
+        error,
+        apiRequest,
+        next,
+        csrfService,
+        httpBackend,
+        authSession,
+      ),
     ),
   );
 };
@@ -75,12 +74,13 @@ function sendApiRequest(
     return next(request);
   }
 
-  return csrfService.token().pipe(
-    switchMap(
-      (token: string): Observable<HttpEvent<unknown>> =>
+  return csrfService
+    .token()
+    .pipe(
+      switchMap((token: string): Observable<HttpEvent<unknown>> =>
         next(withCsrfToken(request, token)),
-    ),
-  );
+      ),
+    );
 }
 
 /**
@@ -113,9 +113,8 @@ function handleAuthError(
 
       return throwError((): unknown => refreshError);
     }),
-    switchMap(
-      (): Observable<HttpEvent<unknown>> =>
-        sendApiRequest(request, next, csrfService),
+    switchMap((): Observable<HttpEvent<unknown>> =>
+      sendApiRequest(request, next, csrfService),
     ),
   );
 }
@@ -140,18 +139,17 @@ function refreshSession(
   csrfService.clear();
 
   refreshRequest$ = csrfService.token().pipe(
-    switchMap(
-      (token: string): Observable<unknown> =>
-        http.post(
-          `${API_BASE_URL}/auth/refresh`,
-          {},
-          {
-            headers: {
-              'X-CSRF-Token': token,
-            },
-            withCredentials: true,
+    switchMap((token: string): Observable<unknown> =>
+      http.post(
+        `${API_BASE_URL}/auth/refresh`,
+        {},
+        {
+          headers: {
+            'X-CSRF-Token': token,
           },
-        ),
+          withCredentials: true,
+        },
+      ),
     ),
     tap((): void => {
       csrfService.clear();
