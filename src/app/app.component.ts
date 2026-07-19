@@ -3,6 +3,7 @@ import {
   DestroyRef,
   OnInit,
   ChangeDetectionStrategy,
+  Signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterOutlet } from '@angular/router';
@@ -18,13 +19,15 @@ import { AuthSessionService } from './auth-session.service';
   styleUrl: './app.component.scss',
 })
 export class AppComponent implements OnInit {
-  public readonly authInitialized = this.authSession.initialized;
+  public readonly authInitialized: Signal<boolean>;
 
   public constructor(
     private readonly authInitialization: AuthInitializationService,
     private readonly authSession: AuthSessionService,
     private readonly destroyRef: DestroyRef,
-  ) {}
+  ) {
+    this.authInitialized = this.authSession.initialized;
+  }
 
   /**
    * Starts first-load authentication before rendering application routes.
