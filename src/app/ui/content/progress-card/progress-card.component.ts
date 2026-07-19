@@ -25,9 +25,13 @@ export class SynProgressCardComponent {
 
   @Input() public routerLink: string | null = null;
 
+  @Input() public secondaryActionLabel: string | null = null;
+
   @Input({ required: true }) public title = '';
 
   @Output() public readonly action = new EventEmitter<void>();
+
+  @Output() public readonly secondaryAction = new EventEmitter<void>();
 
   /**
    * Returns a safe progress value within the rendered range.
@@ -43,5 +47,12 @@ export class SynProgressCardComponent {
    */
   public onAction(): void {
     this.action.emit();
+  }
+
+  /**
+   * Emits when the progress card secondary action is selected.
+   */
+  public onSecondaryAction(): void {
+    this.secondaryAction.emit();
   }
 }

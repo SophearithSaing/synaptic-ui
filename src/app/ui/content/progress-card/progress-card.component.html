@@ -27,14 +27,31 @@
     <span class="progress-card__label">
       {{ normalizedProgress() }}% Progress
     </span>
-    @if (routerLink) {
-      <a class="progress-card__button" [routerLink]="routerLink">
-        {{ actionLabel }}
-      </a>
-    } @else {
-      <button class="progress-card__button" type="button" (click)="onAction()">
-        {{ actionLabel }}
-      </button>
-    }
+
+    <div class="progress-card__action-list">
+      @if (secondaryActionLabel) {
+        <button
+          class="progress-card__button progress-card__button--text"
+          type="button"
+          (click)="onSecondaryAction()"
+        >
+          {{ secondaryActionLabel }}
+        </button>
+      }
+
+      @if (routerLink) {
+        <a class="progress-card__button" [routerLink]="routerLink">
+          {{ actionLabel }}
+        </a>
+      } @else {
+        <button
+          class="progress-card__button"
+          type="button"
+          (click)="onAction()"
+        >
+          {{ actionLabel }}
+        </button>
+      }
+    </div>
   </div>
 </article>
