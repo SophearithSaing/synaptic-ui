@@ -13,6 +13,7 @@ import {
   SynBrandComponent,
   SynButtonComponent,
   SynCardComponent,
+  SynConfirmationDialogComponent,
   SynContainerComponent,
   SynEmptyStateComponent,
   SynGridComponent,
@@ -43,6 +44,7 @@ interface HomeProgressTopic {
     SynBrandComponent,
     SynButtonComponent,
     SynCardComponent,
+    SynConfirmationDialogComponent,
     SynContainerComponent,
     SynEmptyStateComponent,
     SynGridComponent,
@@ -63,6 +65,9 @@ export class HomeComponent implements OnInit {
   public readonly loading = signal(true);
   public readonly inProgressSessions = signal<readonly InProgressSession[]>([]);
   public readonly sessionsError = signal<string | null>(null);
+  public readonly stopSessionError = signal<string | null>(null);
+  public readonly stopSessionLoading = signal(false);
+  public readonly stopSessionRequest = signal<HomeProgressTopic | null>(null);
 
   public readonly navItems: readonly SynNavItem[] = [
     {
@@ -192,6 +197,79 @@ export class HomeComponent implements OnInit {
    */
   public sessionProgress(session: InProgressSession): number {
     return Math.max(0, Math.min(100, session.currentLevel));
+  }
+
+  /**
+   * Returns the confirmation dialog copy for a session stop request.
+   *
+   * @param summary In-progress summary selected for stopping.
+   * @returns Confirmation dialog body copy.
+   */
+  public stopSessionDescription(summary: HomeProgressTopic): string {
+    return `${summary.topic.title} will be removed from your in-progress topics.`;
+  }
+
+  /**
+   * Opens the stop confirmation dialog for an in-progress session.
+   *
+   * @param summary In-progress summary selected for stopping.
+   */
+  public requestStopSession(summary: HomeProgressTopic): void {
+    this.stopSessionError.set(null);
+    this.stopSessionRequest.set(summary);
+  }
+
+  /**
+   * Closes the stop confirmation dialog without changing progress.
+   */
+  public cancelStopSession(): void {
+    if (this.stopSessionLoading()) {
+      return;
+    }
+
+    this.stopSessionError.set(null);
+    this.stopSessionRequest.set(null);
+  }
+
+  /**
+   * Deletes the selected in-progress session from the API and local UI state.
+   */
+  public confirmStopSession(): void {
+    const request = this.stopSessionRequest();
+
+    if (request === null || this.stopSessionLoading()) {
+      return;
+    }
+
+    this.stopSessionError.set(null);
+    this.stopSessionLoading.set(true);
+    this.sessionService
+      .deleteSession(request.session.id)
+      .pipe(
+        finalize((): void => {
+          this.stopSessionLoading.set(false);
+        }),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe({
+        next: (): void => {
+          this.inProgressSessions.update(
+            (
+              sessions: readonly InProgressSession[],
+            ): readonly InProgressSession[] =>
+              sessions.filter(
+                (session: InProgressSession): boolean =>
+                  session.id !== request.session.id,
+              ),
+          );
+          this.stopSessionRequest.set(null);
+        },
+        error: (): void => {
+          this.stopSessionError.set(
+            'Unable to stop this session. Please try again.',
+          );
+        },
+      });
   }
 
   /**
