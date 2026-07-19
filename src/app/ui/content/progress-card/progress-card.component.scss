@@ -80,6 +80,14 @@
   line-height: 1.4;
 }
 
+.progress-card__action-list {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-unit);
+  justify-content: flex-end;
+}
+
 .progress-card__button {
   align-items: center;
   display: inline-flex;
@@ -108,5 +116,21 @@
 
   &:hover {
     background: var(--color-primary-container);
+  }
+
+  &--text {
+    min-height: auto;
+
+    border-color: transparent;
+
+    padding: var(--space-unit);
+
+    background: transparent;
+    color: var(--color-on-surface-variant);
+
+    &:hover {
+      background: var(--color-surface-container-low);
+      color: var(--color-on-surface);
+    }
   }
 }

@@ -45,6 +45,16 @@ export class SessionService {
   }
 
   /**
+   * Deletes an existing session by id.
+   *
+   * @param sessionId Session id to delete.
+   * @returns Observable completing when the session is deleted.
+   */
+  public deleteSession(sessionId: string): Observable<void> {
+    return this.http.delete<void>(`${API_BASE_URL}/sessions/${sessionId}`);
+  }
+
+  /**
    * Continues an existing session by id.
    *
    * @param sessionId Session id to continue.

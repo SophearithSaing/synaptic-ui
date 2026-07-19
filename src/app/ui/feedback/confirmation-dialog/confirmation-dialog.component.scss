@@ -1,0 +1,54 @@
+:host {
+  display: contents;
+}
+
+.confirmation-dialog {
+  align-items: center;
+  display: flex;
+  position: fixed;
+  inset: 0;
+  justify-content: center;
+  z-index: 4;
+
+  padding: var(--space-md);
+
+  background: color-mix(in srgb, var(--color-primary) 48%, transparent);
+}
+
+.confirmation-dialog__panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+
+  width: min(100%, calc((var(--space-xl) * 4) + var(--space-lg)));
+
+  border: 1px solid var(--color-outline-variant);
+
+  padding: var(--space-md);
+
+  background: var(--color-surface-container-lowest);
+  color: var(--color-on-surface);
+}
+
+.confirmation-dialog__copy {
+  color: var(--color-secondary);
+}
+
+.confirmation-dialog__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  justify-content: flex-end;
+
+  margin-top: var(--space-sm);
+}
+
+@media (max-width: 719px) {
+  .confirmation-dialog__actions {
+    justify-content: stretch;
+  }
+
+  .confirmation-dialog__actions syn-button {
+    flex: 1 1 100%;
+  }
+}

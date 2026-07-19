@@ -55,6 +55,8 @@
                     summary.session.id
                   "
                   actionLabel="Continue"
+                  secondaryActionLabel="Stop"
+                  (secondaryAction)="requestStopSession(summary)"
                 />
               }
             </syn-grid>
@@ -133,4 +135,17 @@
       </syn-stack>
     </syn-container>
   </div>
+
+  @if (stopSessionRequest(); as stopRequest) {
+    <syn-confirmation-dialog
+      title="Stop in-progress session?"
+      confirmLabel="Stop"
+      loadingConfirmLabel="Stopping"
+      [description]="stopSessionDescription(stopRequest)"
+      [error]="stopSessionError()"
+      [loading]="stopSessionLoading()"
+      (cancel)="cancelStopSession()"
+      (confirm)="confirmStopSession()"
+    />
+  }
 </syn-page-shell>

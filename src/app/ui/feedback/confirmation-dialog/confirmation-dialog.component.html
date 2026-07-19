@@ -1,0 +1,32 @@
+<div class="confirmation-dialog" role="presentation">
+  <section
+    class="confirmation-dialog__panel"
+    role="alertdialog"
+    aria-modal="true"
+    [attr.aria-labelledby]="titleId"
+    [attr.aria-describedby]="descriptionId"
+  >
+    <h2 [id]="titleId" class="syn-heading-md">{{ title }}</h2>
+    <p [id]="descriptionId" class="confirmation-dialog__copy">
+      {{ description }}
+    </p>
+
+    @if (error) {
+      <p class="syn-error-message">{{ error }}</p>
+    }
+
+    <div class="confirmation-dialog__actions">
+      <syn-button
+        [label]="cancelLabel"
+        variant="secondary"
+        [disabled]="loading"
+        (buttonClick)="onCancel()"
+      />
+      <syn-button
+        [label]="loading ? loadingConfirmLabel : confirmLabel"
+        [disabled]="loading"
+        (buttonClick)="onConfirm()"
+      />
+    </div>
+  </section>
+</div>
