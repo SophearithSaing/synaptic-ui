@@ -112,14 +112,24 @@
                     @for (topic of group.topics; track topicTrackBy(topic)) {
                       <syn-card
                         interactive
-                        actionLabel="Start"
                         [icon]="topic.icon"
                         [label]="group.category.title"
                         [title]="topic.title"
                         [description]="topic.description"
-                        [routerLink]="'/session/' + topic.id"
                         [tags]="topic.tags"
-                      />
+                      >
+                        <div class="home__topic-actions">
+                          <syn-button
+                            label="Standard"
+                            variant="secondary"
+                            [routerLink]="'/session/' + topic.id"
+                          />
+                          <syn-button
+                            label="Live"
+                            [routerLink]="'/session/' + topic.id + '/live'"
+                          />
+                        </div>
+                      </syn-card>
                     } @empty {
                       <syn-empty-state
                         title="No topics available"
