@@ -46,16 +46,14 @@
                 <syn-progress-card
                   [title]="summary.topic.title"
                   [level]="summary.session.currentLevel"
+                  [modeLabel]="sessionModeLabel(summary)"
                   [progress]="sessionProgress(summary.session)"
                   [icon]="summary.topic.icon"
-                  [routerLink]="
-                    '/session/' +
-                    summary.topic.id +
-                    '/continue/' +
-                    summary.session.id
-                  "
+                  [routerLink]="sessionRouterLink(summary)"
                   actionLabel="Continue"
-                  secondaryActionLabel="Stop"
+                  [secondaryActionLabel]="
+                    summary.mode === 'standard' ? 'Stop' : null
+                  "
                   (secondaryAction)="requestStopSession(summary)"
                 />
               }

@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
-import { finalize } from 'rxjs';
+import { finalize, forkJoin } from 'rxjs';
 
 import {
   SynBrandComponent,
@@ -34,9 +34,17 @@ import { SessionService } from '../../session.service';
 import { TopicCatalogService } from '../../topic-catalog.service';
 
 interface HomeProgressTopic {
+  readonly mode: HomeSessionMode;
   readonly session: InProgressSession;
   readonly topic: Topic;
 }
+
+interface HomeProgressSession {
+  readonly mode: HomeSessionMode;
+  readonly session: InProgressSession;
+}
+
+type HomeSessionMode = 'standard' | 'live';
 
 @Component({
   selector: 'app-home',
@@ -63,7 +71,9 @@ export class HomeComponent implements OnInit {
   public readonly catalogError = signal<string | null>(null);
   public readonly categoryGroups = signal<readonly TopicCategoryGroup[]>([]);
   public readonly loading = signal(true);
-  public readonly inProgressSessions = signal<readonly InProgressSession[]>([]);
+  public readonly inProgressSessions = signal<readonly HomeProgressSession[]>(
+    [],
+  );
   public readonly sessionsError = signal<string | null>(null);
   public readonly stopSessionError = signal<string | null>(null);
   public readonly stopSessionLoading = signal(false);
@@ -112,13 +122,20 @@ export class HomeComponent implements OnInit {
         },
       });
 
-    this.sessionService
-      .loadInProgressSessions()
+    forkJoin({
+      live: this.sessionService.loadLiveInProgressSessions(),
+      standard: this.sessionService.loadInProgressSessions(),
+    })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (sessions: readonly InProgressSession[]): void => {
+        next: (sessions: {
+          readonly live: readonly InProgressSession[];
+          readonly standard: readonly InProgressSession[];
+        }): void => {
           this.sessionsError.set(null);
-          this.inProgressSessions.set(sessions);
+          this.inProgressSessions.set(
+            this.combineSessions(sessions.standard, sessions.live),
+          );
         },
         error: (): void => {
           this.sessionsError.set(
@@ -152,9 +169,10 @@ export class HomeComponent implements OnInit {
    */
   public inProgressTopics(): readonly HomeProgressTopic[] {
     return this.inProgressSessions().map(
-      (session: InProgressSession): HomeProgressTopic => ({
-        session,
-        topic: this.findTopic(session.topic.id) ?? session.topic,
+      (summary: HomeProgressSession): HomeProgressTopic => ({
+        mode: summary.mode,
+        session: summary.session,
+        topic: this.findTopic(summary.session.topic.id) ?? summary.session.topic,
       }),
     );
   }
@@ -186,7 +204,34 @@ export class HomeComponent implements OnInit {
    * @returns Stable session id.
    */
   public sessionTrackBy(summary: HomeProgressTopic): string {
-    return summary.session.id;
+    return `${summary.mode}:${summary.session.id}`;
+  }
+
+  /**
+   * Returns the session mode label for display.
+   *
+   * @param summary In-progress summary rendered by the template.
+   * @returns Human-readable session mode label.
+   */
+  public sessionModeLabel(summary: HomeProgressTopic): string {
+    return summary.mode === 'standard' ? 'Standard' : 'Live';
+  }
+
+  /**
+   * Returns the route for continuing an in-progress session.
+   *
+   * @param summary In-progress summary rendered by the template.
+   * @returns Continue route for the session mode.
+   */
+  public sessionRouterLink(summary: HomeProgressTopic): string {
+    const topicId = summary.topic.id;
+    const sessionId = summary.session.id;
+
+    if (summary.mode === 'live') {
+      return `/session/${topicId}/live/continue/${sessionId}`;
+    }
+
+    return `/session/${topicId}/continue/${sessionId}`;
   }
 
   /**
@@ -215,6 +260,10 @@ export class HomeComponent implements OnInit {
    * @param summary In-progress summary selected for stopping.
    */
   public requestStopSession(summary: HomeProgressTopic): void {
+    if (summary.mode !== 'standard') {
+      return;
+    }
+
     this.stopSessionError.set(null);
     this.stopSessionRequest.set(summary);
   }
@@ -255,11 +304,12 @@ export class HomeComponent implements OnInit {
         next: (): void => {
           this.inProgressSessions.update(
             (
-              sessions: readonly InProgressSession[],
-            ): readonly InProgressSession[] =>
+              sessions: readonly HomeProgressSession[],
+            ): readonly HomeProgressSession[] =>
               sessions.filter(
-                (session: InProgressSession): boolean =>
-                  session.id !== request.session.id,
+                (summary: HomeProgressSession): boolean =>
+                  summary.mode !== request.mode ||
+                  summary.session.id !== request.session.id,
               ),
           );
           this.stopSessionRequest.set(null);
@@ -290,5 +340,35 @@ export class HomeComponent implements OnInit {
     }
 
     return null;
+  }
+
+  /**
+   * Combines standard and live sessions into one sorted progress list.
+   *
+   * @param standardSessions Standard in-progress sessions.
+   * @param liveSessions Live in-progress sessions.
+   * @returns Combined in-progress session summaries.
+   */
+  private combineSessions(
+    standardSessions: readonly InProgressSession[],
+    liveSessions: readonly InProgressSession[],
+  ): readonly HomeProgressSession[] {
+    return [
+      ...standardSessions.map(
+        (session: InProgressSession): HomeProgressSession => ({
+          mode: 'standard',
+          session,
+        }),
+      ),
+      ...liveSessions.map(
+        (session: InProgressSession): HomeProgressSession => ({
+          mode: 'live',
+          session,
+        }),
+      ),
+    ].sort(
+      (left: HomeProgressSession, right: HomeProgressSession): number =>
+        Date.parse(right.session.updatedAt) - Date.parse(left.session.updatedAt),
+    );
   }
 }

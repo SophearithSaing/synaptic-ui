@@ -45,6 +45,17 @@ export class SessionService {
   }
 
   /**
+   * Loads active live sessions for the authenticated user.
+   *
+   * @returns Observable of active live in-progress sessions.
+   */
+  public loadLiveInProgressSessions(): Observable<readonly InProgressSession[]> {
+    return this.http.get<readonly InProgressSession[]>(
+      `${API_BASE_URL}/sessions/live/in-progress`,
+    );
+  }
+
+  /**
    * Deletes an existing session by id.
    *
    * @param sessionId Session id to delete.
