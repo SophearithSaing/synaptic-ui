@@ -113,10 +113,13 @@
                       <syn-card
                         interactive
                         [icon]="topic.icon"
-                        [label]="group.category.title"
+                        [label]="
+                          topic.tags.length
+                            ? topic.tags.join(' / ')
+                            : group.category.title
+                        "
                         [title]="topic.title"
                         [description]="topic.description"
-                        [tags]="topic.tags"
                       >
                         <div class="home__topic-actions">
                           <syn-button
