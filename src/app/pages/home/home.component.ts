@@ -260,10 +260,6 @@ export class HomeComponent implements OnInit {
    * @param summary In-progress summary selected for stopping.
    */
   public requestStopSession(summary: HomeProgressTopic): void {
-    if (summary.mode !== 'standard') {
-      return;
-    }
-
     this.stopSessionError.set(null);
     this.stopSessionRequest.set(summary);
   }
@@ -292,8 +288,12 @@ export class HomeComponent implements OnInit {
 
     this.stopSessionError.set(null);
     this.stopSessionLoading.set(true);
-    this.sessionService
-      .deleteSession(request.session.id)
+    const deleteRequest =
+      request.mode === 'live'
+        ? this.sessionService.deleteLiveSession(request.session.id)
+        : this.sessionService.deleteSession(request.session.id);
+
+    deleteRequest
       .pipe(
         finalize((): void => {
           this.stopSessionLoading.set(false);

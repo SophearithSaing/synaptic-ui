@@ -51,9 +51,7 @@
                   [icon]="summary.topic.icon"
                   [routerLink]="sessionRouterLink(summary)"
                   actionLabel="Continue"
-                  [secondaryActionLabel]="
-                    summary.mode === 'standard' ? 'Stop' : null
-                  "
+                  secondaryActionLabel="Stop"
                   (secondaryAction)="requestStopSession(summary)"
                 />
               }

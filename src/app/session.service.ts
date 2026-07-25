@@ -66,6 +66,16 @@ export class SessionService {
   }
 
   /**
+   * Deletes an existing live session by id.
+   *
+   * @param sessionId Live session id to delete.
+   * @returns Observable completing when the live session is deleted.
+   */
+  public deleteLiveSession(sessionId: string): Observable<void> {
+    return this.http.delete<void>(`${API_BASE_URL}/sessions/live/${sessionId}`);
+  }
+
+  /**
    * Continues an existing session by id.
    *
    * @param sessionId Session id to continue.
