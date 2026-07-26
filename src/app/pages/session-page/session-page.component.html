@@ -285,20 +285,20 @@
 
             <div class="session-page__actions">
               <syn-button
-                label="Exit to Home"
+                label="Exit"
                 variant="secondary"
                 routerLink="/home"
               />
               @if (sessionMode() === "live") {
                 <syn-button
-                  label="Reject Question"
+                  label="Reject"
                   variant="secondary"
                   [disabled]="!canRejectQuestion()"
                   (buttonClick)="openRejectQuestionDialog()"
                 />
               }
               <syn-button
-                [label]="submitting() ? 'Evaluating...' : 'Submit Answer'"
+                [label]="submitting() ? 'Evaluating...' : 'Submit'"
                 type="submit"
                 [disabled]="!canSubmit() || submitting()"
                 (buttonClick)="submitSet()"
