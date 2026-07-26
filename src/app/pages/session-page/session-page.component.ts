@@ -61,6 +61,7 @@ type SessionMode = 'standard' | 'live';
 })
 export class SessionPageComponent implements OnInit {
   private readonly correctAnswerThreshold = 0.5;
+  private readonly liveQuestionTotal = 3;
   private readonly liveQuestionId = signal<string | null>(null);
   private readonly liveQuestions = signal<readonly SessionQuestion[]>([]);
 
@@ -356,13 +357,78 @@ export class SessionPageComponent implements OnInit {
   }
 
   /**
-   * Formats a one-based question number.
+   * Formats a one-based question number for the current session mode.
    *
+   * @param question Question rendered by the template.
    * @param index Zero-based question index.
    * @returns Padded question number.
    */
-  public questionNumber(index: number): string {
+  public questionNumber(question: SessionQuestion, index: number): string {
+    if (this.sessionMode() === 'live') {
+      return String(this.liveQuestionNumber(question)).padStart(2, '0');
+    }
+
     return String(index + 1).padStart(2, '0');
+  }
+
+  /**
+   * Returns the progress count for the active question set.
+   *
+   * @returns Answered progress count for display.
+   */
+  public progressAnsweredCount(): number {
+    const questionSet = this.questionSet();
+
+    if (questionSet === null || this.sessionMode() === 'standard') {
+      return this.answeredCount();
+    }
+
+    const question = questionSet.questions[0] ?? null;
+
+    if (question === null) {
+      return 0;
+    }
+
+    const currentQuestionNumber = this.liveQuestionNumber(question);
+    const currentAnswered = (this.answers()[question.id] ?? '').trim().length
+      ? 1
+      : 0;
+
+    return Math.max(
+      0,
+      Math.min(
+        this.liveQuestionTotal,
+        currentQuestionNumber - 1 + currentAnswered,
+      ),
+    );
+  }
+
+  /**
+   * Returns the progress total for the active question set.
+   *
+   * @returns Progress denominator for display.
+   */
+  public progressQuestionTotal(): number {
+    if (this.sessionMode() === 'live') {
+      return this.liveQuestionTotal;
+    }
+
+    return this.questionSet()?.questions.length ?? 0;
+  }
+
+  /**
+   * Returns the current progress percentage.
+   *
+   * @returns Progress width percentage.
+   */
+  public progressPercent(): number {
+    const total = this.progressQuestionTotal();
+
+    if (!total) {
+      return 0;
+    }
+
+    return (100 / total) * this.progressAnsweredCount();
   }
 
   /**
@@ -834,6 +900,22 @@ export class SessionPageComponent implements OnInit {
     }
 
     return Number(match[1]);
+  }
+
+  /**
+   * Resolves a live question number from generated question ids.
+   *
+   * @param question Live question returned by the API.
+   * @returns Live question number within the current three-question set.
+   */
+  private liveQuestionNumber(question: SessionQuestion): number {
+    const match = question.id.match(/(?:^|-)q(\d+)(?:-|$)/i);
+
+    if (match === null) {
+      return 1;
+    }
+
+    return Math.max(1, Math.min(this.liveQuestionTotal, Number(match[1])));
   }
 
   /**
