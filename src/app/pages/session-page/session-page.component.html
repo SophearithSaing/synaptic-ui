@@ -3,7 +3,7 @@
     <syn-brand synNavBarBrand routerLink="/home" ariaLabel="Synaptic home" />
 
     <div synNavBarActions class="session-page__status">
-      <span class="syn-kicker">Session Active</span>
+      <span class="syn-kicker">{{ sessionModeLabel() }} Session Active</span>
     </div>
   </syn-nav-bar>
 
@@ -41,11 +41,11 @@
               <article class="session-feedback__metric">
                 <span class="syn-kicker">Questions Correct</span>
                 <strong>
-                  {{ correctCount() }} / {{ questionSet()!.questions.length }}
+                  {{ correctCount() }} / {{ feedbackQuestionTotal() }}
                 </strong>
               </article>
               <article class="session-feedback__metric">
-                <span class="syn-kicker">Level</span>
+                <span class="syn-kicker">{{ sessionModeLabel() }} Level</span>
                 <strong>{{ questionSet()!.level }}</strong>
               </article>
             </div>
@@ -58,7 +58,7 @@
             <h2 class="syn-heading-md">Question Ledger</h2>
 
             @for (
-              question of questionSet()!.questions;
+              question of feedbackQuestions();
               track questionTrackBy(question);
               let index = $index
             ) {
@@ -77,10 +77,12 @@
 
                 <div class="session-feedback__content">
                   <span class="syn-kicker">
-                    Question {{ questionNumber(index) }}
+                    Question {{ questionNumber(question, index) }}
                   </span>
                   <p class="session-feedback__prompt">
-                    <syn-inline-code-text [text]="question.prompt" />
+                    <syn-inline-code-text
+                      [text]="feedbackQuestionPrompt(question)"
+                    />
                   </p>
                   <p
                     class="session-feedback__answer"
@@ -144,19 +146,46 @@
             }
           </section>
 
+          @if (error()) {
+            <p class="syn-error-message">{{ error() }}</p>
+          }
+
           <div class="session-page__actions session-page__actions--end">
             @if (hasWrongAnswer()) {
-              <syn-button label="Back Home" (buttonClick)="endSession()" />
-            } @else {
               <syn-button
-                label="End Session"
-                variant="secondary"
+                label="Back Home"
+                [variant]="sessionMode() === 'live' ? 'secondary' : 'primary'"
+                [disabled]="retryQuestionLoading()"
                 (buttonClick)="endSession()"
               />
-              <syn-button
-                label="Next Question"
-                (buttonClick)="nextQuestion()"
-              />
+              @if (sessionMode() === "live") {
+                <syn-button
+                  [label]="
+                    retryQuestionLoading()
+                      ? 'Loading...'
+                      : 'Retry'
+                  "
+                  [disabled]="!canRetryFailedQuestion()"
+                  (buttonClick)="retryFailedQuestion()"
+                />
+              }
+            } @else {
+              @if (hasNextQuestion()) {
+                <syn-button
+                  label="End Session"
+                  variant="secondary"
+                  (buttonClick)="endSession()"
+                />
+                <syn-button
+                  label="Next Question"
+                  (buttonClick)="nextQuestion()"
+                />
+              } @else {
+                <syn-button
+                  label="Finish Session"
+                  (buttonClick)="endSession()"
+                />
+              }
             }
           </div>
         </section>
@@ -175,7 +204,7 @@
                 {{ topic()!.title }}
               </h1>
               <span class="session-work__level">
-                Level {{ questionSet()!.level }}
+                {{ sessionModeLabel() }} / Level {{ questionSet()!.level }}
               </span>
             </div>
 
@@ -183,13 +212,11 @@
               <span>Progress</span>
               <div>
                 <span
-                  [style.width.%]="
-                    (100 / questionSet()!.questions.length) * answeredCount()
-                  "
+                  [style.width.%]="progressPercent()"
                 ></span>
               </div>
               <strong>
-                {{ answeredCount() }} / {{ questionSet()!.questions.length }}
+                {{ progressAnsweredCount() }} / {{ progressQuestionTotal() }}
               </strong>
             </div>
           </header>
@@ -208,7 +235,7 @@
               <article class="session-question">
                 <div class="session-question__header">
                   <span class="syn-question-index">
-                    {{ questionNumber(index) }}
+                    {{ questionNumber(question, index) }}
                   </span>
                   <h2>
                     <syn-inline-code-text [text]="question.prompt" />
@@ -262,6 +289,14 @@
                 variant="secondary"
                 routerLink="/home"
               />
+              @if (sessionMode() === "live") {
+                <syn-button
+                  label="Reject Question"
+                  variant="secondary"
+                  [disabled]="!canRejectQuestion()"
+                  (buttonClick)="openRejectQuestionDialog()"
+                />
+              }
               <syn-button
                 [label]="submitting() ? 'Evaluating...' : 'Submit Answer'"
                 type="submit"
@@ -274,6 +309,32 @@
       }
     </syn-container>
   </main>
+
+  @if (rejectQuestionDialogOpen()) {
+    <syn-confirmation-dialog
+      title="Reject live question?"
+      description="Tell the system why this question should be replaced."
+      confirmLabel="Reject"
+      loadingConfirmLabel="Rejecting"
+      [error]="rejectQuestionError()"
+      [loading]="rejectQuestionLoading()"
+      (cancel)="cancelRejectQuestion()"
+      (confirm)="confirmRejectQuestion()"
+    >
+      <label class="session-reject" for="live-reject-reason">
+        <span class="syn-kicker">Rejection Reason</span>
+        <textarea
+          id="live-reject-reason"
+          class="session-reject__textarea"
+          rows="5"
+          placeholder="Example: The question is ambiguous or unrelated to this topic."
+          [disabled]="rejectQuestionLoading()"
+          [value]="rejectQuestionReason()"
+          (input)="writeRejectQuestionReason($event)"
+        ></textarea>
+      </label>
+    </syn-confirmation-dialog>
+  }
 
   <syn-footer />
 </syn-page-shell>

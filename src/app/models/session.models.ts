@@ -46,9 +46,12 @@ export interface SessionAnswerSubmission {
 export interface EvaluatedAnswer {
   readonly id: string;
   readonly questionId: string;
+  readonly questionPrompt: string;
   readonly questionType: SessionQuestionType;
   readonly answer: string;
+  readonly answerText?: string;
   readonly correctAnswer: string;
+  readonly correctAnswerText?: string;
   readonly score: number;
   readonly feedback: string;
   readonly targetConcepts: readonly string[];
@@ -88,6 +91,17 @@ export interface StartSessionResponse {
   readonly questionSet: QuestionSet;
 }
 
+export interface LiveQuestionResponse {
+  readonly sessionId: string;
+  readonly questionId: string;
+  readonly question: SessionQuestion;
+}
+
+export interface LiveSessionSubmitResponse {
+  readonly answers: readonly EvaluatedAnswer[];
+  readonly nextQuestion: LiveQuestionResponse | null;
+}
+
 export interface InProgressSession {
   readonly id: string;
   readonly student: string;
@@ -95,8 +109,8 @@ export interface InProgressSession {
   readonly currentLevel: number;
   readonly status: string;
   readonly overallEvaluation?: SessionOverallEvaluation;
-  readonly startAt?: string;
-  readonly finishAt?: string;
+  readonly startedAt?: string;
+  readonly finishedAt?: string;
   readonly createdAt: string;
   readonly updatedAt: string;
 }

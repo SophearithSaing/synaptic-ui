@@ -1,11 +1,15 @@
 :host {
   display: block;
+
+  height: 100%;
 }
 
 .card {
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
+
+  height: 100%;
 
   border: 1px solid var(--color-outline-variant);
 
