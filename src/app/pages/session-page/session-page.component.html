@@ -262,6 +262,14 @@
                 variant="secondary"
                 routerLink="/home"
               />
+              @if (sessionMode() === "live") {
+                <syn-button
+                  label="Reject Question"
+                  variant="secondary"
+                  [disabled]="!canRejectQuestion()"
+                  (buttonClick)="openRejectQuestionDialog()"
+                />
+              }
               <syn-button
                 [label]="submitting() ? 'Evaluating...' : 'Submit Answer'"
                 type="submit"
@@ -274,6 +282,32 @@
       }
     </syn-container>
   </main>
+
+  @if (rejectQuestionDialogOpen()) {
+    <syn-confirmation-dialog
+      title="Reject live question?"
+      description="Tell the system why this question should be replaced."
+      confirmLabel="Reject"
+      loadingConfirmLabel="Rejecting"
+      [error]="rejectQuestionError()"
+      [loading]="rejectQuestionLoading()"
+      (cancel)="cancelRejectQuestion()"
+      (confirm)="confirmRejectQuestion()"
+    >
+      <label class="session-reject" for="live-reject-reason">
+        <span class="syn-kicker">Rejection Reason</span>
+        <textarea
+          id="live-reject-reason"
+          class="session-reject__textarea"
+          rows="5"
+          placeholder="Example: The question is ambiguous or unrelated to this topic."
+          [disabled]="rejectQuestionLoading()"
+          [value]="rejectQuestionReason()"
+          (input)="writeRejectQuestionReason($event)"
+        ></textarea>
+      </label>
+    </syn-confirmation-dialog>
+  }
 
   <syn-footer />
 </syn-page-shell>

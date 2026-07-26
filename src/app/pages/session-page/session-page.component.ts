@@ -11,6 +11,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
   SynBrandComponent,
   SynButtonComponent,
+  SynConfirmationDialogComponent,
   SynContainerComponent,
   SynEmptyStateComponent,
   SynFooterComponent,
@@ -46,6 +47,7 @@ type SessionMode = 'standard' | 'live';
   imports: [
     SynBrandComponent,
     SynButtonComponent,
+    SynConfirmationDialogComponent,
     SynContainerComponent,
     SynEmptyStateComponent,
     SynFooterComponent,
@@ -68,6 +70,10 @@ export class SessionPageComponent implements OnInit {
   public readonly loading = signal(true);
   public readonly activeSessionId = signal<string | null>(null);
   public readonly questionSet = signal<QuestionSet | null>(null);
+  public readonly rejectQuestionDialogOpen = signal(false);
+  public readonly rejectQuestionError = signal<string | null>(null);
+  public readonly rejectQuestionLoading = signal(false);
+  public readonly rejectQuestionReason = signal('');
   public readonly sessionMode = signal<SessionMode>('standard');
   public readonly submitting = signal(false);
   public readonly topic = signal<Topic | null>(null);
@@ -203,6 +209,100 @@ export class SessionPageComponent implements OnInit {
    */
   public endSession(): void {
     void this.router.navigate(['/home']);
+  }
+
+  /**
+   * Reports whether the current live question can be rejected.
+   *
+   * @returns True when a pending live question can be rejected.
+   */
+  public canRejectQuestion(): boolean {
+    return (
+      this.sessionMode() === 'live' &&
+      this.feedback() === null &&
+      this.questionSet() !== null &&
+      this.liveQuestionId() !== null &&
+      !this.submitting() &&
+      !this.rejectQuestionLoading()
+    );
+  }
+
+  /**
+   * Opens the live question rejection dialog.
+   */
+  public openRejectQuestionDialog(): void {
+    if (!this.canRejectQuestion()) {
+      return;
+    }
+
+    this.rejectQuestionError.set(null);
+    this.rejectQuestionReason.set('');
+    this.rejectQuestionDialogOpen.set(true);
+  }
+
+  /**
+   * Closes the live question rejection dialog.
+   */
+  public cancelRejectQuestion(): void {
+    if (this.rejectQuestionLoading()) {
+      return;
+    }
+
+    this.rejectQuestionDialogOpen.set(false);
+    this.rejectQuestionError.set(null);
+    this.rejectQuestionReason.set('');
+  }
+
+  /**
+   * Stores the live question rejection reason.
+   *
+   * @param event Textarea input event.
+   */
+  public writeRejectQuestionReason(event: Event): void {
+    const element = event.target as HTMLTextAreaElement;
+
+    this.rejectQuestionReason.set(element.value);
+  }
+
+  /**
+   * Rejects the current live question and loads its replacement.
+   */
+  public confirmRejectQuestion(): void {
+    const sessionId = this.activeSessionId();
+    const questionId = this.liveQuestionId();
+    const topic = this.topic();
+    const reason = this.rejectQuestionReason().trim();
+
+    if (sessionId === null || questionId === null || topic === null) {
+      this.rejectQuestionError.set('A live question is required to reject.');
+      return;
+    }
+
+    if (!reason.length) {
+      this.rejectQuestionError.set('Add a reason before rejecting.');
+      return;
+    }
+
+    this.rejectQuestionError.set(null);
+    this.rejectQuestionLoading.set(true);
+    this.sessionService
+      .rejectLiveQuestion(sessionId, questionId, reason)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (response: LiveQuestionResponse): void => {
+          this.applyLiveQuestion(response, topic);
+          this.answers.set({});
+          this.feedback.set(null);
+          this.rejectQuestionDialogOpen.set(false);
+          this.rejectQuestionReason.set('');
+          this.rejectQuestionLoading.set(false);
+          this.scrollToPageTop();
+        },
+        error: (error: Error): void => {
+          this.rejectQuestionError.set(error.message);
+          this.rejectQuestionLoading.set(false);
+        },
+      });
   }
 
   /**

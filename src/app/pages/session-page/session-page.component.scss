@@ -32,6 +32,7 @@
 .session-work__header,
 .session-work__form,
 .session-question,
+.session-reject,
 .session-feedback,
 .session-feedback__header,
 .session-feedback__ledger,
@@ -110,6 +111,29 @@
   gap: var(--space-md);
   padding: var(--space-md);
   background: var(--color-surface-container-lowest);
+}
+
+.session-reject {
+  gap: var(--space-unit);
+}
+
+.session-reject__textarea {
+  width: 100%;
+  min-height: 120px;
+
+  border: 1px solid var(--color-outline-variant);
+
+  padding: var(--space-sm);
+
+  background: var(--color-surface-container-lowest);
+  color: var(--color-on-surface);
+  resize: vertical;
+
+  &:focus {
+    border-color: var(--color-primary);
+
+    outline: none;
+  }
 }
 
 .session-question:focus-within,

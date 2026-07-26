@@ -11,6 +11,8 @@
       {{ description }}
     </p>
 
+    <ng-content></ng-content>
+
     @if (error) {
       <p class="syn-error-message">{{ error }}</p>
     }

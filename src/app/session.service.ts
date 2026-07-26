@@ -118,6 +118,29 @@ export class SessionService {
   }
 
   /**
+   * Rejects the current pending live question and requests a replacement.
+   *
+   * @param sessionId Live session id associated with the question.
+   * @param questionId Live question id returned by the API.
+   * @param reason Student reason for rejecting the question.
+   * @returns Observable of the replacement pending live question.
+   */
+  public rejectLiveQuestion(
+    sessionId: string,
+    questionId: string,
+    reason: string,
+  ): Observable<LiveQuestionResponse> {
+    return this.http.post<LiveQuestionResponse>(
+      `${API_BASE_URL}/sessions/live/reject`,
+      {
+        questionId,
+        reason,
+        sessionId,
+      },
+    );
+  }
+
+  /**
    * Submits answers for a question set.
    *
    * @param sessionId Session id associated with the question set.
