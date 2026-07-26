@@ -49,7 +49,9 @@ export interface EvaluatedAnswer {
   readonly questionPrompt: string;
   readonly questionType: SessionQuestionType;
   readonly answer: string;
+  readonly answerText?: string;
   readonly correctAnswer: string;
+  readonly correctAnswerText?: string;
   readonly score: number;
   readonly feedback: string;
   readonly targetConcepts: readonly string[];

@@ -590,9 +590,9 @@ export class SessionPageComponent implements OnInit {
    * @returns Submitted answer text for display.
    */
   public submittedAnswerText(question: SessionQuestion): string {
-    const answer = this.feedbackAnswer(question.id)?.answer ?? '';
+    const feedbackAnswer = this.feedbackAnswer(question.id);
 
-    return this.optionText(question, answer) || 'No answer submitted';
+    return feedbackAnswer?.answerText ?? feedbackAnswer?.answer ?? '';
   }
 
   /**
@@ -602,28 +602,9 @@ export class SessionPageComponent implements OnInit {
    * @returns Correct answer text for display.
    */
   public correctAnswerText(question: SessionQuestion): string {
-    const answer = this.feedbackAnswer(question.id)?.correctAnswer ?? '';
+    const feedbackAnswer = this.feedbackAnswer(question.id);
 
-    return this.optionText(question, answer) || answer;
-  }
-
-  /**
-   * Returns option text for MCQ answer ids.
-   *
-   * @param question Question associated with the answer.
-   * @param answer Answer value returned by the API.
-   * @returns Option text for MCQ ids, or the original answer.
-   */
-  public optionText(question: SessionQuestion, answer: string): string {
-    if (question.type !== 'mcq') {
-      return answer;
-    }
-
-    return (
-      question.options.find(
-        (option: SessionQuestionOption): boolean => option.id === answer,
-      )?.text ?? answer
-    );
+    return feedbackAnswer?.correctAnswerText ?? feedbackAnswer?.correctAnswer ?? '';
   }
 
   /**
