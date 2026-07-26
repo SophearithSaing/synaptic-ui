@@ -80,7 +80,9 @@
                     Question {{ questionNumber(question, index) }}
                   </span>
                   <p class="session-feedback__prompt">
-                    <syn-inline-code-text [text]="question.prompt" />
+                    <syn-inline-code-text
+                      [text]="feedbackQuestionPrompt(question)"
+                    />
                   </p>
                   <p
                     class="session-feedback__answer"

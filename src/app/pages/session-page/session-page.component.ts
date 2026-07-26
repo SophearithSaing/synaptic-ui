@@ -457,16 +457,47 @@ export class SessionPageComponent implements OnInit {
       return questionSet.questions;
     }
 
-    const questions = feedback.answers
-      .map((answer: EvaluatedAnswer): SessionQuestion | null =>
-        this.liveQuestion(answer.questionId),
-      )
-      .filter(
-        (question: SessionQuestion | null): question is SessionQuestion =>
-          question !== null,
-      );
+    return feedback.answers.map(
+      (answer: EvaluatedAnswer): SessionQuestion =>
+        this.liveQuestion(answer.questionId) ??
+        this.feedbackQuestionFromAnswer(answer),
+    );
+  }
 
-    return questions.length ? questions : questionSet.questions;
+  /**
+   * Creates a display fallback for feedback without loaded question metadata.
+   *
+   * @param answer Evaluated answer returned by the API.
+   * @returns Minimal question display model for the feedback ledger.
+   */
+  public feedbackQuestionFromAnswer(answer: EvaluatedAnswer): SessionQuestion {
+    return {
+      id: answer.questionId,
+      type: answer.questionType,
+      prompt: answer.questionPrompt,
+      options: [],
+      correctOptionId:
+        answer.questionType === 'mcq' ? answer.correctAnswer : undefined,
+      targetConcepts: answer.targetConcepts,
+      feedback: {
+        correct: answer.feedback,
+        incorrect: answer.feedback,
+      },
+      rubrics: {
+        keyPoints: answer.strengths,
+        misconceptions: answer.weaknesses,
+      },
+    };
+  }
+
+  /**
+   * Returns readable feedback question prompt text.
+   *
+   * @param question Question rendered by the feedback ledger.
+   * @returns Question prompt text for display.
+   */
+  public feedbackQuestionPrompt(question: SessionQuestion): string {
+    return question.prompt;
   }
 
   /**

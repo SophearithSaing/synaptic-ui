@@ -46,6 +46,7 @@ export interface SessionAnswerSubmission {
 export interface EvaluatedAnswer {
   readonly id: string;
   readonly questionId: string;
+  readonly questionPrompt: string;
   readonly questionType: SessionQuestionType;
   readonly answer: string;
   readonly correctAnswer: string;
