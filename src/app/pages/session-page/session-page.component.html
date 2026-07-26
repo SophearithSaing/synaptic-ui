@@ -2,8 +2,8 @@
   <syn-nav-bar synPageHeader>
     <syn-brand synNavBarBrand routerLink="/home" ariaLabel="Synaptic home" />
 
-    <div synNavBarActions class="session-page__status">
-      <span class="syn-kicker">{{ sessionModeLabel() }} Session Active</span>
+    <div synNavBarActions>
+      <syn-button label="Exit" variant="secondary" routerLink="/home" />
     </div>
   </syn-nav-bar>
 
@@ -52,6 +52,7 @@
           </header>
 
           <section
+            #sessionScrollTarget
             class="session-feedback__ledger"
             aria-label="Question ledger"
           >
@@ -208,7 +209,11 @@
               </span>
             </div>
 
-            <div class="session-work__progress" aria-label="Question progress">
+            <div
+              #sessionScrollTarget
+              class="session-work__progress"
+              aria-label="Question progress"
+            >
               <span>Progress</span>
               <div>
                 <span
@@ -284,21 +289,16 @@
             }
 
             <div class="session-page__actions">
-              <syn-button
-                label="Exit to Home"
-                variant="secondary"
-                routerLink="/home"
-              />
               @if (sessionMode() === "live") {
                 <syn-button
-                  label="Reject Question"
+                  label="Reject"
                   variant="secondary"
                   [disabled]="!canRejectQuestion()"
                   (buttonClick)="openRejectQuestionDialog()"
                 />
               }
               <syn-button
-                [label]="submitting() ? 'Evaluating...' : 'Submit Answer'"
+                [label]="submitting() ? 'Evaluating...' : 'Submit'"
                 type="submit"
                 [disabled]="!canSubmit() || submitting()"
                 (buttonClick)="submitSet()"

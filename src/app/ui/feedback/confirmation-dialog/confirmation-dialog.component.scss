@@ -45,6 +45,7 @@
 
 @media (max-width: 719px) {
   .confirmation-dialog__actions {
+    flex-direction: column-reverse;
     justify-content: stretch;
   }
 

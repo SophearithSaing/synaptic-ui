@@ -1,9 +1,11 @@
 import {
   Component,
   DestroyRef,
+  ElementRef,
   OnInit,
   signal,
   ChangeDetectionStrategy,
+  ViewChild,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -64,6 +66,9 @@ export class SessionPageComponent implements OnInit {
   private readonly liveQuestionTotal = 3;
   private readonly liveQuestionId = signal<string | null>(null);
   private readonly liveQuestions = signal<readonly SessionQuestion[]>([]);
+
+  @ViewChild('sessionScrollTarget')
+  private sessionScrollTarget?: ElementRef<HTMLElement>;
 
   public readonly answers = signal<Record<string, string>>({});
   public readonly error = signal<string | null>(null);
@@ -176,7 +181,7 @@ export class SessionPageComponent implements OnInit {
           this.feedback.set(this.toStandardFeedback(feedback));
           this.error.set(null);
           this.submitting.set(false);
-          this.scrollToPageTop();
+          this.scrollToSessionTarget();
         },
         error: (error: Error): void => {
           this.error.set(error.message);
@@ -203,7 +208,7 @@ export class SessionPageComponent implements OnInit {
     this.questionSet.set(nextQuestionSet);
     this.feedback.set(null);
     this.answers.set({});
-    this.scrollToPageTop();
+    this.scrollToSessionTarget();
   }
 
   /**
@@ -260,7 +265,7 @@ export class SessionPageComponent implements OnInit {
           this.answers.set({});
           this.feedback.set(null);
           this.retryQuestionLoading.set(false);
-          this.scrollToPageTop();
+          this.scrollToSessionTarget();
         },
         error: (error: Error): void => {
           this.error.set(error.message);
@@ -354,7 +359,7 @@ export class SessionPageComponent implements OnInit {
           this.rejectQuestionDialogOpen.set(false);
           this.rejectQuestionReason.set('');
           this.rejectQuestionLoading.set(false);
-          this.scrollToPageTop();
+          this.scrollToSessionTarget();
         },
         error: (error: Error): void => {
           this.rejectQuestionError.set(error.message);
@@ -683,12 +688,12 @@ export class SessionPageComponent implements OnInit {
   }
 
   /**
-   * Scrolls the page back to the top after a view state transition.
+   * Scrolls to the active session content after a view state transition.
    */
-  private scrollToPageTop(): void {
+  private scrollToSessionTarget(): void {
     window.setTimeout((): void => {
-      window.scrollTo({
-        top: 0,
+      this.sessionScrollTarget?.nativeElement.scrollIntoView({
+        block: 'start',
         behavior: 'smooth',
       });
     });
@@ -830,7 +835,7 @@ export class SessionPageComponent implements OnInit {
           this.feedback.set(this.toLiveFeedback(feedback, topic));
           this.error.set(null);
           this.submitting.set(false);
-          this.scrollToPageTop();
+          this.scrollToSessionTarget();
         },
         error: (error: Error): void => {
           this.error.set(error.message);
