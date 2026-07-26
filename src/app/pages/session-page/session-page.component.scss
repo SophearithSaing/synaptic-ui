@@ -81,6 +81,7 @@
 .session-work__progress {
   align-items: center;
   gap: var(--space-sm);
+  scroll-margin-top: var(--space-lg);
   font-size: var(--font-size-body-md);
 }
 
@@ -200,6 +201,7 @@
 
 .session-feedback__ledger {
   gap: var(--space-sm);
+  scroll-margin-top: var(--space-lg);
 }
 
 .session-feedback__item--error {

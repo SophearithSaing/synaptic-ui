@@ -52,6 +52,7 @@
           </header>
 
           <section
+            #sessionScrollTarget
             class="session-feedback__ledger"
             aria-label="Question ledger"
           >
@@ -208,7 +209,11 @@
               </span>
             </div>
 
-            <div class="session-work__progress" aria-label="Question progress">
+            <div
+              #sessionScrollTarget
+              class="session-work__progress"
+              aria-label="Question progress"
+            >
               <span>Progress</span>
               <div>
                 <span
