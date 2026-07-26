@@ -107,8 +107,8 @@ export interface InProgressSession {
   readonly currentLevel: number;
   readonly status: string;
   readonly overallEvaluation?: SessionOverallEvaluation;
-  readonly startAt?: string;
-  readonly finishAt?: string;
+  readonly startedAt?: string;
+  readonly finishedAt?: string;
   readonly createdAt: string;
   readonly updatedAt: string;
 }
