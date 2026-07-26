@@ -2,8 +2,8 @@
   <syn-nav-bar synPageHeader>
     <syn-brand synNavBarBrand routerLink="/home" ariaLabel="Synaptic home" />
 
-    <div synNavBarActions class="session-page__status">
-      <span class="syn-kicker">{{ sessionModeLabel() }} Session Active</span>
+    <div synNavBarActions>
+      <syn-button label="Exit" variant="secondary" routerLink="/home" />
     </div>
   </syn-nav-bar>
 
@@ -289,11 +289,6 @@
             }
 
             <div class="session-page__actions">
-              <syn-button
-                label="Exit"
-                variant="secondary"
-                routerLink="/home"
-              />
               @if (sessionMode() === "live") {
                 <syn-button
                   label="Reject"
