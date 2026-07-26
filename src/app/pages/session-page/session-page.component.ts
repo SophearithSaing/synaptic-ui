@@ -75,6 +75,7 @@ export class SessionPageComponent implements OnInit {
   public readonly rejectQuestionError = signal<string | null>(null);
   public readonly rejectQuestionLoading = signal(false);
   public readonly rejectQuestionReason = signal('');
+  public readonly retryQuestionLoading = signal(false);
   public readonly sessionMode = signal<SessionMode>('standard');
   public readonly submitting = signal(false);
   public readonly topic = signal<Topic | null>(null);
@@ -210,6 +211,53 @@ export class SessionPageComponent implements OnInit {
    */
   public endSession(): void {
     void this.router.navigate(['/home']);
+  }
+
+  /**
+   * Reports whether a failed live question can be retried.
+   *
+   * @returns True when live failed feedback can load the failed question.
+   */
+  public canRetryFailedQuestion(): boolean {
+    return (
+      this.sessionMode() === 'live' &&
+      this.feedback() !== null &&
+      this.hasWrongAnswer() &&
+      this.activeSessionId() !== null &&
+      this.topic() !== null &&
+      !this.retryQuestionLoading()
+    );
+  }
+
+  /**
+   * Loads the failed live question returned by the API for retry.
+   */
+  public retryFailedQuestion(): void {
+    const sessionId = this.activeSessionId();
+    const topic = this.topic();
+
+    if (sessionId === null || topic === null || !this.canRetryFailedQuestion()) {
+      return;
+    }
+
+    this.error.set(null);
+    this.retryQuestionLoading.set(true);
+    this.sessionService
+      .continueLiveSession(sessionId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (response: LiveQuestionResponse): void => {
+          this.applyLiveQuestion(response, topic);
+          this.answers.set({});
+          this.feedback.set(null);
+          this.retryQuestionLoading.set(false);
+          this.scrollToPageTop();
+        },
+        error: (error: Error): void => {
+          this.error.set(error.message);
+          this.retryQuestionLoading.set(false);
+        },
+      });
   }
 
   /**

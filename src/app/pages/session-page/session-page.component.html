@@ -146,9 +146,29 @@
             }
           </section>
 
+          @if (error()) {
+            <p class="syn-error-message">{{ error() }}</p>
+          }
+
           <div class="session-page__actions session-page__actions--end">
             @if (hasWrongAnswer()) {
-              <syn-button label="Back Home" (buttonClick)="endSession()" />
+              <syn-button
+                label="Back Home"
+                [variant]="sessionMode() === 'live' ? 'secondary' : 'primary'"
+                [disabled]="retryQuestionLoading()"
+                (buttonClick)="endSession()"
+              />
+              @if (sessionMode() === "live") {
+                <syn-button
+                  [label]="
+                    retryQuestionLoading()
+                      ? 'Loading...'
+                      : 'Retry'
+                  "
+                  [disabled]="!canRetryFailedQuestion()"
+                  (buttonClick)="retryFailedQuestion()"
+                />
+              }
             } @else {
               <syn-button
                 label="End Session"
