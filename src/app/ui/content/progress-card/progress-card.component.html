@@ -2,8 +2,18 @@
   <div class="progress-card__header">
     <div>
       <h3 class="progress-card__title">{{ title }}</h3>
-      @if (level !== null) {
-        <p class="progress-card__meta">Level {{ level }}</p>
+      @if (level !== null || modeLabel) {
+        <div class="progress-card__meta-list">
+          @if (modeLabel) {
+            <span class="progress-card__meta">{{ modeLabel }}</span>
+          }
+          @if (modeLabel && level !== null) {
+            <span class="progress-card__meta" aria-hidden="true">/</span>
+          }
+          @if (level !== null) {
+            <span class="progress-card__meta">Level {{ level }}</span>
+          }
+        </div>
       }
     </div>
     @if (icon) {

@@ -28,6 +28,16 @@ export const routes: Routes = [
     component: HomeComponent,
   },
   {
+    path: 'session/:topicId/live/continue/:sessionId',
+    canActivate: [authGuard],
+    component: SessionPageComponent,
+  },
+  {
+    path: 'session/:topicId/live',
+    canActivate: [authGuard],
+    component: SessionPageComponent,
+  },
+  {
     path: 'session/:topicId',
     canActivate: [authGuard],
     component: SessionPageComponent,

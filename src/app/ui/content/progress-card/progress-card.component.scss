@@ -32,6 +32,13 @@
   line-height: 1.6;
 }
 
+.progress-card__meta-list {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-unit);
+}
+
 .progress-card__meta {
   margin: 0;
 

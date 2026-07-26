@@ -21,6 +21,8 @@ export class SynProgressCardComponent {
 
   @Input() public level: number | null = null;
 
+  @Input() public modeLabel: string | null = null;
+
   @Input() public progress = 0;
 
   @Input() public routerLink: string | null = null;
