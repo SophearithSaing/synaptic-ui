@@ -170,15 +170,22 @@
                 />
               }
             } @else {
-              <syn-button
-                label="End Session"
-                variant="secondary"
-                (buttonClick)="endSession()"
-              />
-              <syn-button
-                label="Next Question"
-                (buttonClick)="nextQuestion()"
-              />
+              @if (hasNextQuestion()) {
+                <syn-button
+                  label="End Session"
+                  variant="secondary"
+                  (buttonClick)="endSession()"
+                />
+                <syn-button
+                  label="Next Question"
+                  (buttonClick)="nextQuestion()"
+                />
+              } @else {
+                <syn-button
+                  label="Finish Session"
+                  (buttonClick)="endSession()"
+                />
+              }
             }
           </div>
         </section>

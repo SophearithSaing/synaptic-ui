@@ -207,6 +207,15 @@ export class SessionPageComponent implements OnInit {
   }
 
   /**
+   * Reports whether feedback includes another question to continue with.
+   *
+   * @returns True when a next question set is available.
+   */
+  public hasNextQuestion(): boolean {
+    return this.feedback()?.nextQuestionSet !== null;
+  }
+
+  /**
    * Ends the focused session and returns home.
    */
   public endSession(): void {
