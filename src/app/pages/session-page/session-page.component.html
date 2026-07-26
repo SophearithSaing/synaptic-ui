@@ -3,7 +3,7 @@
     <syn-brand synNavBarBrand routerLink="/home" ariaLabel="Synaptic home" />
 
     <div synNavBarActions class="session-page__status">
-      <span class="syn-kicker">Session Active</span>
+      <span class="syn-kicker">{{ sessionModeLabel() }} Session Active</span>
     </div>
   </syn-nav-bar>
 
@@ -41,11 +41,11 @@
               <article class="session-feedback__metric">
                 <span class="syn-kicker">Questions Correct</span>
                 <strong>
-                  {{ correctCount() }} / {{ questionSet()!.questions.length }}
+                  {{ correctCount() }} / {{ feedbackQuestionTotal() }}
                 </strong>
               </article>
               <article class="session-feedback__metric">
-                <span class="syn-kicker">Level</span>
+                <span class="syn-kicker">{{ sessionModeLabel() }} Level</span>
                 <strong>{{ questionSet()!.level }}</strong>
               </article>
             </div>
@@ -58,7 +58,7 @@
             <h2 class="syn-heading-md">Question Ledger</h2>
 
             @for (
-              question of questionSet()!.questions;
+              question of feedbackQuestions();
               track questionTrackBy(question);
               let index = $index
             ) {
@@ -175,7 +175,7 @@
                 {{ topic()!.title }}
               </h1>
               <span class="session-work__level">
-                Level {{ questionSet()!.level }}
+                {{ sessionModeLabel() }} / Level {{ questionSet()!.level }}
               </span>
             </div>
 

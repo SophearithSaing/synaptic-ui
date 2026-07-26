@@ -20,6 +20,8 @@ import {
 } from '../../ui';
 import {
   EvaluatedAnswer,
+  LiveQuestionResponse,
+  LiveSessionSubmitResponse,
   QuestionSet,
   SessionAnswerSubmission,
   SessionQuestion,
@@ -30,6 +32,14 @@ import {
 import { Topic, TopicCategoryGroup } from '../../models/topic.models';
 import { SessionService } from '../../session.service';
 import { TopicCatalogService } from '../../topic-catalog.service';
+
+interface SessionFeedbackView {
+  readonly answers: readonly EvaluatedAnswer[];
+  readonly nextQuestionSet: QuestionSet | null;
+  readonly score: number;
+}
+
+type SessionMode = 'standard' | 'live';
 
 @Component({
   selector: 'app-session-page',
@@ -49,13 +59,16 @@ import { TopicCatalogService } from '../../topic-catalog.service';
 })
 export class SessionPageComponent implements OnInit {
   private readonly correctAnswerThreshold = 0.5;
+  private readonly liveQuestionId = signal<string | null>(null);
+  private readonly liveQuestions = signal<readonly SessionQuestion[]>([]);
 
   public readonly answers = signal<Record<string, string>>({});
   public readonly error = signal<string | null>(null);
-  public readonly feedback = signal<SessionSubmitResponse | null>(null);
+  public readonly feedback = signal<SessionFeedbackView | null>(null);
   public readonly loading = signal(true);
   public readonly activeSessionId = signal<string | null>(null);
   public readonly questionSet = signal<QuestionSet | null>(null);
+  public readonly sessionMode = signal<SessionMode>('standard');
   public readonly submitting = signal(false);
   public readonly topic = signal<Topic | null>(null);
 
@@ -72,6 +85,8 @@ export class SessionPageComponent implements OnInit {
    */
   public ngOnInit(): void {
     const topicId = this.route.snapshot.paramMap.get('topicId');
+
+    this.sessionMode.set(this.router.url.includes('/live') ? 'live' : 'standard');
 
     if (topicId === null) {
       void this.router.navigate(['/home']);
@@ -140,12 +155,17 @@ export class SessionPageComponent implements OnInit {
     this.submitting.set(true);
     this.error.set(null);
 
+    if (this.sessionMode() === 'live') {
+      this.submitLiveSet(sessionId, questionSet);
+      return;
+    }
+
     this.sessionService
       .submitAnswers(sessionId, questionSet, this.submissions())
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (feedback: SessionSubmitResponse): void => {
-          this.feedback.set(feedback);
+          this.feedback.set(this.toStandardFeedback(feedback));
           this.error.set(null);
           this.submitting.set(false);
           this.scrollToPageTop();
@@ -166,6 +186,10 @@ export class SessionPageComponent implements OnInit {
     if (nextQuestionSet === null) {
       void this.router.navigate(['/home']);
       return;
+    }
+
+    if (this.sessionMode() === 'live') {
+      this.liveQuestionId.set(nextQuestionSet.id);
     }
 
     this.questionSet.set(nextQuestionSet);
@@ -242,6 +266,56 @@ export class SessionPageComponent implements OnInit {
   }
 
   /**
+   * Returns the active session mode label for display.
+   *
+   * @returns Human-readable session mode label.
+   */
+  public sessionModeLabel(): string {
+    return this.sessionMode() === 'standard' ? 'Standard' : 'Live';
+  }
+
+  /**
+   * Returns questions that should be shown in the feedback ledger.
+   *
+   * @returns Feedback questions for the current mode.
+   */
+  public feedbackQuestions(): readonly SessionQuestion[] {
+    const feedback = this.feedback();
+    const questionSet = this.questionSet();
+
+    if (feedback === null || questionSet === null) {
+      return [];
+    }
+
+    if (this.sessionMode() === 'standard') {
+      return questionSet.questions;
+    }
+
+    const questions = feedback.answers
+      .map((answer: EvaluatedAnswer): SessionQuestion | null =>
+        this.liveQuestion(answer.questionId),
+      )
+      .filter(
+        (question: SessionQuestion | null): question is SessionQuestion =>
+          question !== null,
+      );
+
+    return questions.length ? questions : questionSet.questions;
+  }
+
+  /**
+   * Returns the total number of evaluated feedback answers.
+   *
+   * @returns Feedback answer count for summary display.
+   */
+  public feedbackQuestionTotal(): number {
+    return Math.max(
+      this.feedbackQuestions().length,
+      this.feedback()?.answers.length ?? 0,
+    );
+  }
+
+  /**
    * Returns the feedback answer for a question id.
    *
    * @param questionId Question id to inspect.
@@ -249,7 +323,7 @@ export class SessionPageComponent implements OnInit {
    */
   public feedbackAnswer(questionId: string): EvaluatedAnswer | null {
     return (
-      this.feedback()?.attempt.answers.find(
+      this.feedback()?.answers.find(
         (answer: EvaluatedAnswer): boolean => answer.questionId === questionId,
       ) ?? null
     );
@@ -304,7 +378,7 @@ export class SessionPageComponent implements OnInit {
    * @returns Score percentage for display.
    */
   public scorePercent(): number {
-    return Math.round((this.feedback()?.attempt.setScore ?? 0) * 100);
+    return Math.round((this.feedback()?.score ?? 0) * 100);
   }
 
   /**
@@ -324,7 +398,7 @@ export class SessionPageComponent implements OnInit {
    */
   public correctCount(): number {
     return (
-      this.feedback()?.attempt.answers.filter(
+      this.feedback()?.answers.filter(
         (answer: EvaluatedAnswer): boolean => this.isCorrectAnswer(answer),
       ).length ?? 0
     );
@@ -337,7 +411,7 @@ export class SessionPageComponent implements OnInit {
    */
   public hasWrongAnswer(): boolean {
     return (
-      this.feedback()?.attempt.answers.some(
+      this.feedback()?.answers.some(
         (answer: EvaluatedAnswer): boolean => !this.isCorrectAnswer(answer),
       ) ?? false
     );
@@ -394,6 +468,11 @@ export class SessionPageComponent implements OnInit {
     const sessionId = this.route.snapshot.paramMap.get('sessionId');
     const isContinue = this.router.url.includes('/continue');
 
+    if (this.sessionMode() === 'live') {
+      this.loadLiveQuestionSet(topic, isContinue ? sessionId : null);
+      return;
+    }
+
     if (isContinue) {
       this.loadContinuedQuestionSet(sessionId);
       return;
@@ -443,6 +522,218 @@ export class SessionPageComponent implements OnInit {
           this.loading.set(false);
         },
       });
+  }
+
+  /**
+   * Loads the active live question for a new or existing live session.
+   *
+   * @param topic Topic selected by the student.
+   * @param sessionId Existing live session id, or null to start fresh.
+   */
+  private loadLiveQuestionSet(topic: Topic, sessionId: string | null): void {
+    const request =
+      sessionId === null
+        ? this.sessionService.startLiveSession(topic)
+        : this.sessionService.continueLiveSession(sessionId);
+
+    request.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (response: LiveQuestionResponse): void => {
+        this.applyLiveQuestion(response, topic);
+      },
+      error: (error: Error): void => {
+        this.error.set(error.message);
+        this.loading.set(false);
+      },
+    });
+  }
+
+  /**
+   * Stores a live API response in the shared session page state.
+   *
+   * @param response Live question response returned by the API.
+   * @param topic Topic selected by the student.
+   */
+  private applyLiveQuestion(response: LiveQuestionResponse, topic: Topic): void {
+    this.activeSessionId.set(response.sessionId);
+    this.liveQuestionId.set(response.questionId);
+    this.rememberLiveQuestion(response.question);
+    this.questionSet.set(this.toLiveQuestionSet(response, topic));
+    this.error.set(null);
+    this.loading.set(false);
+  }
+
+  /**
+   * Submits a single live answer for the current pending live question.
+   *
+   * @param sessionId Active live session id.
+   * @param questionSet Synthetic live question set being answered.
+   */
+  private submitLiveSet(sessionId: string, questionSet: QuestionSet): void {
+    const topic = this.topic();
+    const question = questionSet.questions[0] ?? null;
+    const questionId = this.liveQuestionId();
+
+    if (topic === null || question === null || questionId === null) {
+      this.error.set('A live question is required before submitting.');
+      this.submitting.set(false);
+      return;
+    }
+
+    const answer = (this.answers()[question.id] ?? '').trim();
+
+    if (!answer.length) {
+      this.error.set('An answer is required before submitting.');
+      this.submitting.set(false);
+      return;
+    }
+
+    this.sessionService
+      .submitLiveAnswer(sessionId, questionId, answer)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (feedback: LiveSessionSubmitResponse): void => {
+          this.feedback.set(this.toLiveFeedback(feedback, topic));
+          this.error.set(null);
+          this.submitting.set(false);
+          this.scrollToPageTop();
+        },
+        error: (error: Error): void => {
+          this.error.set(error.message);
+          this.submitting.set(false);
+        },
+      });
+  }
+
+  /**
+   * Converts standard submit feedback into a shared feedback view model.
+   *
+   * @param response Standard session submit response.
+   * @returns Shared feedback view model.
+   */
+  private toStandardFeedback(
+    response: SessionSubmitResponse,
+  ): SessionFeedbackView {
+    return {
+      answers: response.attempt.answers,
+      nextQuestionSet: response.nextQuestionSet,
+      score: response.attempt.setScore,
+    };
+  }
+
+  /**
+   * Converts live submit feedback into a shared feedback view model.
+   *
+   * @param response Live session submit response.
+   * @param topic Topic selected by the student.
+   * @returns Shared feedback view model.
+   */
+  private toLiveFeedback(
+    response: LiveSessionSubmitResponse,
+    topic: Topic,
+  ): SessionFeedbackView {
+    const nextQuestionSet =
+      response.nextQuestion === null
+        ? null
+        : this.toLiveQuestionSet(response.nextQuestion, topic);
+
+    if (response.nextQuestion !== null) {
+      this.rememberLiveQuestion(response.nextQuestion.question);
+    }
+
+    return {
+      answers: response.answers,
+      nextQuestionSet,
+      score: this.averageScore(response.answers),
+    };
+  }
+
+  /**
+   * Converts a live question response into the regular page question-set shape.
+   *
+   * @param response Live question response returned by the API.
+   * @param topic Topic selected by the student.
+   * @returns Synthetic question set containing the pending live question.
+   */
+  private toLiveQuestionSet(
+    response: LiveQuestionResponse,
+    topic: Topic,
+  ): QuestionSet {
+    const now = new Date().toISOString();
+
+    return {
+      id: response.questionId,
+      topic: topic.id,
+      setType: 'live',
+      level: this.liveLevel(response.question),
+      questions: [response.question],
+      createdAt: now,
+      updatedAt: now,
+    };
+  }
+
+  /**
+   * Stores live questions seen by this page instance for feedback lookups.
+   *
+   * @param question Live question returned by the API.
+   */
+  private rememberLiveQuestion(question: SessionQuestion): void {
+    this.liveQuestions.update(
+      (questions: readonly SessionQuestion[]): readonly SessionQuestion[] => [
+        ...questions.filter(
+          (candidate: SessionQuestion): boolean => candidate.id !== question.id,
+        ),
+        question,
+      ],
+    );
+  }
+
+  /**
+   * Finds a live question seen by this page instance.
+   *
+   * @param questionId Live question id to find.
+   * @returns Matching live question, or null when missing.
+   */
+  private liveQuestion(questionId: string): SessionQuestion | null {
+    return (
+      this.liveQuestions().find(
+        (question: SessionQuestion): boolean => question.id === questionId,
+      ) ?? null
+    );
+  }
+
+  /**
+   * Returns the average score for evaluated answers.
+   *
+   * @param answers Evaluated answer list from the API.
+   * @returns Average score, or 0 when no answers exist.
+   */
+  private averageScore(answers: readonly EvaluatedAnswer[]): number {
+    if (!answers.length) {
+      return 0;
+    }
+
+    return (
+      answers.reduce(
+        (total: number, answer: EvaluatedAnswer): number => total + answer.score,
+        0,
+      ) / answers.length
+    );
+  }
+
+  /**
+   * Resolves a live level from generated question ids when available.
+   *
+   * @param question Live question returned by the API.
+   * @returns Best-effort live level for display.
+   */
+  private liveLevel(question: SessionQuestion): number {
+    const match = question.id.match(/(?:^|-)l(\d+)(?:-|$)/i);
+
+    if (match === null) {
+      return 0;
+    }
+
+    return Number(match[1]);
   }
 
   /**
