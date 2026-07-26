@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 
 import {
   InProgressSession,
+  LiveQuestionResponse,
+  LiveSessionSubmitResponse,
   QuestionSet,
   SessionAnswerSubmission,
   SessionSubmitResponse,
@@ -29,6 +31,19 @@ export class SessionService {
   public startSession(topic: Topic): Observable<StartSessionResponse> {
     return this.http.post<StartSessionResponse>(
       `${API_BASE_URL}/sessions/start`,
+      { topicId: topic.id },
+    );
+  }
+
+  /**
+   * Starts a new live session for the selected topic.
+   *
+   * @param topic Topic selected by the student.
+   * @returns Observable of the live session and pending question.
+   */
+  public startLiveSession(topic: Topic): Observable<LiveQuestionResponse> {
+    return this.http.post<LiveQuestionResponse>(
+      `${API_BASE_URL}/sessions/live/start`,
       { topicId: topic.id },
     );
   }
@@ -88,6 +103,21 @@ export class SessionService {
   }
 
   /**
+   * Continues an existing live session by id.
+   *
+   * @param sessionId Live session id to continue.
+   * @returns Observable of the current or next pending live question.
+   */
+  public continueLiveSession(sessionId: string): Observable<LiveQuestionResponse> {
+    return this.http.post<LiveQuestionResponse>(
+      `${API_BASE_URL}/sessions/live/continue`,
+      {
+        sessionId,
+      },
+    );
+  }
+
+  /**
    * Submits answers for a question set.
    *
    * @param sessionId Session id associated with the question set.
@@ -106,6 +136,29 @@ export class SessionService {
         sessionId,
         questionSetId: questionSet.id,
         answers,
+      },
+    );
+  }
+
+  /**
+   * Submits one live session answer for evaluation.
+   *
+   * @param sessionId Live session id associated with the question.
+   * @param questionId Live question id returned by the API.
+   * @param answer Student answer text or selected option id.
+   * @returns Observable of evaluated feedback and next live question.
+   */
+  public submitLiveAnswer(
+    sessionId: string,
+    questionId: string,
+    answer: string,
+  ): Observable<LiveSessionSubmitResponse> {
+    return this.http.post<LiveSessionSubmitResponse>(
+      `${API_BASE_URL}/sessions/live/submit-answer`,
+      {
+        answer,
+        questionId,
+        sessionId,
       },
     );
   }

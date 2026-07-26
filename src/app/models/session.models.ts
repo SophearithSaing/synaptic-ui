@@ -88,6 +88,17 @@ export interface StartSessionResponse {
   readonly questionSet: QuestionSet;
 }
 
+export interface LiveQuestionResponse {
+  readonly sessionId: string;
+  readonly questionId: string;
+  readonly question: SessionQuestion;
+}
+
+export interface LiveSessionSubmitResponse {
+  readonly answers: readonly EvaluatedAnswer[];
+  readonly nextQuestion: LiveQuestionResponse | null;
+}
+
 export interface InProgressSession {
   readonly id: string;
   readonly student: string;
