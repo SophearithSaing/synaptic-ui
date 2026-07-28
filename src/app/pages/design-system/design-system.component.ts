@@ -1,7 +1,9 @@
-import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 
 import {
-  SynBrandComponent,
   SynButtonComponent,
   SynCardComponent,
   SynCatalogCardComponent,
@@ -16,10 +18,7 @@ import {
   SynInputComponent,
   SynLedgerItem,
   SynLedgerListComponent,
-  SynMobileNavComponent,
-  SynNavBarComponent,
   SynNavItem,
-  SynNavItemsComponent,
   SynOptionComponent,
   SynPageShellComponent,
   SynProgressBarComponent,
@@ -63,7 +62,6 @@ interface SpacingToken {
 @Component({
   selector: 'app-design-system',
   imports: [
-    SynBrandComponent,
     SynButtonComponent,
     SynCardComponent,
     SynCatalogCardComponent,
@@ -77,9 +75,6 @@ interface SpacingToken {
     SynInfoCardComponent,
     SynInputComponent,
     SynLedgerListComponent,
-    SynMobileNavComponent,
-    SynNavBarComponent,
-    SynNavItemsComponent,
     SynOptionComponent,
     SynPageShellComponent,
     SynProgressBarComponent,
@@ -95,20 +90,6 @@ interface SpacingToken {
   styleUrl: './design-system.component.scss',
 })
 export class DesignSystemComponent {
-  public readonly mobileNavOpen = signal(false);
-
-  public readonly navItems: readonly SynNavItem[] = [
-    {
-      label: 'Home',
-      routerLink: '/',
-    },
-    {
-      active: true,
-      label: 'Design',
-      routerLink: '/design-system',
-    },
-  ];
-
   public readonly footerLinks: readonly SynNavItem[] = [
     {
       label: 'Home',
@@ -255,18 +236,4 @@ export class DesignSystemComponent {
       value: '48px',
     },
   ];
-
-  /**
-   * Toggles the mobile navigation menu visibility.
-   */
-  public toggleMobileNav(): void {
-    this.mobileNavOpen.update((isOpen: boolean): boolean => !isOpen);
-  }
-
-  /**
-   * Closes the mobile navigation menu after navigation.
-   */
-  public closeMobileNav(): void {
-    this.mobileNavOpen.set(false);
-  }
 }

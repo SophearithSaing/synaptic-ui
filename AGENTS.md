@@ -10,11 +10,11 @@
 
 ## Design
 
-For any design-related work, first read `DESIGN.md` and `design-system.css`.
+For any design-related work, first read `DESIGN.md` and `styles.scss`.
 
 Follow `DESIGN.md` as the source of truth for UI, UX, styling, layout, components, and interaction patterns.
 
-Follow `design-system.css` as the source of truth for design tokens, variables, colors, spacing, typography, breakpoints, shadows, borders, and reusable style primitives.
+Follow `styles.scss` as the source of truth for design tokens, variables, colors, spacing, typography, breakpoints, shadows, borders, and reusable style primitives.
 
 Do not introduce new design patterns, hardcoded visual values, or duplicate style primitives unless explicitly requested.
 

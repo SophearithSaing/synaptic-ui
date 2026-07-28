@@ -9,18 +9,12 @@ import { Router } from '@angular/router';
 import { Observable, switchMap } from 'rxjs';
 
 import {
-  SynBrandComponent,
   SynButtonComponent,
   SynFooterComponent,
   SynFormFieldComponent,
   SynFormPanelComponent,
   SynFormShellComponent,
   SynInputComponent,
-  SynMobileNavComponent,
-  SynNavAction,
-  SynNavBarComponent,
-  SynNavItem,
-  SynNavItemsComponent,
   SynPageShellComponent,
   SynTextLinkComponent,
 } from '../../ui';
@@ -38,16 +32,12 @@ import { AuthenticatedUser } from '../../models/auth.models';
 @Component({
   selector: 'app-register-page',
   imports: [
-    SynBrandComponent,
     SynButtonComponent,
     SynFooterComponent,
     SynFormFieldComponent,
     SynFormPanelComponent,
     SynFormShellComponent,
     SynInputComponent,
-    SynMobileNavComponent,
-    SynNavBarComponent,
-    SynNavItemsComponent,
     SynPageShellComponent,
     SynTextLinkComponent,
   ],
@@ -57,27 +47,7 @@ import { AuthenticatedUser } from '../../models/auth.models';
 })
 export class RegisterPageComponent {
   public readonly errorMessage = signal<string | null>(null);
-  public readonly mobileNavOpen = signal(false);
   public readonly submitting = signal(false);
-
-  public readonly navItems: readonly SynNavItem[] = [
-    {
-      label: 'Documentation',
-      routerLink: '/design-system',
-    },
-    {
-      href: 'mailto:support@synaptic.local',
-      label: 'Support',
-    },
-  ];
-
-  public readonly navActions: readonly SynNavAction[] = [
-    {
-      label: 'Log In',
-      routerLink: '/login',
-      variant: 'primary',
-    },
-  ];
 
   public constructor(
     private readonly authApi: AuthApiService,
@@ -85,20 +55,6 @@ export class RegisterPageComponent {
     private readonly destroyRef: DestroyRef,
     private readonly router: Router,
   ) {}
-
-  /**
-   * Toggles the mobile navigation menu visibility.
-   */
-  public toggleMobileNav(): void {
-    this.mobileNavOpen.update((isOpen: boolean): boolean => !isOpen);
-  }
-
-  /**
-   * Closes the mobile navigation menu after navigation.
-   */
-  public closeMobileNav(): void {
-    this.mobileNavOpen.set(false);
-  }
 
   /**
    * Registers the user and navigates to the signed-in home page.

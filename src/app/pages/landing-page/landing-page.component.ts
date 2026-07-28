@@ -1,7 +1,6 @@
-import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 import {
-  SynBrandComponent,
   SynButtonComponent,
   SynCatalogCardComponent,
   SynContainerComponent,
@@ -11,11 +10,7 @@ import {
   SynInfoCardComponent,
   SynLedgerItem,
   SynLedgerListComponent,
-  SynMobileNavComponent,
-  SynNavAction,
-  SynNavBarComponent,
   SynNavItem,
-  SynNavItemsComponent,
   SynPageShellComponent,
   SynSectionComponent,
   SynSectionHeaderComponent,
@@ -37,7 +32,6 @@ interface CurriculumTrack {
 @Component({
   selector: 'app-landing-page',
   imports: [
-    SynBrandComponent,
     SynButtonComponent,
     SynCatalogCardComponent,
     SynContainerComponent,
@@ -46,9 +40,6 @@ interface CurriculumTrack {
     SynGridComponent,
     SynInfoCardComponent,
     SynLedgerListComponent,
-    SynMobileNavComponent,
-    SynNavBarComponent,
-    SynNavItemsComponent,
     SynPageShellComponent,
     SynSectionComponent,
     SynSectionHeaderComponent,
@@ -59,41 +50,6 @@ interface CurriculumTrack {
   styleUrl: './landing-page.component.scss',
 })
 export class LandingPageComponent {
-  public readonly mobileNavOpen = signal(false);
-
-  public readonly navItems: readonly SynNavItem[] = [
-    {
-      active: true,
-      href: '#home',
-      label: 'Home',
-    },
-    {
-      href: '#philosophy',
-      label: 'Philosophy',
-    },
-    {
-      href: '#curriculum',
-      label: 'Curriculum',
-    },
-    {
-      label: 'Design',
-      routerLink: '/design-system',
-    },
-  ];
-
-  public readonly navActions: readonly SynNavAction[] = [
-    {
-      label: 'Log In',
-      routerLink: '/login',
-      variant: 'secondary',
-    },
-    {
-      label: 'Sign Up',
-      routerLink: '/register',
-      variant: 'primary',
-    },
-  ];
-
   public readonly footerLinks: readonly SynNavItem[] = [
     {
       href: '#curriculum',
@@ -187,17 +143,4 @@ export class LandingPageComponent {
     },
   ];
 
-  /**
-   * Toggles the mobile navigation menu visibility.
-   */
-  public toggleMobileNav(): void {
-    this.mobileNavOpen.update((isOpen: boolean): boolean => !isOpen);
-  }
-
-  /**
-   * Closes the mobile navigation menu after navigation.
-   */
-  public closeMobileNav(): void {
-    this.mobileNavOpen.set(false);
-  }
 }

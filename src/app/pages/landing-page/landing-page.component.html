@@ -1,46 +1,4 @@
 <syn-page-shell>
-  <syn-nav-bar synPageHeader>
-    <syn-brand
-      synNavBarBrand
-      href="#home"
-      label="Synaptic"
-      ariaLabel="Synaptic home"
-    />
-
-    <syn-nav-items
-      synNavBarNav
-      ariaLabel="Primary navigation"
-      [items]="navItems"
-    />
-
-    <div synNavBarActions class="landing-actions">
-      <syn-button label="Log In" routerLink="/login" variant="secondary" />
-      <syn-button label="Sign Up" routerLink="/register" />
-    </div>
-
-    <button
-      synNavBarMenu
-      class="syn-menu-button"
-      type="button"
-      aria-label="Toggle navigation menu"
-      [attr.aria-expanded]="mobileNavOpen()"
-      (click)="toggleMobileNav()"
-    >
-      <span class="material-symbols-outlined" aria-hidden="true">
-        {{ mobileNavOpen() ? "close" : "menu" }}
-      </span>
-    </button>
-
-    @if (mobileNavOpen()) {
-      <syn-mobile-nav
-        synNavBarMobileNav
-        [items]="navItems"
-        [actions]="navActions"
-        (navigate)="closeMobileNav()"
-      />
-    }
-  </syn-nav-bar>
-
   <section class="landing-hero" id="home">
     <div class="landing-hero__content">
       <p class="syn-kicker">Structured technical mastery</p>

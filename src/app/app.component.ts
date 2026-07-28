@@ -8,12 +8,13 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterOutlet } from '@angular/router';
 
+import { AppNavbarComponent } from './app-navbar/app-navbar.component';
 import { AuthInitializationService } from './auth-initialization.service';
 import { AuthSessionService } from './auth-session.service';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [AppNavbarComponent, RouterOutlet],
   templateUrl: './app.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './app.component.scss',

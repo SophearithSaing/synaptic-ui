@@ -2,10 +2,6 @@
   display: block;
 }
 
-.landing-actions {
-  display: none;
-}
-
 .landing-hero {
   align-items: center;
   display: flex;
@@ -32,11 +28,6 @@
 }
 
 @media (min-width: 720px) {
-  .landing-actions {
-    display: flex;
-    gap: var(--space-unit);
-  }
-
   .landing-hero {
     min-height: 520px;
   }
