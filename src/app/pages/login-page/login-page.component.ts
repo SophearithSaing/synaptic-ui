@@ -9,7 +9,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, switchMap } from 'rxjs';
 
 import {
-  SynBrandComponent,
   SynButtonComponent,
   SynFormFieldComponent,
   SynFormPanelComponent,
@@ -25,7 +24,6 @@ import { AuthenticatedUser } from '../../models/auth.models';
 @Component({
   selector: 'app-login-page',
   imports: [
-    SynBrandComponent,
     SynButtonComponent,
     SynFormFieldComponent,
     SynFormPanelComponent,

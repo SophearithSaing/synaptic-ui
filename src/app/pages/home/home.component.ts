@@ -6,28 +6,21 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Router } from '@angular/router';
 import { finalize, forkJoin } from 'rxjs';
 
 import {
-  SynBrandComponent,
   SynButtonComponent,
   SynCardComponent,
   SynConfirmationDialogComponent,
   SynContainerComponent,
   SynEmptyStateComponent,
   SynGridComponent,
-  SynNavBarComponent,
-  SynNavItem,
-  SynNavItemsComponent,
   SynPageShellComponent,
   SynProgressCardComponent,
   SynSectionHeaderComponent,
   SynStackComponent,
 } from '../../ui';
 
-import { AuthApiService } from '../../auth-api.service';
-import { AuthSessionService } from '../../auth-session.service';
 import { InProgressSession } from '../../models/session.models';
 import { Topic, TopicCategoryGroup } from '../../models/topic.models';
 import { SessionService } from '../../session.service';
@@ -49,15 +42,12 @@ type HomeSessionMode = 'standard' | 'live';
 @Component({
   selector: 'app-home',
   imports: [
-    SynBrandComponent,
     SynButtonComponent,
     SynCardComponent,
     SynConfirmationDialogComponent,
     SynContainerComponent,
     SynEmptyStateComponent,
     SynGridComponent,
-    SynNavBarComponent,
-    SynNavItemsComponent,
     SynPageShellComponent,
     SynProgressCardComponent,
     SynSectionHeaderComponent,
@@ -79,22 +69,7 @@ export class HomeComponent implements OnInit {
   public readonly stopSessionLoading = signal(false);
   public readonly stopSessionRequest = signal<HomeProgressTopic | null>(null);
 
-  public readonly navItems: readonly SynNavItem[] = [
-    {
-      active: true,
-      label: 'Home',
-      routerLink: '/home',
-    },
-    {
-      label: 'Design',
-      routerLink: '/design-system',
-    },
-  ];
-
   public constructor(
-    private readonly authApi: AuthApiService,
-    private readonly authSession: AuthSessionService,
-    private readonly router: Router,
     private readonly sessionService: SessionService,
     private readonly topicCatalog: TopicCatalogService,
     private readonly destroyRef: DestroyRef,
@@ -144,22 +119,6 @@ export class HomeComponent implements OnInit {
           this.inProgressSessions.set([]);
         },
       });
-  }
-
-  /**
-   * Revokes the API session and returns to the landing page.
-   */
-  public logOut(): void {
-    this.authApi
-      .logout()
-      .pipe(
-        finalize((): void => {
-          this.authSession.signOut();
-          void this.router.navigate(['/']);
-        }),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe();
   }
 
   /**

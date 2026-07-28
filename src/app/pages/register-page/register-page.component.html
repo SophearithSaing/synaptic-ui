@@ -1,36 +1,4 @@
 <syn-page-shell>
-  <syn-nav-bar synPageHeader>
-    <syn-brand synNavBarBrand routerLink="/" ariaLabel="Synaptic home" />
-
-    <syn-nav-items
-      synNavBarNav
-      ariaLabel="Registration navigation"
-      [items]="navItems"
-    />
-
-    <button
-      synNavBarMenu
-      class="syn-menu-button"
-      type="button"
-      aria-label="Toggle navigation menu"
-      [attr.aria-expanded]="mobileNavOpen()"
-      (click)="toggleMobileNav()"
-    >
-      <span class="material-symbols-outlined" aria-hidden="true">
-        {{ mobileNavOpen() ? "close" : "menu" }}
-      </span>
-    </button>
-
-    @if (mobileNavOpen()) {
-      <syn-mobile-nav
-        synNavBarMobileNav
-        [items]="navItems"
-        [actions]="navActions"
-        (navigate)="closeMobileNav()"
-      />
-    }
-  </syn-nav-bar>
-
   <syn-form-shell center>
     <syn-form-panel
       title="Establish Identity"

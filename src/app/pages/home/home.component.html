@@ -1,22 +1,4 @@
 <syn-page-shell>
-  <syn-nav-bar synPageHeader>
-    <syn-brand synNavBarBrand routerLink="/home" ariaLabel="Synaptic home" />
-
-    <syn-nav-items
-      synNavBarNav
-      ariaLabel="Workspace navigation"
-      [items]="navItems"
-    />
-
-    <div synNavBarActions class="home__session">
-      <syn-button
-        label="Log Out"
-        variant="secondary"
-        (buttonClick)="logOut()"
-      />
-    </div>
-  </syn-nav-bar>
-
   <div class="home">
     <syn-container>
       <syn-stack page>

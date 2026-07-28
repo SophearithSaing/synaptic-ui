@@ -11,14 +11,12 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import {
-  SynBrandComponent,
   SynButtonComponent,
   SynConfirmationDialogComponent,
   SynContainerComponent,
   SynEmptyStateComponent,
   SynFooterComponent,
   SynInlineCodeTextComponent,
-  SynNavBarComponent,
   SynPageShellComponent,
 } from '../../ui';
 import {
@@ -47,14 +45,12 @@ type SessionMode = 'standard' | 'live';
 @Component({
   selector: 'app-session-page',
   imports: [
-    SynBrandComponent,
     SynButtonComponent,
     SynConfirmationDialogComponent,
     SynContainerComponent,
     SynEmptyStateComponent,
     SynFooterComponent,
     SynInlineCodeTextComponent,
-    SynNavBarComponent,
     SynPageShellComponent,
   ],
   templateUrl: './session-page.component.html',

@@ -1,19 +1,9 @@
 import {
   Component,
-  DestroyRef,
-  Signal,
-  computed,
-  signal,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Router } from '@angular/router';
-import { finalize } from 'rxjs';
 
-import { AuthApiService } from '../../auth-api.service';
-import { AuthSessionService } from '../../auth-session.service';
 import {
-  SynBrandComponent,
   SynButtonComponent,
   SynCardComponent,
   SynCatalogCardComponent,
@@ -28,10 +18,7 @@ import {
   SynInputComponent,
   SynLedgerItem,
   SynLedgerListComponent,
-  SynMobileNavComponent,
-  SynNavBarComponent,
   SynNavItem,
-  SynNavItemsComponent,
   SynOptionComponent,
   SynPageShellComponent,
   SynProgressBarComponent,
@@ -75,7 +62,6 @@ interface SpacingToken {
 @Component({
   selector: 'app-design-system',
   imports: [
-    SynBrandComponent,
     SynButtonComponent,
     SynCardComponent,
     SynCatalogCardComponent,
@@ -89,9 +75,6 @@ interface SpacingToken {
     SynInfoCardComponent,
     SynInputComponent,
     SynLedgerListComponent,
-    SynMobileNavComponent,
-    SynNavBarComponent,
-    SynNavItemsComponent,
     SynOptionComponent,
     SynPageShellComponent,
     SynProgressBarComponent,
@@ -107,14 +90,6 @@ interface SpacingToken {
   styleUrl: './design-system.component.scss',
 })
 export class DesignSystemComponent {
-  public readonly mobileNavOpen = signal(false);
-
-  public readonly authenticated: Signal<boolean>;
-
-  public readonly brandRouterLink: Signal<string>;
-
-  public readonly navItems: Signal<readonly SynNavItem[]>;
-
   public readonly footerLinks: readonly SynNavItem[] = [
     {
       label: 'Home',
@@ -261,59 +236,4 @@ export class DesignSystemComponent {
       value: '48px',
     },
   ];
-
-  public constructor(
-    private readonly authApi: AuthApiService,
-    private readonly authSession: AuthSessionService,
-    private readonly destroyRef: DestroyRef,
-    private readonly router: Router,
-  ) {
-    this.authenticated = computed((): boolean =>
-      this.authSession.isAuthenticated(),
-    );
-    this.brandRouterLink = computed((): string =>
-      this.authenticated() ? '/home' : '/',
-    );
-    this.navItems = computed((): readonly SynNavItem[] => [
-      {
-        label: 'Home',
-        routerLink: this.authenticated() ? '/home' : '/',
-      },
-      {
-        active: true,
-        label: 'Design',
-        routerLink: '/design-system',
-      },
-    ]);
-  }
-
-  /**
-   * Toggles the mobile navigation menu visibility.
-   */
-  public toggleMobileNav(): void {
-    this.mobileNavOpen.update((isOpen: boolean): boolean => !isOpen);
-  }
-
-  /**
-   * Closes the mobile navigation menu after navigation.
-   */
-  public closeMobileNav(): void {
-    this.mobileNavOpen.set(false);
-  }
-
-  /**
-   * Revokes the API session and returns to the landing page.
-   */
-  public logOut(): void {
-    this.authApi
-      .logout()
-      .pipe(
-        finalize((): void => {
-          this.authSession.signOut();
-          void this.router.navigate(['/']);
-        }),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe();
-  }
 }
