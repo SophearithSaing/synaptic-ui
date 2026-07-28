@@ -34,14 +34,25 @@
             {{ item.action.label }}
           </a>
         } @else {
-          <a
-            class="mobile-nav__action"
-            [ngClass]="item.classes"
-            [href]="item.action.href"
-            (click)="onNavigate()"
-          >
-            {{ item.action.label }}
-          </a>
+          @if (item.action.href) {
+            <a
+              class="mobile-nav__action"
+              [ngClass]="item.classes"
+              [href]="item.action.href"
+              (click)="onNavigate()"
+            >
+              {{ item.action.label }}
+            </a>
+          } @else {
+            <button
+              class="mobile-nav__action"
+              type="button"
+              [ngClass]="item.classes"
+              (click)="onAction(item.action)"
+            >
+              {{ item.action.label }}
+            </button>
+          }
         }
       }
     </div>

@@ -1,0 +1,18 @@
+:host {
+  display: block;
+}
+
+.app-navbar__actions {
+  display: none;
+  gap: var(--space-unit);
+}
+
+.app-navbar__actions--session {
+  display: flex;
+}
+
+@media (min-width: 720px) {
+  .app-navbar__actions {
+    display: flex;
+  }
+}

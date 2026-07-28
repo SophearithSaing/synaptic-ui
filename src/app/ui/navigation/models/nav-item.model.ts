@@ -6,5 +6,6 @@ export interface SynNavItem {
 }
 
 export interface SynNavAction extends SynNavItem {
+  readonly actionId?: string;
   readonly variant?: 'primary' | 'secondary' | 'ghost';
 }

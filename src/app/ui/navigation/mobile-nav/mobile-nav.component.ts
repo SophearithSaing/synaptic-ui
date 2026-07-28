@@ -32,6 +32,8 @@ export class SynMobileNavComponent implements OnChanges {
 
   @Output() public readonly navigate = new EventEmitter<void>();
 
+  @Output() public readonly action = new EventEmitter<string>();
+
   public actionItems: readonly SynMobileNavActionItem[] =
     this.createActionItems();
 
@@ -47,6 +49,19 @@ export class SynMobileNavComponent implements OnChanges {
    */
   public onNavigate(): void {
     this.navigate.emit();
+  }
+
+  /**
+   * Emits when a mobile navigation action is activated.
+   *
+   * @param navAction Mobile navigation action that was activated.
+   */
+  public onAction(navAction: SynNavAction): void {
+    if (navAction.actionId) {
+      this.action.emit(navAction.actionId);
+    }
+
+    this.onNavigate();
   }
 
   /**
