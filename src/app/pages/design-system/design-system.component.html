@@ -3,17 +3,28 @@
     <syn-brand
       synNavBarBrand
       label="Synaptic Design"
-      routerLink="/"
+      [routerLink]="brandRouterLink()"
       ariaLabel="Synaptic home"
     />
 
     <syn-nav-items
       synNavBarNav
       ariaLabel="Primary navigation"
-      [items]="navItems"
+      [items]="navItems()"
     />
 
-    <span synNavBarActions class="syn-kicker">v1.0.0</span>
+    @if (authenticated()) {
+      <div synNavBarActions class="design-nav-actions">
+        <span class="syn-kicker">Session Active</span>
+        <syn-button
+          label="Log Out"
+          variant="secondary"
+          (buttonClick)="logOut()"
+        />
+      </div>
+    } @else {
+      <span synNavBarActions class="syn-kicker">v1.0.0</span>
+    }
 
     <button
       synNavBarMenu
@@ -31,7 +42,7 @@
     @if (mobileNavOpen()) {
       <syn-mobile-nav
         synNavBarMobileNav
-        [items]="navItems"
+        [items]="navItems()"
         (navigate)="closeMobileNav()"
       />
     }

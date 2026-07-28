@@ -1,5 +1,17 @@
-import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  Signal,
+  computed,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Router } from '@angular/router';
+import { finalize } from 'rxjs';
 
+import { AuthApiService } from '../../auth-api.service';
+import { AuthSessionService } from '../../auth-session.service';
 import {
   SynBrandComponent,
   SynButtonComponent,
@@ -97,17 +109,11 @@ interface SpacingToken {
 export class DesignSystemComponent {
   public readonly mobileNavOpen = signal(false);
 
-  public readonly navItems: readonly SynNavItem[] = [
-    {
-      label: 'Home',
-      routerLink: '/',
-    },
-    {
-      active: true,
-      label: 'Design',
-      routerLink: '/design-system',
-    },
-  ];
+  public readonly authenticated: Signal<boolean>;
+
+  public readonly brandRouterLink: Signal<string>;
+
+  public readonly navItems: Signal<readonly SynNavItem[]>;
 
   public readonly footerLinks: readonly SynNavItem[] = [
     {
@@ -256,6 +262,31 @@ export class DesignSystemComponent {
     },
   ];
 
+  public constructor(
+    private readonly authApi: AuthApiService,
+    private readonly authSession: AuthSessionService,
+    private readonly destroyRef: DestroyRef,
+    private readonly router: Router,
+  ) {
+    this.authenticated = computed((): boolean =>
+      this.authSession.isAuthenticated(),
+    );
+    this.brandRouterLink = computed((): string =>
+      this.authenticated() ? '/home' : '/',
+    );
+    this.navItems = computed((): readonly SynNavItem[] => [
+      {
+        label: 'Home',
+        routerLink: this.authenticated() ? '/home' : '/',
+      },
+      {
+        active: true,
+        label: 'Design',
+        routerLink: '/design-system',
+      },
+    ]);
+  }
+
   /**
    * Toggles the mobile navigation menu visibility.
    */
@@ -268,5 +299,21 @@ export class DesignSystemComponent {
    */
   public closeMobileNav(): void {
     this.mobileNavOpen.set(false);
+  }
+
+  /**
+   * Revokes the API session and returns to the landing page.
+   */
+  public logOut(): void {
+    this.authApi
+      .logout()
+      .pipe(
+        finalize((): void => {
+          this.authSession.signOut();
+          void this.router.navigate(['/']);
+        }),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe();
   }
 }
