@@ -19,8 +19,11 @@
   --color-error: #ba1a1a;
   --color-error-container: #ffdad6;
   --color-success: #146c2e;
+  --color-warning: #8a6100;
+  --color-warning-container: #fff0c2;
   --color-on-error: #ffffff;
   --color-on-error-container: #93000a;
+  --color-on-warning-container: #5c4200;
   --font-serif: "Source Serif 4", Georgia, serif;
   --font-sans: "Inter", Arial, sans-serif;
   --font-mono: "JetBrains Mono", "Courier New", monospace;
@@ -351,6 +354,43 @@ h4 {
   color: var(--color-on-primary);
   font-family: var(--font-mono);
   font-size: 12px;
+}
+
+.syn-log-status {
+  display: inline-flex;
+
+  border: 1px solid var(--color-outline-variant);
+
+  padding: calc(var(--space-unit) / 2) var(--space-unit);
+
+  background: var(--color-surface-container);
+  color: var(--color-on-surface-variant);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.5;
+  text-transform: uppercase;
+
+  &--pending {
+    border-color: var(--color-warning);
+
+    background: var(--color-warning-container);
+    color: var(--color-on-warning-container);
+  }
+
+  &--rejected {
+    border-color: var(--color-error);
+
+    background: var(--color-error-container);
+    color: var(--color-on-error-container);
+  }
+
+  &--passed,
+  &--failed {
+    border-color: var(--color-success);
+
+    color: var(--color-success);
+  }
 }
 
 @media (min-width: 720px) {
