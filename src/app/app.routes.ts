@@ -1,7 +1,8 @@
 import { Routes } from '@angular/router';
 
-import { authGuard, unauthGuard } from './auth.guard';
+import { adminGuard, authGuard, unauthGuard } from './auth.guard';
 import { DesignSystemComponent } from './pages/design-system/design-system.component';
+import { AiLogsComponent } from './pages/ai-logs/ai-logs.component';
 import { HomeComponent } from './pages/home/home.component';
 import { LandingPageComponent } from './pages/landing-page/landing-page.component';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
@@ -26,6 +27,11 @@ export const routes: Routes = [
     path: 'home',
     canActivate: [authGuard],
     component: HomeComponent,
+  },
+  {
+    path: 'ai-logs',
+    canActivate: [adminGuard],
+    component: AiLogsComponent,
   },
   {
     path: 'session/:topicId/live/continue/:sessionId',

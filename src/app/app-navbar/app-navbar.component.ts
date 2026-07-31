@@ -140,7 +140,7 @@ export class AppNavbarComponent {
       return [];
     }
 
-    return [
+    const items: SynNavItem[] = [
       {
         active: this.isHomeActive(url),
         label: 'Home',
@@ -152,6 +152,16 @@ export class AppNavbarComponent {
         routerLink: '/design-system',
       },
     ];
+
+    if (this.authSession.user()?.role === 'admin') {
+      items.push({
+        active: url.startsWith('/ai-logs'),
+        label: 'AI Logs',
+        routerLink: '/ai-logs',
+      });
+    }
+
+    return items;
   }
 
   /**
