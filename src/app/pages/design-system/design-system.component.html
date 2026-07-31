@@ -130,6 +130,38 @@
           </div>
         </syn-card>
 
+        <syn-card>
+          <div class="design-log-current__header">
+            <div class="design-log-current__metadata">
+              <span
+                class="syn-log-status syn-log-status--{{ aiLogPreview.status }}"
+              >
+                {{ aiLogPreview.status }}
+              </span>
+              <span>{{ aiLogPreview.aiModel }}</span>
+            </div>
+            <time>{{ aiLogPreview.createdAt }}</time>
+          </div>
+          <h3 class="design-log-current__operation">
+            {{ aiLogPreview.operation }}
+          </h3>
+          <dl class="design-log-current__details">
+            <div>
+              <dt>Prompt</dt>
+              <dd>{{ aiLogPreview.prompt }}</dd>
+            </div>
+            <div>
+              <dt>Question</dt>
+              <dd>{{ aiLogPreview.question }}</dd>
+            </div>
+          </dl>
+          <div class="design-log-current__actions">
+            <syn-button label="View Prompt" variant="secondary" />
+            <syn-button label="View Question JSON" variant="secondary" />
+            <syn-button label="View Output" variant="secondary" />
+          </div>
+        </syn-card>
+
         <syn-card title="Form Controls & Ledger Validation">
           <div class="design-form-card">
             <syn-form-field label="Institutional Email" forId="designEmail">
@@ -262,6 +294,4 @@
       </syn-stack>
     </syn-container>
   </syn-stack>
-
-  <syn-footer synPageFooter [links]="footerLinks" />
 </syn-page-shell>

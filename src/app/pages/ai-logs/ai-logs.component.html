@@ -1,0 +1,148 @@
+<syn-page-shell>
+  <div class="ai-logs">
+    <syn-container>
+      <syn-stack page>
+        <section class="ai-logs__section" aria-labelledby="ai-logs-title">
+          <syn-section-header
+            [title]="
+              logPage() === null
+                ? 'AI Logs'
+                : 'AI Logs (' + logPage()!.total + ')'
+            "
+            headingId="ai-logs-title"
+          />
+
+          <div class="ai-logs__filters" aria-label="Question status filters">
+            @for (filter of statusFilters; track filter.id) {
+              <syn-button
+                [label]="filter.label"
+                [variant]="
+                  statusFilter() === filter.id ? 'primary' : 'secondary'
+                "
+                [attr.aria-pressed]="statusFilter() === filter.id"
+                (buttonClick)="setStatusFilter(filter.id)"
+              />
+            }
+          </div>
+
+          @if (loading()) {
+            <syn-empty-state
+              title="Loading AI logs"
+              description="Retrieving the newest AI completion records."
+            />
+          } @else if (error()) {
+            <syn-empty-state
+              title="AI logs unavailable"
+              [description]="error()!"
+              icon="error"
+            >
+              <p class="syn-error-message">
+                AI completion logs could not load.
+              </p>
+            </syn-empty-state>
+          } @else if (filteredLogs().length) {
+            <div class="ai-logs__list">
+              @for (log of filteredLogs(); track logTrackBy(log)) {
+                <syn-card>
+                  <div class="ai-logs__card-header">
+                    <div class="ai-logs__metadata">
+                      <span
+                        class="syn-log-status"
+                        [class.syn-log-status--pending]="
+                          questionStatus(log) === 'pending'
+                        "
+                        [class.syn-log-status--rejected]="
+                          questionStatus(log) === 'rejected'
+                        "
+                        [class.syn-log-status--passed]="
+                          questionStatus(log) === 'passed'
+                        "
+                        [class.syn-log-status--failed]="
+                          questionStatus(log) === 'failed'
+                        "
+                        [class.syn-log-status--unlinked]="
+                          questionStatus(log) === 'unlinked'
+                        "
+                      >
+                        {{ questionStatusLabel(log) }}
+                      </span>
+                      <span class="ai-logs__model">{{ log.aiModel }}</span>
+                    </div>
+                    <time [attr.datetime]="log.createdAt">
+                      {{ log.createdAt | date: "medium" }}
+                    </time>
+                  </div>
+
+                  <h3 class="ai-logs__operation">
+                    {{ operationLabel(log.operation) }}
+                  </h3>
+
+                  <dl class="ai-logs__excerpts">
+                    <div>
+                      <dt>Prompt</dt>
+                      <dd>{{ truncate(log.prompt) }}</dd>
+                    </div>
+                    <div>
+                      <dt>Question</dt>
+                      <dd>{{ truncate(questionPrompt(log)) }}</dd>
+                    </div>
+                  </dl>
+
+                  <div class="ai-logs__actions">
+                    <syn-button
+                      label="View Prompt"
+                      variant="secondary"
+                      (buttonClick)="openPrompt(log)"
+                    />
+                    <syn-button
+                      label="View Question"
+                      variant="secondary"
+                      [disabled]="log.liveQuestion === null"
+                      (buttonClick)="openQuestionJson(log)"
+                    />
+                    <syn-button
+                      label="View Output"
+                      variant="secondary"
+                      (buttonClick)="openOutput(log)"
+                    />
+                  </div>
+                </syn-card>
+              }
+            </div>
+          } @else {
+            <syn-empty-state
+              title="No matching logs on this page"
+              description="Choose a different status category or move to another page."
+            />
+          }
+
+          @if (logPage(); as page) {
+            <nav class="ai-logs__pagination" aria-label="AI logs pagination">
+              <syn-button
+                label="Previous"
+                variant="secondary"
+                [disabled]="!hasPreviousPage() || loading()"
+                (buttonClick)="goToPage(page.page - 1)"
+              />
+              <p>Page {{ page.page }} of {{ pageCount(page) }}</p>
+              <syn-button
+                label="Next"
+                variant="secondary"
+                [disabled]="!hasNextPage() || loading()"
+                (buttonClick)="goToPage(page.page + 1)"
+              />
+            </nav>
+          }
+        </section>
+      </syn-stack>
+    </syn-container>
+  </div>
+
+  @if (viewer(); as activeViewer) {
+    <syn-json-viewer-dialog
+      [title]="activeViewer.title"
+      [content]="activeViewer.content"
+      (close)="closeViewer()"
+    />
+  }
+</syn-page-shell>

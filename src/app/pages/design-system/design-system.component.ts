@@ -1,7 +1,4 @@
-import {
-  Component,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 import {
   SynButtonComponent,
@@ -10,7 +7,6 @@ import {
   SynChipComponent,
   SynContainerComponent,
   SynEmptyStateComponent,
-  SynFooterComponent,
   SynFormFieldComponent,
   SynFormPanelComponent,
   SynGridComponent,
@@ -18,7 +14,6 @@ import {
   SynInputComponent,
   SynLedgerItem,
   SynLedgerListComponent,
-  SynNavItem,
   SynOptionComponent,
   SynPageShellComponent,
   SynProgressBarComponent,
@@ -59,6 +54,15 @@ interface SpacingToken {
   readonly value: string;
 }
 
+interface AiLogPreview {
+  readonly aiModel: string;
+  readonly createdAt: string;
+  readonly operation: string;
+  readonly prompt: string;
+  readonly question: string;
+  readonly status: 'pending' | 'rejected' | 'passed' | 'failed';
+}
+
 @Component({
   selector: 'app-design-system',
   imports: [
@@ -68,7 +72,6 @@ interface SpacingToken {
     SynChipComponent,
     SynContainerComponent,
     SynEmptyStateComponent,
-    SynFooterComponent,
     SynFormFieldComponent,
     SynFormPanelComponent,
     SynGridComponent,
@@ -90,17 +93,6 @@ interface SpacingToken {
   styleUrl: './design-system.component.scss',
 })
 export class DesignSystemComponent {
-  public readonly footerLinks: readonly SynNavItem[] = [
-    {
-      label: 'Home',
-      routerLink: '/',
-    },
-    {
-      label: 'Design System',
-      routerLink: '/design-system',
-    },
-  ];
-
   public readonly ledgerItems: readonly SynLedgerItem[] = [
     {
       icon: 'close',
@@ -169,6 +161,16 @@ export class DesignSystemComponent {
       className: 'design-swatch--card',
     },
   ];
+
+  public readonly aiLogPreview: AiLogPreview = {
+    aiModel: 'gpt-4.1-mini',
+    createdAt: '21 JUN 2026, 10:24',
+    operation: 'Question Generation',
+    prompt:
+      'Generate a multiple-choice question that tests paging fundamentals.',
+    question: 'What does paging divide virtual memory into?',
+    status: 'passed',
+  };
 
   public readonly functionalTokens: readonly FunctionalToken[] = [
     {
