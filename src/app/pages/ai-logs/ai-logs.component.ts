@@ -21,6 +21,7 @@ import {
   SynCardComponent,
   SynContainerComponent,
   SynEmptyStateComponent,
+  SynJsonViewerDialogComponent,
   SynPageShellComponent,
   SynSectionHeaderComponent,
   SynStackComponent,
@@ -32,6 +33,11 @@ type AiLogStatusFilter =
 interface AiLogStatusFilterOption {
   readonly id: AiLogStatusFilter;
   readonly label: string;
+}
+
+interface AiLogViewer {
+  readonly content: string;
+  readonly title: string;
 }
 
 const LOG_PAGE_LIMIT = 20;
@@ -48,6 +54,7 @@ const OPERATION_LABELS: Record<string, string> = {
     SynCardComponent,
     SynContainerComponent,
     SynEmptyStateComponent,
+    SynJsonViewerDialogComponent,
     SynPageShellComponent,
     SynSectionHeaderComponent,
     SynStackComponent,
@@ -64,6 +71,8 @@ export class AiLogsComponent implements OnInit {
   public readonly logPage = signal<AiLogPage | null>(null);
 
   public readonly statusFilter = signal<AiLogStatusFilter>('all');
+
+  public readonly viewer = signal<AiLogViewer | null>(null);
 
   public readonly statusFilters: readonly AiLogStatusFilterOption[] = [
     { id: 'all', label: 'All' },
@@ -216,6 +225,47 @@ export class AiLogsComponent implements OnInit {
   }
 
   /**
+   * Opens the full AI instruction prompt for a log entry.
+   *
+   * @param log AI log to inspect.
+   */
+  public openPrompt(log: AiLog): void {
+    this.openViewer('AI Prompt', this.formatJson(log.prompt));
+  }
+
+  /**
+   * Opens the persisted question as formatted JSON when one exists.
+   *
+   * @param log AI log to inspect.
+   */
+  public openQuestionJson(log: AiLog): void {
+    if (log.liveQuestion === null) {
+      return;
+    }
+
+    this.openViewer(
+      'Question JSON',
+      JSON.stringify(log.liveQuestion.question, null, 2),
+    );
+  }
+
+  /**
+   * Opens the full AI completion output for a log entry.
+   *
+   * @param log AI log to inspect.
+   */
+  public openOutput(log: AiLog): void {
+    this.openViewer('AI Output', this.formatJson(log.output));
+  }
+
+  /**
+   * Closes the active JSON or text viewer.
+   */
+  public closeViewer(): void {
+    this.viewer.set(null);
+  }
+
+  /**
    * Returns the total count of server pages for a response.
    *
    * @param page Paginated API response.
@@ -250,6 +300,30 @@ export class AiLogsComponent implements OnInit {
           this.logPage.set(null);
         },
       });
+  }
+
+  /**
+   * Opens the shared read-only viewer with a title and content payload.
+   *
+   * @param title Viewer heading.
+   * @param content Complete content to render.
+   */
+  private openViewer(title: string, content: string): void {
+    this.viewer.set({ content, title });
+  }
+
+  /**
+   * Pretty-prints JSON content and preserves non-JSON content verbatim.
+   *
+   * @param content Raw content that may contain JSON.
+   * @returns Formatted JSON or the original content string.
+   */
+  private formatJson(content: string): string {
+    try {
+      return JSON.stringify(JSON.parse(content), null, 2);
+    } catch {
+      return content;
+    }
   }
 
   /**

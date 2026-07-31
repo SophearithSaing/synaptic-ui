@@ -87,6 +87,25 @@
                       <dd>{{ truncate(questionPrompt(log)) }}</dd>
                     </div>
                   </dl>
+
+                  <div class="ai-logs__actions">
+                    <syn-button
+                      label="View Prompt"
+                      variant="secondary"
+                      (buttonClick)="openPrompt(log)"
+                    />
+                    <syn-button
+                      label="View Question"
+                      variant="secondary"
+                      [disabled]="log.liveQuestion === null"
+                      (buttonClick)="openQuestionJson(log)"
+                    />
+                    <syn-button
+                      label="View Output"
+                      variant="secondary"
+                      (buttonClick)="openOutput(log)"
+                    />
+                  </div>
                 </syn-card>
               }
             </div>
@@ -118,4 +137,12 @@
       </syn-stack>
     </syn-container>
   </div>
+
+  @if (viewer(); as activeViewer) {
+    <syn-json-viewer-dialog
+      [title]="activeViewer.title"
+      [content]="activeViewer.content"
+      (close)="closeViewer()"
+    />
+  }
 </syn-page-shell>
