@@ -1,7 +1,4 @@
-import {
-  Component,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 import {
   SynButtonComponent,
@@ -57,6 +54,15 @@ interface TypeSpecimen {
 interface SpacingToken {
   readonly name: string;
   readonly value: string;
+}
+
+interface AiLogPreview {
+  readonly aiModel: string;
+  readonly createdAt: string;
+  readonly operation: string;
+  readonly prompt: string;
+  readonly question: string;
+  readonly status: 'pending' | 'rejected' | 'passed' | 'failed';
 }
 
 @Component({
@@ -169,6 +175,16 @@ export class DesignSystemComponent {
       className: 'design-swatch--card',
     },
   ];
+
+  public readonly aiLogPreview: AiLogPreview = {
+    aiModel: 'gpt-4.1-mini',
+    createdAt: '21 JUN 2026, 10:24',
+    operation: 'Question Generation',
+    prompt:
+      'Generate a multiple-choice question that tests paging fundamentals.',
+    question: 'What does paging divide virtual memory into?',
+    status: 'passed',
+  };
 
   public readonly functionalTokens: readonly FunctionalToken[] = [
     {

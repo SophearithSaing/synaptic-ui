@@ -130,6 +130,33 @@
           </div>
         </syn-card>
 
+        <syn-card>
+          <div class="design-log-current__header">
+            <div class="design-log-current__metadata">
+              <span
+                class="syn-log-status syn-log-status--{{ aiLogPreview.status }}"
+              >
+                {{ aiLogPreview.status }}
+              </span>
+              <span>{{ aiLogPreview.aiModel }}</span>
+            </div>
+            <time>{{ aiLogPreview.createdAt }}</time>
+          </div>
+          <h3 class="design-log-current__operation">
+            {{ aiLogPreview.operation }}
+          </h3>
+          <dl class="design-log-current__details">
+            <div>
+              <dt>Prompt</dt>
+              <dd>{{ aiLogPreview.prompt }}</dd>
+            </div>
+            <div>
+              <dt>Question</dt>
+              <dd>{{ aiLogPreview.question }}</dd>
+            </div>
+          </dl>
+        </syn-card>
+
         <syn-card title="Form Controls & Ledger Validation">
           <div class="design-form-card">
             <syn-form-field label="Institutional Email" forId="designEmail">
