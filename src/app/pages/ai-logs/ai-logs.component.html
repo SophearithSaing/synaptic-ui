@@ -4,16 +4,13 @@
       <syn-stack page>
         <section class="ai-logs__section" aria-labelledby="ai-logs-title">
           <syn-section-header
-            title="AI Logs"
-            description="Newest AI completions and their linked live-question outcomes."
+            [title]="
+              logPage() === null
+                ? 'AI Logs'
+                : 'AI Logs (' + logPage()!.total + ')'
+            "
             headingId="ai-logs-title"
-          >
-            @if (logPage(); as page) {
-              <p synSectionHeaderAction class="ai-logs__count">
-                {{ page.total }} total
-              </p>
-            }
-          </syn-section-header>
+          />
 
           <div class="ai-logs__filters" aria-label="Question status filters">
             @for (filter of statusFilters; track filter.id) {
