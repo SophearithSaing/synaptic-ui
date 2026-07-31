@@ -1,8 +1,7 @@
 :host {
   display: flex;
+  flex: 1;
   flex-direction: column;
-
-  min-height: calc(100vh - 64px);
 
   background: var(--color-surface);
   color: var(--color-on-surface);

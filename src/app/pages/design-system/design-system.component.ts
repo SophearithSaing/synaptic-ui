@@ -7,7 +7,6 @@ import {
   SynChipComponent,
   SynContainerComponent,
   SynEmptyStateComponent,
-  SynFooterComponent,
   SynFormFieldComponent,
   SynFormPanelComponent,
   SynGridComponent,
@@ -15,7 +14,6 @@ import {
   SynInputComponent,
   SynLedgerItem,
   SynLedgerListComponent,
-  SynNavItem,
   SynOptionComponent,
   SynPageShellComponent,
   SynProgressBarComponent,
@@ -74,7 +72,6 @@ interface AiLogPreview {
     SynChipComponent,
     SynContainerComponent,
     SynEmptyStateComponent,
-    SynFooterComponent,
     SynFormFieldComponent,
     SynFormPanelComponent,
     SynGridComponent,
@@ -96,17 +93,6 @@ interface AiLogPreview {
   styleUrl: './design-system.component.scss',
 })
 export class DesignSystemComponent {
-  public readonly footerLinks: readonly SynNavItem[] = [
-    {
-      label: 'Home',
-      routerLink: '/',
-    },
-    {
-      label: 'Design System',
-      routerLink: '/design-system',
-    },
-  ];
-
   public readonly ledgerItems: readonly SynLedgerItem[] = [
     {
       icon: 'close',

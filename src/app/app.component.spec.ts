@@ -44,5 +44,6 @@ describe('AppComponent', () => {
     const compiled = fixture.nativeElement as HTMLElement;
 
     expect(compiled.querySelector('router-outlet')).toBeTruthy();
+    expect(compiled.querySelectorAll('syn-footer').length).toBe(1);
   });
 });

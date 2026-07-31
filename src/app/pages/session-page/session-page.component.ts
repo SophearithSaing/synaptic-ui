@@ -15,7 +15,6 @@ import {
   SynConfirmationDialogComponent,
   SynContainerComponent,
   SynEmptyStateComponent,
-  SynFooterComponent,
   SynInlineCodeTextComponent,
   SynPageShellComponent,
 } from '../../ui';
@@ -49,7 +48,6 @@ type SessionMode = 'standard' | 'live';
     SynConfirmationDialogComponent,
     SynContainerComponent,
     SynEmptyStateComponent,
-    SynFooterComponent,
     SynInlineCodeTextComponent,
     SynPageShellComponent,
   ],
