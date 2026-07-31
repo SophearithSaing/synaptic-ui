@@ -1,0 +1,56 @@
+:host {
+  display: contents;
+}
+
+.json-viewer-dialog {
+  align-items: center;
+  display: flex;
+  position: fixed;
+  inset: 0;
+  justify-content: center;
+  z-index: 4;
+
+  padding: var(--space-md);
+
+  background: color-mix(in srgb, var(--color-primary) 48%, transparent);
+}
+
+.json-viewer-dialog__panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+
+  width: min(100%, calc(var(--container-max) - var(--space-lg)));
+  max-height: calc(100vh - (var(--space-md) * 2));
+
+  border: 1px solid var(--color-outline-variant);
+
+  padding: var(--space-md);
+
+  background: var(--color-surface-container-lowest);
+  color: var(--color-on-surface);
+}
+
+.json-viewer-dialog__header {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  justify-content: space-between;
+}
+
+.json-viewer-dialog__content {
+  overflow: auto;
+
+  margin: 0;
+  border: 1px solid var(--color-outline-variant);
+
+  padding: var(--space-sm);
+
+  background: var(--color-surface-container-low);
+  color: var(--color-on-surface);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.5;
+  white-space: pre;
+}
