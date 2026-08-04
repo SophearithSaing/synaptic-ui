@@ -1,6 +1,7 @@
 @if (authInitialized()) {
   <app-navbar />
   <router-outlet />
+  <syn-footer />
 } @else {
   <main class="initial-loader" aria-label="Loading Synaptic">
     <span class="initial-loader__brand">

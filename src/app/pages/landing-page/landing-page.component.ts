@@ -5,12 +5,10 @@ import {
   SynCatalogCardComponent,
   SynContainerComponent,
   SynEmptyStateComponent,
-  SynFooterComponent,
   SynGridComponent,
   SynInfoCardComponent,
   SynLedgerItem,
   SynLedgerListComponent,
-  SynNavItem,
   SynPageShellComponent,
   SynSectionComponent,
   SynSectionHeaderComponent,
@@ -36,7 +34,6 @@ interface CurriculumTrack {
     SynCatalogCardComponent,
     SynContainerComponent,
     SynEmptyStateComponent,
-    SynFooterComponent,
     SynGridComponent,
     SynInfoCardComponent,
     SynLedgerListComponent,
@@ -50,21 +47,6 @@ interface CurriculumTrack {
   styleUrl: './landing-page.component.scss',
 })
 export class LandingPageComponent {
-  public readonly footerLinks: readonly SynNavItem[] = [
-    {
-      href: '#curriculum',
-      label: 'Documentation',
-    },
-    {
-      href: '#home',
-      label: 'Privacy Policy',
-    },
-    {
-      href: '#home',
-      label: 'Terms of Service',
-    },
-  ];
-
   public readonly philosophyCards: readonly FeatureCard[] = [
     {
       icon: 'repeat',

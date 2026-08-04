@@ -11,10 +11,11 @@ import { RouterOutlet } from '@angular/router';
 import { AppNavbarComponent } from './app-navbar/app-navbar.component';
 import { AuthInitializationService } from './auth-initialization.service';
 import { AuthSessionService } from './auth-session.service';
+import { SynFooterComponent } from './ui';
 
 @Component({
   selector: 'app-root',
-  imports: [AppNavbarComponent, RouterOutlet],
+  imports: [AppNavbarComponent, RouterOutlet, SynFooterComponent],
   templateUrl: './app.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './app.component.scss',

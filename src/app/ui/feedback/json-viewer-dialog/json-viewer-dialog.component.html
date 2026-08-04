@@ -1,0 +1,14 @@
+<div class="json-viewer-dialog" role="presentation">
+  <section
+    class="json-viewer-dialog__panel"
+    role="dialog"
+    aria-modal="true"
+    [attr.aria-labelledby]="titleId"
+  >
+    <div class="json-viewer-dialog__header">
+      <h2 [id]="titleId" class="syn-heading-md">{{ title }}</h2>
+      <syn-button label="Close" variant="secondary" (buttonClick)="onClose()" />
+    </div>
+    <pre class="json-viewer-dialog__content"><code>{{ content }}</code></pre>
+  </section>
+</div>

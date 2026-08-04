@@ -10,7 +10,6 @@ import { Observable, switchMap } from 'rxjs';
 
 import {
   SynButtonComponent,
-  SynFooterComponent,
   SynFormFieldComponent,
   SynFormPanelComponent,
   SynFormShellComponent,
@@ -33,7 +32,6 @@ import { AuthenticatedUser } from '../../models/auth.models';
   selector: 'app-register-page',
   imports: [
     SynButtonComponent,
-    SynFooterComponent,
     SynFormFieldComponent,
     SynFormPanelComponent,
     SynFormShellComponent,

@@ -1,21 +1,7 @@
 <footer class="footer">
-  <div class="footer__inner" [class.footer__inner--center]="!links.length">
-    <div>
-      @if (copy) {
-        <span class="footer__copy">{{ copy }}</span>
-      }
-    </div>
-
-    @if (links.length) {
-      <nav class="footer__nav" [attr.aria-label]="ariaLabel">
-        @for (link of links; track link.label) {
-          @if (link.routerLink) {
-            <a [routerLink]="link.routerLink">{{ link.label }}</a>
-          } @else {
-            <a [href]="link.href">{{ link.label }}</a>
-          }
-        }
-      </nav>
+  <div class="footer__inner">
+    @if (copy) {
+      <span class="footer__copy">{{ copy }}</span>
     }
   </div>
 </footer>
