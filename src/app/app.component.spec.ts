@@ -1,6 +1,7 @@
 import { provideRouter } from '@angular/router';
 import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
+import { vi } from 'vitest';
 
 import { AppComponent } from './app.component';
 import { AuthInitializationService } from './auth-initialization.service';
@@ -8,12 +9,9 @@ import { AuthSessionService } from './auth-session.service';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
-    const authInitialization = jasmine.createSpyObj<AuthInitializationService>(
-      'AuthInitializationService',
-      ['initialize'],
-    );
-
-    authInitialization.initialize.and.returnValue(of(undefined));
+    const authInitialization = {
+      initialize: vi.fn().mockReturnValue(of(undefined)),
+    };
 
     await TestBed.configureTestingModule({
       imports: [AppComponent],
