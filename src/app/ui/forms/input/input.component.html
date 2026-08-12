@@ -9,11 +9,24 @@
     [ngClass]="inputClasses"
     [id]="inputId"
     [name]="name"
-    [type]="type"
+    [type]="resolvedInputType()"
     [autocomplete]="autocomplete"
     [placeholder]="placeholder"
     [required]="required"
     [value]="value"
     (input)="onInput($event)"
   />
+  @if (passwordToggle && type === 'password') {
+    <button
+      class="input-wrap__password-toggle"
+      type="button"
+      [attr.aria-label]="passwordVisible ? 'Hide password' : 'View password'"
+      [attr.aria-pressed]="passwordVisible"
+      (click)="togglePasswordVisibility()"
+    >
+      <span class="material-symbols-outlined" aria-hidden="true">
+        {{ passwordVisible ? 'visibility_off' : 'visibility' }}
+      </span>
+    </button>
+  }
 </span>
